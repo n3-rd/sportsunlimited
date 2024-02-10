@@ -20,6 +20,13 @@
 	<div class="post__container">
 		<h1 class="post__title">{data.title}</h1>
 		<p class="post__excerpt">{data.excerpt}</p>
+		{#if data.tags}
+			<p class="post__tags">
+				{#each data.tags as tag}
+					<span class="post__tag">{tag}</span>
+				{/each}
+			</p>
+		{/if}
 		<p class="post__date">
 			{formatDate(data._createdAt)}
 		</p>

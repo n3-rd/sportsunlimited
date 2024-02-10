@@ -35,5 +35,6 @@ export interface Post {
 	slug: Slug;
 	excerpt?: string;
 	mainImage?: ImageAsset;
+	tags?: string[];
 	body: PortableTextBlock[];
 }
