@@ -5,7 +5,30 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+	console.log(data);
 </script>
+
+<svelte:head>
+	<title>{data.title}</title>
+	<meta name="description" content={data.excerpt} />
+	<meta property="og:title" content={data.title} />
+	<meta property="og:description" content={data.excerpt} />
+	{#if data.mainImage}
+		<meta property="og:image" content={urlFor(data.mainImage).url()} />
+		<meta name="twitter:image" content={urlFor(data.mainImage).url()} />
+	{/if}
+	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug}`} />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Sports Unlimited" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={data.title} />
+	<meta name="twitter:description" content={data.excerpt} />
+	<meta name="twitter:url" content={`https://www.sportsunlimited.ng/post/${data.slug}`} />
+	<!-- add other meta tags -->
+	<meta name="keywords" content={data.tags.join(', ')} />
+	<meta name="author" content={data.tags.excerpt} />
+	<link rel="canonical" href={`https://www.sportsunlimited.ng/post/${data.slug}`} />
+</svelte:head>
 
 <section class="post">
 	{#if data.mainImage}
