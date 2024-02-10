@@ -27,6 +27,12 @@ export default defineType({
       rows: 4,
     }),
     defineField({
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{type: 'string'}],
+    }),
+    defineField({
       name: 'mainImage',
       title: 'Main image',
       type: 'image',
