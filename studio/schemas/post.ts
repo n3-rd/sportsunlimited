@@ -27,10 +27,21 @@ export default defineType({
       rows: 4,
     }),
     defineField({
-      name: 'tags',
-      title: 'Tags',
-      type: 'array',
-      of: [{type: 'string'}],
+      name: "tags",
+      type: "array",
+      of: [{ type: "string" }],
+      options: {
+        list: [
+          { title: "Football", value: "Football" },
+          { title: "Athletics", value: "Athletics" },
+          { title: "Basketball", value: "Basketball" },
+          { title: "Nigeria League", value: "Nigeria League" },
+          { title: "Lifestyle", value: "Lifestyle" },
+          { title: "Oddities", value: "Oddities" },
+          { title: "Other Sports", value: "Other Sports" },
+          { title: "Interview", value: "Interview" },
+        ],
+      },
     }),
     defineField({
       name: 'mainImage',
