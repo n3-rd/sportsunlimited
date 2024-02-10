@@ -165,13 +165,13 @@ body {
 	}
 }
 
-.post .post__tags {
+.post__tags {
 	display: flex;
 	flex-wrap: wrap;
 	margin-top: var(--space-4);
 }
 
-.post .post__tags .post__tag {
+.post__tags .post__tag {
 	font-family: var(--font-family-sans);
 	font-size: var(--font-size-1);
 	line-height: var(--line-height-1);
