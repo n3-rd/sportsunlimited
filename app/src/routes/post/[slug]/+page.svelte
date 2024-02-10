@@ -23,7 +23,7 @@
 		{#if data.tags}
 			<p class="post__tags">
 				{#each data.tags as tag}
-					<span class="post__tag">{tag}</span>
+					<a href={`/tags/${tag}`} class="post__tag">{tag}</a>
 				{/each}
 			</p>
 		{/if}

@@ -22,6 +22,15 @@ export async function getPosts(): Promise<Post[]> {
 	);
 }
 
+export async function getTags(): Promise<string[]> {
+	return await client.fetch(groq`*[_type == "post" && defined(tags)][].tags[] | order(value asc)`);
+}
+
+export async function getTaggedPosts(tag: string): Promise<Post[]> {
+	return await client.fetch(groq`*[_type == "post" && defined(tags) && $tag in tags[]]`, {
+		tag: tag
+	});
+}
 export async function getPost(slug: string): Promise<Post> {
 	return await client.fetch(groq`*[_type == "post" && slug.current == $slug][0]`, {
 		slug

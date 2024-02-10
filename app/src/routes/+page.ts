@@ -1,15 +1,22 @@
-import { getPosts } from '$lib/utils/sanity';
+import { getPosts, getTags } from '$lib/utils/sanity';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const load = (async () => {
 	const posts = await getPosts();
+	const tags = await getTags();
+
+	console.log(tags);	
 
 	if (posts) {
 		return {
-			posts
+			posts,
+			tags
 		};
 	}
 
+
+
+
 	throw error(404, 'Not found');
-}) satisfies PageLoad;
+})
