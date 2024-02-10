@@ -4,9 +4,12 @@ import type { PageLoad } from './$types';
 
 export const load = (async () => {
 	const posts = await getPosts();
-	const tags = await getTags();
+	let tags = await getTags();
 
-	console.log(tags);	
+	// Remove duplicates
+	tags = [...new Set(tags)];
+
+	console.log(tags);  
 
 	if (posts) {
 		return {
@@ -14,9 +17,6 @@ export const load = (async () => {
 			tags
 		};
 	}
-
-
-
 
 	throw error(404, 'Not found');
 })
