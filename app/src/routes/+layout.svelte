@@ -1,11 +1,10 @@
 <script>
 	import Footer from '../components/Footer.svelte';
+	import Header from '../components/Header.svelte';
 </script>
 
+<Header />
 <div class="container">
-	<header class="header">
-		<a class="header__title" href="/">Sports Unlimited</a>
-	</header>
 	<main>
 		<slot />
 	</main>
