@@ -18,8 +18,8 @@ const tagConfig = {
 }
 
 export default defineConfig({
-  name: 'project-name',
-  title: 'Project Name',
+  name: 'Sports_Unlimited',
+  title: 'Sports Unlimited Studio',
   projectId,
   dataset,
   plugins: [deskTool(), visionTool(), tags(tagConfig), autocompletInput()],
