@@ -26,7 +26,7 @@
 	<meta name="twitter:url" content={`https://www.sportsunlimited.ng/post/${data.slug}`} />
 	<!-- add other meta tags -->
 	<meta name="keywords" content={data.tags.join(', ')} />
-	<meta name="author" content={data.tags.excerpt} />
+	<meta name="author" content={data.excerpt} />
 	<link rel="canonical" href={`https://www.sportsunlimited.ng/post/${data.slug}`} />
 </svelte:head>
 
@@ -42,7 +42,10 @@
 	{/if}
 	<div class="post__container">
 		<h1 class="post__title">{data.title}</h1>
-		<p class="post__excerpt">{data.excerpt}</p>
+		{#if data.excerpt}
+			<p class="post__excerpt">{data.excerpt}</p>
+		{/if}
+
 		{#if data.tags}
 			<p class="post__tags">
 				{#each data.tags as tag}
