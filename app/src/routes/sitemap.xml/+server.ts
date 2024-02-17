@@ -25,6 +25,45 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <changefreq>daily</changefreq>
 <priority>0.7</priority>
 </url>
+<url>
+<loc>${site}/about</loc>
+<changefreq>daily</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>${site}/contact</loc>
+<changefreq>daily</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>${site}/tags</loc>
+<changefreq>daily</changefreq>
+<priority>0.7</priority>
+</url>
+<loc>${site}/tags/Football</loc>
+<changefreq>daily</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>${site}/tags/Basketball</loc>
+<changefreq>daily</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>${site}/tags/Nigeria League</loc>
+<changefreq>daily</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>${site}/tags/Interview</loc>
+<changefreq>daily</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>${site}/tags/Other Sports</loc>
+<changefreq>daily</changefreq>
+<priority>0.7</priority>
+</url>
 ${posts.map(post  =>  `
 <url>
 <loc>${site}/post/${post.slug.current}</loc>
