@@ -5,6 +5,7 @@
 
 		{ name: 'Tags', url: '/tags' },
 		{ name: 'Contact', url: '/contact' },
+		{ name: 'Admin', url: 'https://sportsunlimited-studio.vercel.app' },
 		{ name: 'Privacy Policy', url: '/privacy-policy' },
 		{ name: 'Terms of Service', url: '/terms-of-service' }
 	];
@@ -16,7 +17,7 @@
 			<a href={link.url}>{link.name}</a>
 		{/each}
 	</nav>
-	<p>© {new Date().getFullYear()} Your Company Name. All rights reserved.</p>
+	<p>© {new Date().getFullYear()} Trustymike Communications. All rights reserved.</p>
 </footer>
 
 <style>
