@@ -144,6 +144,9 @@
 		height: 70px;
 		width: 70px;
 	}
+	.nav-list {
+		width: 100vw;
+	}
 	@media only screen and (max-width: 798px) {
 		/* Hamburger nav visible on mobile only */
 		.nav-mobile {
@@ -173,6 +176,7 @@
 	@media screen and (min-width: 799px) {
 		.nav-list {
 			display: block !important;
+			width: auto !important;
 		}
 	}
 	#nav-toggle {
