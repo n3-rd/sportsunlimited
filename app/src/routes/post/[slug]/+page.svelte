@@ -3,32 +3,31 @@
 	import { formatDate } from '$lib/utils';
 	import { urlFor } from '$lib/utils/image';
 	import type { PageData } from './$types';
+	import { MetaTags } from 'svelte-meta-tags';
 
 	export let data: PageData;
 	console.log(data);
 </script>
 
-<svelte:head>
-	<title>{data.title}</title>
-	<meta name="description" content={data.excerpt} />
-	<meta property="og:title" content={data.title} />
-	<meta property="og:description" content={data.excerpt} />
-	{#if data.mainImage}
-		<meta property="og:image" content={urlFor(data.mainImage).url()} />
-		<meta name="twitter:image" content={urlFor(data.mainImage).url()} />
-	{/if}
-	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug}`} />
-	<meta property="og:type" content="article" />
-	<meta property="og:site_name" content="Sports Unlimited" />
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content={data.title} />
-	<meta name="twitter:description" content={data.excerpt} />
-	<meta name="twitter:url" content={`https://www.sportsunlimited.ng/post/${data.slug}`} />
-	<!-- add other meta tags -->
-	<meta name="keywords" content={data.tags.join(', ')} />
-	<meta name="author" content={data.excerpt} />
-	<link rel="canonical" href={`https://www.sportsunlimited.ng/post/${data.slug}`} />
-</svelte:head>
+<MetaTags
+	title={data.title}
+	description={data.excerpt}
+	canonical={`https://www.sportsunlimited.ng/post/${data.slug}`}
+	openGraph={{
+		url: `https://www.sportsunlimited.ng/post/${data.slug}`,
+		title: data.title,
+		description: data.excerpt,
+		images: data.mainImage ? [{ url: urlFor(data.mainImage).url() }] : [],
+		siteName: 'Sports Unlimited'
+	}}
+	twitter={{
+		cardType: 'summary_large_image',
+		title: data.title,
+		description: data.excerpt,
+
+		image: data.mainImage ? urlFor(data.mainImage).url() : undefined
+	}}
+/>
 
 <section class="post">
 	{#if data.mainImage}
@@ -57,7 +56,7 @@
 			{formatDate(data._createdAt)}
 		</p>
 		<div class="post__content">
-			<PortableText value={data.body} />
+			<PortableText value={data.body} components={{}} />
 		</div>
 	</div>
 </section>
