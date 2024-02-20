@@ -20,8 +20,9 @@
 	/>
 
 	<meta property="og:url" content={`https://www.sportsunlimited.ng`} />
-	<meta property="og:type" content="article" />
+	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="Sports Unlimited" />
+	<meta property="og:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="Sports Unlimited " />
 	<meta
@@ -29,6 +30,7 @@
 		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports and Interviews"
 	/>
 	<meta name="twitter:url" content={`https://www.sportsunlimited.ng/post`} />
+	<meta name="twitter:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
 	<!-- add other meta tags -->
 	<meta
 		name="keywords"
