@@ -13,6 +13,7 @@
 	title={data.title}
 	description={data.excerpt}
 	canonical={`https://www.sportsunlimited.ng/post/${data.slug.current}`}
+	robots="index, follow"
 	openGraph={{
 		url: `https://www.sportsunlimited.ng/post/${data.slug.current}`,
 		title: data.title,
@@ -27,6 +28,8 @@
 
 		image: data.mainImage ? urlFor(data.mainImage).url() : undefined
 	}}
+	keywords={data.tags ?? [].join(', ')}
+	author="Emmanuel Jemegah"
 />
 
 <section class="post">
