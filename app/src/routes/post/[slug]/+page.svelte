@@ -12,9 +12,9 @@
 <MetaTags
 	title={data.title}
 	description={data.excerpt}
-	canonical={`https://www.sportsunlimited.ng/post/${data.slug}`}
+	canonical={`https://www.sportsunlimited.ng/post/${data.slug.current}`}
 	openGraph={{
-		url: `https://www.sportsunlimited.ng/post/${data.slug}`,
+		url: `https://www.sportsunlimited.ng/post/${data.slug.current}`,
 		title: data.title,
 		description: data.excerpt,
 		images: data.mainImage ? [{ url: urlFor(data.mainImage).url() }] : [],
