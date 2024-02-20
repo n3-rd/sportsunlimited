@@ -40,6 +40,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <changefreq>daily</changefreq>
 <priority>0.7</priority>
 </url>
+<url>
 <loc>${site}/tags/Football</loc>
 <changefreq>daily</changefreq>
 <priority>0.7</priority>
