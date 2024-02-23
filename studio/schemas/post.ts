@@ -9,11 +9,13 @@ export default defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
+      description: 'Title of the blog post',
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
+      description: 'The slug for the blog post, tap generate to create a slug from the title',
       validation: (Rule) => Rule.required(),
       options: {
         source: 'title',
@@ -24,11 +26,13 @@ export default defineType({
       name: 'excerpt',
       title: 'Excerpt',
       type: 'text',
+      description: 'A short description of the blog post (optional)',
       rows: 4,
     }),
     defineField({
       name: "tags",
       type: "array",
+      description: 'Tags that relate to the post',
       of: [{ type: "string" }],
       options: {
         list: [
@@ -44,9 +48,21 @@ export default defineType({
       },
     }),
     defineField({
+      name: "keywords",
+      title: "Keywords",
+      description: "Add keywords that describes your blog post. (max of 10)",
+      type: "array",
+      of: [{ type: "string" }],
+      options: {
+        layout: "tags",
+      },
+      validation: (Rule) => Rule.max(10)
+    }),
+    defineField({
       name: 'mainImage',
       title: 'Main image',
       type: 'image',
+      description: 'The main image for the blog post',
       options: {
         hotspot: true,
       },
