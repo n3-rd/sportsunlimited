@@ -9,29 +9,32 @@
 	console.log(data);
 </script>
 
-<MetaTags
-	title={data.title}
-	description={data.excerpt}
-	canonical={`https://www.sportsunlimited.ng/post/${data.slug.current}`}
-	robots="index, follow"
-	openGraph={{
-		url: `https://www.sportsunlimited.ng/post/${data.slug.current}`,
-		title: data.title,
-		description: data.excerpt,
-		images: data.mainImage ? [{ url: urlFor(data.mainImage).url() }] : [],
-		siteName: 'Sports Unlimited'
-	}}
-	twitter={{
-		cardType: 'summary_large_image',
-		title: data.title,
-		description: data.excerpt,
+{#if data}
+	<MetaTags
+		title={data.title}
+		description={data.excerpt}
+		canonical={`https://www.sportsunlimited.ng/post/${data.slug.current}`}
+		robots="index, follow"
+		openGraph={{
+			url: `https://www.sportsunlimited.ng/post/${data.slug.current}`,
+			title: data.title,
+			description: data.excerpt,
+			images: data.mainImage ? [{ url: urlFor(data.mainImage).url() }] : [],
+			siteName: 'Sports Unlimited'
+		}}
+		twitter={{
+			cardType: 'summary_large_image',
+			title: data.title,
+			description: data.excerpt,
 
-		image: data.mainImage ? urlFor(data.mainImage).url() : undefined
-	}}
-	keywords={data.tags ?? [].join(', ')}
-	author="Emmanuel Jemegah"
-/>
+			image: data.mainImage ? urlFor(data.mainImage).url() : undefined
+		}}
+		keywords={data.tags ?? [].join(', ')}
+		author="Emmanuel Jemegah"
+	/>
+{/if}
 
+<!-- Rest of your code -->
 <section class="post">
 	{#if data.mainImage}
 		<img
