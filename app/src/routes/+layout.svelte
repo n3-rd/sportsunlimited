@@ -6,7 +6,7 @@
 	import { inject } from '@vercel/analytics';
 
 	// Inject the Analytics functionality
-	inject({ mode: dev ? 'development' : 'production' });
+	inject();
 </script>
 
 <Header />
