@@ -30,7 +30,7 @@
 			image: data.mainImage ? urlFor(data.mainImage).url() : undefined
 		}}
 		keywords={data.tags ?? [].join(', ')}
-		author="Emmanuel Jemegah"
+		
 	/>
 {/if}
 

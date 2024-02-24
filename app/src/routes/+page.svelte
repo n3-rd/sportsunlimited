@@ -8,15 +8,15 @@
 </script>
 
 <svelte:head>
-	<title>Sports Unlimited || Get updated sports news</title>
+	<title>Sports Unlimited || Get updated sports news on NPFL and more</title>
 	<meta
 		name="description"
-		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports and Interviews"
+		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, NPFL, Lifestyle, Oddities, Other Sports, npfl and Interviews"
 	/>
 	<meta property="og:title" content="Sports Unlimited" />
 	<meta
 		property="og:description"
-		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports and Interviews"
+		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports, npfl and Interviews"
 	/>
 
 	<meta property="og:url" content={`https://www.sportsunlimited.ng`} />
@@ -27,14 +27,14 @@
 	<meta name="twitter:title" content="Sports Unlimited " />
 	<meta
 		name="twitter:description"
-		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports and Interviews"
+		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports, npfl and Interviews"
 	/>
 	<meta name="twitter:url" content={`https://www.sportsunlimited.ng/post`} />
 	<meta name="twitter:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
 	<!-- add other meta tags -->
 	<meta
 		name="keywords"
-		content="Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports, Interviews"
+		content="Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports, Interviews, npfl, sports unlimited, sportsunlimited, league, nigeria"
 	/>
 	<meta name="author" content="Emmanuel Jemegah" />
 	<link rel="canonical" href="https://www.sportsunlimited.ng/post" />
@@ -44,7 +44,9 @@
 	{#if data.tags?.length}
 		<p class="post__tags">
 			{#each data.tags as tag}
-				<a href={`/tags/${tag}`} class="post__tag">{tag}</a>
+				<h2>
+					<a href={`/tags/${tag}`} class="post__tag">{tag}</a>
+				</h2>
 			{/each}
 		</p>
 	{/if}

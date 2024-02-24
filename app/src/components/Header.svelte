@@ -13,9 +13,9 @@
 
 <section class="navigation">
 	<div class="nav-container">
-		<div class="brand">
+		<h2 class="brand">
 			<a href="/">Sports Unlimited</a>
-		</div>
+		</h2>
 		<nav>
 			<div class="nav-mobile">
 				<a id="nav-toggle" href="#!" on:click={toggleMobileMenu}><span /></a>
@@ -224,5 +224,9 @@
 		max-width: 1000px;
 		margin: 0 auto;
 		padding: 10px;
+	}
+	h2 {
+		padding: 0;
+		margin: 0;
 	}
 </style>
