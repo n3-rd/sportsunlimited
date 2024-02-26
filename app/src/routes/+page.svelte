@@ -11,12 +11,12 @@
 	<title>Sports Unlimited || Get updated sports news on NPFL and more</title>
 	<meta
 		name="description"
-		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, NPFL, Lifestyle, Oddities, Other Sports, npfl and Interviews"
+		content="Visit SportsUnlimited.ng to Get updated sports news on  Football, Athletics, Basketball, Nigeria League, NPFL, Lifestyle, Oddities, Other Sports, npfl and Interviews"
 	/>
 	<meta property="og:title" content="Sports Unlimited" />
 	<meta
 		property="og:description"
-		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports, npfl and Interviews"
+		content="Visit SportsUnlimited.ng to Get updated sports news on  Football, Athletics, Basketball, Nigeria League, NPFL, Lifestyle, Oddities, Other Sports, npfl and Interviews"
 	/>
 
 	<meta property="og:url" content={`https://www.sportsunlimited.ng`} />
@@ -27,7 +27,7 @@
 	<meta name="twitter:title" content="Sports Unlimited " />
 	<meta
 		name="twitter:description"
-		content="Get updated sports news on  Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports, npfl and Interviews"
+		content="Visit SportsUnlimited.ng to Get updated sports news on  Football, Athletics, Basketball, Nigeria League, NPFL, Lifestyle, Oddities, Other Sports, npfl and Interviews"
 	/>
 	<meta name="twitter:url" content={`https://www.sportsunlimited.ng/post`} />
 	<meta name="twitter:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />

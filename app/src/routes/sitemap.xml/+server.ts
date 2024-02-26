@@ -68,7 +68,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 ${posts.map(post  =>  `
 <url>
 <loc>${site}/post/${post.slug.current}</loc>
-<changefreq>weekly</changefreq>
+<changefreq>daily</changefreq>
 <lastmod>${post._createdAt.split('T')[0]}</lastmod>
 </url>
 `).join('')}
