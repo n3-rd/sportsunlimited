@@ -1,6 +1,5 @@
 import { getTaggedPosts } from '$lib/utils/sanity';
 
-export const ssr = false;
 
 export async function load({ params}) {
     const capitalizeFirstLetter = (string:string) =>{
