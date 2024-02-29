@@ -8,36 +8,9 @@
 	export let data: PageData;
 	console.log(data);
 </script>
-
-{#if data}
-	<!-- <MetaTags
-		title={data.title}
-		description={data.excerpt}
-		canonical={`https://www.sportsunlimited.ng/post/${data.slug.current}`}
-		robots="index, follow"
-		openGraph={{
-			url: `https://www.sportsunlimited.ng/post/${data.slug.current}`,
-			title: data.title,
-			description: data.excerpt,
-			images: data.mainImage ? [{ url: urlFor(data.mainImage).url() }] : [],
-			siteName: 'Sports Unlimited'
-		}}
-		twitter={{
-			cardType: 'summary_large_image',
-			title: data.title,
-			description: data.excerpt,
-
-			image: data.mainImage ? urlFor(data.mainImage).url() : undefined
-		}}
-		keywords={data.tags ?? [].join(', ')}
-		
-	/> -->
-
-{/if}
-
 <svelte:head>
-	<title>{data.title}</title>
-	<meta name="description" content={data.excerpt} />
+	<title>{data.title || 'sports unlimited'}</title>
+	<meta name="description" content={data.title} />
 	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content={data.title} />
@@ -48,7 +21,7 @@
 	<meta name="twitter:title" content={data.title} />
 	<meta name="twitter:description" content={data.excerpt} />
 	<meta name="twitter:image" content={data.mainImage ? urlFor(data.mainImage).url() : undefined} />
-	<!-- <meta name="keywords" content={data.tags ?? [].join(', ')} /> -->
+	<meta name="keywords" content={data.tags ? data.tags.join(', ') : 'sportsunlim'} />
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
 </svelte:head>
