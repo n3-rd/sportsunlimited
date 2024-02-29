@@ -34,6 +34,5 @@
 
 </a>
 {/each}
-{:else}
-<Welcome />
+
 {/if}
