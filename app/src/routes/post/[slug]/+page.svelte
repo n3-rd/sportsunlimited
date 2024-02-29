@@ -3,7 +3,7 @@
 	import { formatDate } from '$lib/utils/index';
 	import { urlFor } from '$lib/utils/image';
 	import type { PageData } from './$types';
-	import { MetaTags } from 'svelte-meta-tags';
+	
 
 	export let data: PageData;
 	console.log(data);
@@ -14,14 +14,14 @@
 	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content={data.title} />
-	<meta property="og:description" content={data.excerpt} />
+	<meta property="og:description" content={data.excerpt || data.title} />
 	<meta property="og:image" content={data.mainImage ? urlFor(data.mainImage).url() : undefined} />
 	<meta property="og:site_name" content="Sports Unlimited" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={data.title} />
-	<meta name="twitter:description" content={data.excerpt} />
+	<meta name="twitter:description" content={data.excerpt || data.title} />
 	<meta name="twitter:image" content={data.mainImage ? urlFor(data.mainImage).url() : undefined} />
-	<meta name="keywords" content={data.tags ? data.tags.join(', ') : 'sportsunlim'} />
+	<meta name="keywords" content={data.tags ? data.tags.join(', ') : 'sportsunlimited '} />
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
 </svelte:head>
