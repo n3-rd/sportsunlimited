@@ -37,6 +37,15 @@ export async function getPost(slug: string): Promise<Post> {
 	});
 }
 
+export async function searchPosts(query: string): Promise<Post[]> {
+	return await client.fetch(
+		groq`*[_type == "post" && defined(slug.current) && (title match $query || body[].children[].text match $query || title match "*$query*" || body[].children[].text match "*$query*")] | order(_createdAt desc)`,
+		{
+			query: query
+		}
+	);
+}
+
 export interface Post {
 	_type: 'post';
 	_createdAt: string;
