@@ -5,5 +5,5 @@ import { client } from './sanity';
 const builder = imageUrlBuilder(client);
 
 export function urlFor(source: Image) {
-	return builder.image(source);
+	return builder.image(source).format('webp');
 }

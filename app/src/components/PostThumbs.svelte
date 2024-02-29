@@ -7,6 +7,7 @@
     import relativeTime from 'dayjs/plugin/relativeTime';
 	import Welcome from "./Welcome.svelte";
     dayjs.extend(relativeTime);
+    
 
     export let posts:any;
 </script>

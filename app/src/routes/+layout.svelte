@@ -5,21 +5,23 @@
     // Import the Analytics package, and the SvelteKit dev variable.
     import { dev } from '$app/environment';
     import { inject } from '@vercel/analytics';
+	import Sidebar from "../components/Sidebar.svelte";
 
     // Inject the Analytics functionality
     inject();
 </script>
 
 <Header ></Header>
-<div class="container flex md:flex-row gap-7">
-    <main class="w-3/4">
+<div class="container flex flex-col md:flex-row gap-7">
+    <main class="w-full md:w-3/4">
         <slot></slot>
-        <footer class="mt-auto">
-            <Footer></Footer>
-        </footer>
+     
     </main>
-    <aside class="w-1/4 h-[200vh] bg-violet-500">
-        aside
+    <aside class="w-full md:w-1/4 h-full  py-20 px-2">
+      <Sidebar/>
     </aside>
-  
+
 </div>
+<footer class="mt-auto">
+    <Footer></Footer>
+</footer>

@@ -1,12 +1,20 @@
 <script lang="ts">
 	import Card from '../../../components/Card.svelte';
 	import { onDestroy } from 'svelte';
+	import PostThumbs from '../../../components/PostThumbs.svelte';
 
 	export let data;
 
-	let posts;
-	$: posts = data.props.posts; // make posts reactive
-	console.log(posts);
+	let posts: string | any[];
+	posts = data.props.posts; // make posts reactive
+
+	posts = posts.slice(8);
+
+let displayCount = 8; // Initial number of posts to display
+
+function loadMore() {
+	displayCount += 8; // Load 8 more posts each time
+}
 
 	onDestroy(() => {
 		console.log('destroyed');
@@ -21,13 +29,16 @@
 		</h2>
 	</div>
 {:else}
-	<h2>
+	<h1 class="text-3xl font-bold text-center py-5">
 		Tags for "{data.props.slug}"
-	</h2>
+	</h1>
 
-	{#each posts as post}
-		<Card {post} />
-	{/each}
+    <div class="post-thumbs grid grid-cols-1 md:grid-cols-2 ">
+<PostThumbs  posts={posts.slice(0, displayCount)}/>
+</div>
+{#if posts.length > displayCount}
+<button on:click={loadMore}>Load More</button>
+{/if}
 {/if}
 
 <style>
