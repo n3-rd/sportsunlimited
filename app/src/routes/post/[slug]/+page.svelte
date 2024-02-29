@@ -10,7 +10,7 @@
 </script>
 
 {#if data}
-	<MetaTags
+	<!-- <MetaTags
 		title={data.title}
 		description={data.excerpt}
 		canonical={`https://www.sportsunlimited.ng/post/${data.slug.current}`}
@@ -31,8 +31,27 @@
 		}}
 		keywords={data.tags ?? [].join(', ')}
 		
-	/>
+	/> -->
+
 {/if}
+
+<svelte:head>
+	<title>{data.title}</title>
+	<meta name="description" content={data.excerpt} />
+	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content={data.title} />
+	<meta property="og:description" content={data.excerpt} />
+	<meta property="og:image" content={data.mainImage ? urlFor(data.mainImage).url() : undefined} />
+	<meta property="og:site_name" content="Sports Unlimited" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={data.title} />
+	<meta name="twitter:description" content={data.excerpt} />
+	<meta name="twitter:image" content={data.mainImage ? urlFor(data.mainImage).url() : undefined} />
+	<!-- <meta name="keywords" content={data.tags ?? [].join(', ')} /> -->
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
+</svelte:head>
 
 <!-- Rest of your code -->
 <section class="post py-7">
