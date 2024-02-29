@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PortableText } from '@portabletext/svelte';
-	import { formatDate } from '$lib/utils';
+	import { formatDate } from '$lib/utils/index';
 	import { urlFor } from '$lib/utils/image';
 	import type { PageData } from './$types';
 	import { MetaTags } from 'svelte-meta-tags';

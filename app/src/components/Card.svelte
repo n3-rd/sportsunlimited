@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatDate } from '$lib/utils';
+	import { formatDate } from '$lib/utils/index';
 	import { urlFor } from '$lib/utils/image';
 	import type { Post } from '$lib/utils/sanity';
 

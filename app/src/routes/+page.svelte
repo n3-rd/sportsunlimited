@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Card from '../components/Card.svelte';
+	import Posts from '../components/Posts.svelte';
+	import Tags from '../components/Tags.svelte';
 	import Welcome from '../components/Welcome.svelte';
 	import type { PageData } from './$types';
 
@@ -41,21 +43,7 @@
 </svelte:head>
 
 <section>
-	{#if data.tags?.length}
-		<p class="post__tags">
-			{#each data.tags as tag}
-				<h2>
-					<a href={`/tags/${tag}`} class="post__tag">{tag}</a>
-				</h2>
-			{/each}
-		</p>
-	{/if}
-
-	{#if data.posts?.length}
-		{#each data.posts as post}
-			<Card {post} />
-		{/each}
-	{:else}
-		<Welcome />
-	{/if}
+	
+		<Tags tags={data.tags} />
+<Posts posts={data.posts} />
 </section>
