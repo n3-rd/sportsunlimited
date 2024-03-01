@@ -8,7 +8,7 @@
 	let posts: string | any[];
 	posts = data.props.posts; // make posts reactive
 
-	posts = posts.slice(8);
+	
 
 let displayCount = 8; // Initial number of posts to display
 

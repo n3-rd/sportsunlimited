@@ -14,7 +14,7 @@
     export let posts;
     export let latest = posts.slice(0, 8);
     export let pairPosts = latest.slice(0, 2);
-    posts = posts.slice(8);
+    posts = posts.slice(2); // Remove the first 2 posts from the `posts` array
 
     let displayCount = 8; // Initial number of posts to display
 
@@ -25,18 +25,18 @@
 
 <div class="flex flex-col gap-8">
     <HomeCarousel items={latest} />
-    <PairPosts pair={pairPosts} />
+    <PairPosts pair={pairPosts} /> <!-- Include only the pairPosts array -->
     <div class="posts">
      
     </div>
     {#if posts?.length}
     <div class="post-thumbs grid grid-cols-1 md:grid-cols-2 ">
-        <PostThumbs posts={posts.slice(0, displayCount)} />
+        <PostThumbs posts={posts.slice(0, displayCount)} /> <!-- Include only the posts array -->
     </div>
     {#if posts.length > displayCount}
-<button on:click={loadMore}>Load More</button>
-{/if}
+        <button on:click={loadMore}>Load More</button>
+    {/if}
     {:else}
-    <Welcome />
+        <Welcome />
     {/if}
 </div>
