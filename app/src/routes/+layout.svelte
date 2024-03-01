@@ -9,11 +9,22 @@
     import { fade } from 'svelte/transition';
     export let data;
     $: pathname = data.pathname;
+    import { beforeNavigate, afterNavigate } from '$app/navigation';
+	import Spinner from "../components/Spinner.svelte";
+
+let isLoading = false;
+
+beforeNavigate(() => (isLoading = true));
+afterNavigate(() => (isLoading = false));
 
     // Inject the Analytics functionality
     inject();
 </script>
-
+{#if isLoading}
+<div class="h-screen w-screen fixed z-[999] bg-[#0000009d] flex justify-center items-center mix-blend-darken">
+        <Spinner/>
+</div>
+{/if}
 <Header ></Header>
 <div class="container flex flex-col md:flex-row gap-7">
     <main class="w-full md:w-3/4">
@@ -32,3 +43,4 @@
 <footer class="mt-auto">
     <Footer></Footer>
 </footer>
+

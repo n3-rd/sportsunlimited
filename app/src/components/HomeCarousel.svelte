@@ -56,6 +56,7 @@ on:mouseleave={plugin.reset}
            {/each}
        {/if}
    </Carousel.Content>
-   <Carousel.Previous />
-   <Carousel.Next />
+
+   <Carousel.Previous class="hidden md:block" />
+   <Carousel.Next  class="hidden md:block"/>
 </Carousel.Root>
