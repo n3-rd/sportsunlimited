@@ -10,7 +10,7 @@
 </script>
 <svelte:head>
 	<title>{data.title || 'sports unlimited'}</title>
-	<meta name="description" content={data.title} />
+	<meta name="description" content={data.excerpt || data.title} />
 	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content={data.title} />
