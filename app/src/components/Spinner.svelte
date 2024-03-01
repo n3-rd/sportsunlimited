@@ -1,11 +1,16 @@
-<div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+<script lang="ts">
+export let height = "80px"
+export let width = "80px"
+</script>
+
+<div class="lds-ring"
+style="height: {height}; width: {width};"
+><div></div><div></div><div></div><div></div></div>
 
 <style>
     .lds-ring {
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
 }
 .lds-ring div {
   box-sizing: border-box;
