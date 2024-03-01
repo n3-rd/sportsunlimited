@@ -6,8 +6,8 @@
 		{ name: 'Tags', url: '/tags' },
 		{ name: 'Contact', url: '/contact' },
 		{ name: 'Admin', url: 'https://sportsunlimited-studio.vercel.app' },
-		{ name: 'Privacy Policy', url: '/privacy-policy' },
-		{ name: 'Terms of Service', url: '/terms-of-service' }
+		{ name: 'Privacy Policy', url: '/privacy' },
+	
 	];
 </script>
 
