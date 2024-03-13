@@ -7,6 +7,39 @@
 
 	export let data: PageData;
 	console.log(data);
+
+	const socialInfo = [
+		{
+			name: 'Whatsapp',
+			url: `https://wa.me/?text= read this article ${data.title} https://www.sportsunlimited.ng/post/${data.slug.current}`,
+			icon: '/whatsapp.svg',
+		},
+		{
+			name: 'Facebook',
+			url: `https://www.facebook.com/sharer/sharer.php?u=https://www.sportsunlimited.ng/post/${data.slug.current}`,
+			icon: '/facebook.svg',
+		},
+		{
+			name: 'X',
+			url: `https://x.com/intent/tweet?text= read this article ${data.title} https://www.sportsunlimited.ng/post/${data.slug.current}`,
+			icon: '/x.svg',
+		},
+		// {
+		// 	name: 'Linkedin',
+		// 	url: `https://www.linkedin.com/shareArticle?mini=true&url=https://www.sportsunlimited.ng/post/${data.slug.current}&title=${data.title}&summary=${data.excerpt || data.title}&source=Sports Unlimited`,
+		// 	icon: '/linkedin.svg',
+		// },
+		{
+			name: 'Email',
+			url: `mailto:?subject=${data.title}&body= read this article ${data.title} https://www.sportsunlimited.ng/post/${data.slug.current}`,
+			icon: '/mail.svg',
+		},
+		// {
+		// 	name: 'Copy link',
+		// 	url: `https://www.sportsunlimited.ng/post/${data.slug.current}`,
+		// 	icon: '/link.svg',
+		// }
+	]
 </script>
 <svelte:head>
 	<title>{data.title || 'sports unlimited'}</title>
@@ -52,9 +85,27 @@
 				{/each}
 			</p>
 		{/if}
+
+		<div class="share py-4 flex-col md:flex-row gap-3">
+			<div class="share">
+				Share:
+			</div>
+			<div>
+				{#each socialInfo as { name, url, icon }}
+				<a href = {url} target="_blank" rel="noopener noreferrer" class="inline-block mr-4">
+					<img src={icon} alt={name} class="h-9 w-9" />
+				</a>
+			{/each}
+			</div>
+			
+		</div>
 		<p class="post__date text-gray-500 mb-4">
 			{formatDate(data._createdAt)}
 		</p>
+
+		<div class="share">
+			
+		</div>
 		<div class="post__content
 		prose 
 		">
