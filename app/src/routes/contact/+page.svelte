@@ -17,7 +17,7 @@
     
     }
 </script>
-<div class="min-w-screen min-h-screen flex justify-center items-center">
+<div class="min-w-screen min-h-screen flex flex-col gap-4 justify-center items-center">
     <Card.Root class="w-[29rem]">
         <Card.Header>
           <Card.Title>Send an email</Card.Title>
@@ -55,4 +55,11 @@
             </p>
         </Card.Footer>
       </Card.Root>
+
+      <a href="https://wa.me/2347084043857">
+    <Button class="flex gap-3 bg-black ">
+        <img src="/whatsapp.svg" class="h-7 w-7" alt="whatsapp icon"/>
+        <span>Chat with us on whatsapp</span>
+    </Button>
+    </a>
 </div>
