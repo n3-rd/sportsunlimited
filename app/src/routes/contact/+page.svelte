@@ -18,23 +18,23 @@
     }
 </script>
 <div class="min-w-screen min-h-screen flex flex-col gap-4 justify-center items-center">
-    <Card.Root class="w-[29rem]">
+    <Card.Root class="w-full md:w-[29rem]">
         <Card.Header>
           <Card.Title>Send an email</Card.Title>
           <Card.Description>How can we help you</Card.Description>
         </Card.Header>
         <Card.Content class="flex flex-col gap-4">
-            <div class="input">
+            <div class="input flex flex-col gap-2">
                 <label for="email">Email</label>
                 <Input bind:value={senderEmail} id="email" type="email" placeholder="Enter your email" />
             </div>
 
-            <div class="input">
+            <div class="input flex flex-col gap-2">
                 <label for="subject">Subject</label>
                 <Input bind:value={subject} id="subject" type="text" placeholder="Enter subject" />
             </div>
 
-            <div class="input">
+            <div class="input flex flex-col gap-2">
                 <label for="message">Message</label>
                 <Textarea bind:value={message} id="message" placeholder="Enter message" />
             </div>
