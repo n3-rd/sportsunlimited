@@ -44,7 +44,7 @@ export default defineType({
           { title: "Oddities", value: "Oddities" },
           { title: "Other Sports", value: "Other Sports" },
           { title: "Interview", value: "Interview" },
-          { title: "Featured", value: "Featured" },
+          { title: "Feature", value: "Feature" },
         ],
       },
     }),
