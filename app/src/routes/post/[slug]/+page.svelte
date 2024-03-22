@@ -111,10 +111,7 @@
 		">
 			<PortableText value={data.body} components={{}} />
 		</div>
-
 	</div>
-	
-	
 </section>
 
 
