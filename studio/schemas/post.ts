@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from 'sanity'
 
 export default defineType({
   name: 'post',
@@ -44,6 +44,7 @@ export default defineType({
           { title: "Oddities", value: "Oddities" },
           { title: "Other Sports", value: "Other Sports" },
           { title: "Interview", value: "Interview" },
+          { title: "Featured", value: "Featured" },
         ],
       },
     }),
@@ -80,8 +81,8 @@ export default defineType({
       media: 'mainImage',
     },
     prepare(selection) {
-      const {author} = selection
-      return {...selection, subtitle: author && `by ${author}`}
+      const { author } = selection
+      return { ...selection, subtitle: author && `by ${author}` }
     },
   },
 })
