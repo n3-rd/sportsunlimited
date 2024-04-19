@@ -5,7 +5,7 @@
 	import Input from "$lib/components/ui/input/input.svelte";
 	import Textarea from "$lib/components/ui/textarea/textarea.svelte";
 
-    let email = 'ejemegah@yahoo.com'
+    let email = 'sportsunlimitedng@gmail.com'
     let subject:string = ''
     let message:string = ''
     let senderEmail:string = ''
@@ -51,12 +51,12 @@
             </a>
 
             <p>
-                Having trouble?, email us at ejemegah@yahoo.com
+                Having trouble?, email us at {email}
             </p>
         </Card.Footer>
       </Card.Root>
 
-      <a href="https://wa.me/2347084043857">
+      <a href="https://wa.me/2348085200935">
     <Button class="flex gap-3 bg-black ">
         <img src="/whatsapp.svg" class="h-7 w-7" alt="whatsapp icon"/>
         <span>Chat with us on whatsapp</span>

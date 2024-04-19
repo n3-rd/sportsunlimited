@@ -38,7 +38,7 @@
 		name="keywords"
 		content="Football, Athletics, Basketball, Nigeria League, Lifestyle, Oddities, Other Sports, Interviews, npfl, sports unlimited, sportsunlimited, league, nigeria"
 	/>
-	<meta name="author" content="Emmanuel Jemegah" />
+	<meta name="author" content="Michael Jemegah" />
 	<link rel="canonical" href="https://www.sportsunlimited.ng/post" />
 </svelte:head>
 
