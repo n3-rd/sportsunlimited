@@ -17,7 +17,14 @@
     
     <div class="thumbs h-28 w-full flex gap-4 my-4">
         <div class="post-image w-1/3 aspect-w-1 aspect-h-1 self-stretch flex items-center justify-center">
-            <img src={urlFor(post.mainImage.asset).url()} alt="" class="post-image w-full h-full object-cover object-center">
+            <img 
+                src={urlFor(post.mainImage.asset).width(300).height(200).quality(80).url()} 
+                alt={post.title}
+                loading="lazy"
+                class="post-image w-full h-full object-cover object-center"
+                width="300"
+                height="200"
+            >
         </div>
         <div class="post-info flex flex-col gap-2 w-2/3">
             <h2 class="text-xl md:text-2xl font-bold">{truncateText(post.title, 40)}</h2>

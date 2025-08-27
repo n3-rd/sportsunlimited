@@ -1,4 +1,30 @@
 <!-- FILEPATH: /home/n3rd/code/sportsunlimited/app/src/routes/privacy/+page.svelte -->
+
+<svelte:head>
+	<title>Privacy Policy | Sports Unlimited</title>
+	<meta name="description" content="Read Sports Unlimited's privacy policy. Learn how we collect, use, and protect your personal data on our Nigerian sports news website." />
+	
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://www.sportsunlimited.ng/privacy" />
+	<meta property="og:title" content="Privacy Policy | Sports Unlimited" />
+	<meta property="og:description" content="Read Sports Unlimited's privacy policy. Learn how we collect, use, and protect your personal data." />
+	<meta property="og:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
+	<meta property="og:site_name" content="Sports Unlimited" />
+	
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:url" content="https://www.sportsunlimited.ng/privacy" />
+	<meta name="twitter:title" content="Privacy Policy | Sports Unlimited" />
+	<meta name="twitter:description" content="Read our privacy policy and data protection practices." />
+	<meta name="twitter:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
+	
+	<!-- Additional SEO -->
+	<meta name="keywords" content="privacy policy, data protection, sports unlimited privacy, user data security" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://www.sportsunlimited.ng/privacy" />
+</svelte:head>
+
 <h1>Privacy Policy</h1>
 <p>Sportsunlimited website is owned by Trustymike Communications, which is a data controller of your personal data.</p>
 

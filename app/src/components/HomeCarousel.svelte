@@ -29,7 +29,7 @@ on:mouseleave={plugin.reset}
            <a href={`/post/${post.slug.current}`} class="w-full">
 
                    <div class="carousel-post w-full h-[28rem] bg-cover bg-top relative"
-                       style="background-image: url({urlFor(post.mainImage.asset).url()}) "
+                       style="background-image: url({urlFor(post.mainImage.asset).width(800).height(450).quality(80).url()}) "
                    >
                        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-900 flex flex-col gap-3 px-10 py-5 text-white">
                            <div class="info flex gap-2">

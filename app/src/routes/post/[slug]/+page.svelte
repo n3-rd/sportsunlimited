@@ -42,21 +42,90 @@
 	]
 </script>
 <svelte:head>
-	<title>{data.title || 'sports unlimited'}</title>
+	<title>{data.title} | Sports Unlimited</title>
 	<meta name="description" content={data.excerpt || data.title} />
-	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
+	
+	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="article" />
+	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
 	<meta property="og:title" content={data.title} />
 	<meta property="og:description" content={data.excerpt || data.title} />
-	<meta property="og:image" content={data.mainImage ? urlFor(data.mainImage).url() : undefined} />
+	<meta property="og:image" content={data.mainImage ? urlFor(data.mainImage).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png'} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:image:alt" content={data.title} />
 	<meta property="og:site_name" content="Sports Unlimited" />
+	<meta property="og:locale" content="en_NG" />
+	<meta property="article:author" content="Sports Unlimited" />
+	<meta property="article:published_time" content={data._createdAt} />
+	<meta property="article:modified_time" content={data._updatedAt || data._createdAt} />
+	<meta property="article:section" content="Sports" />
+	{#if data.tags}
+		{#each data.tags as tag}
+			<meta property="article:tag" content={tag} />
+		{/each}
+	{/if}
+	
+	<!-- Twitter -->
 	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
 	<meta name="twitter:title" content={data.title} />
 	<meta name="twitter:description" content={data.excerpt || data.title} />
-	<meta name="twitter:image" content={data.mainImage ? urlFor(data.mainImage).url() : undefined} />
-	<meta name="keywords" content={data.tags ? data.tags.join(', ') : 'sportsunlimited '} />
-	<meta name="robots" content="index, follow" />
+	<meta name="twitter:image" content={data.mainImage ? urlFor(data.mainImage).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png'} />
+	<meta name="twitter:image:alt" content={data.title} />
+	
+	<!-- Additional SEO meta tags -->
+	<meta name="keywords" content={data.tags ? data.tags.join(', ') + ', Nigerian sports news, sports unlimited' : 'Nigerian sports news, sports unlimited'} />
+	<meta name="author" content="Sports Unlimited" />
+	<meta name="publisher" content="Sports Unlimited" />
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+	<meta name="googlebot" content="index, follow" />
+	<meta name="language" content="English" />
+	<meta name="geo.region" content="NG" />
+	<meta name="geo.country" content="Nigeria" />
+	
+	<!-- Canonical URL -->
 	<link rel="canonical" href={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
+	
+	<!-- Structured Data for Article -->
+	{@html `<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "NewsArticle",
+		"headline": "${data.title.replace(/"/g, '\\"')}",
+		"description": "${(data.excerpt || data.title).replace(/"/g, '\\"')}",
+		"image": {
+			"@type": "ImageObject",
+			"url": "${data.mainImage ? urlFor(data.mainImage).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png'}",
+			"width": 1200,
+			"height": 630
+		},
+		"author": {
+			"@type": "Organization",
+			"name": "Sports Unlimited",
+			"url": "https://www.sportsunlimited.ng"
+		},
+		"publisher": {
+			"@type": "Organization",
+			"name": "Sports Unlimited",
+			"logo": {
+				"@type": "ImageObject",
+				"url": "https://i.postimg.cc/CLVXPt7j/SU.png",
+				"width": 600,
+				"height": 60
+			}
+		},
+		"datePublished": "${data._createdAt}",
+		"dateModified": "${data._updatedAt || data._createdAt}",
+		"mainEntityOfPage": {
+			"@type": "WebPage",
+			"@id": "https://www.sportsunlimited.ng/post/${data.slug.current}"
+		},
+		"articleSection": "Sports",
+		"keywords": "${data.tags ? data.tags.join(', ') : 'Nigerian sports news'}",
+		"url": "https://www.sportsunlimited.ng/post/${data.slug.current}"
+	}
+	</script>`}
 </svelte:head>
 
 <!-- Rest of your code -->

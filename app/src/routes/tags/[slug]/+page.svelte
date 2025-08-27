@@ -22,6 +22,31 @@ function loadMore() {
 	});
 </script>
 
+<svelte:head>
+	<title>{data.props.slug} News | Sports Unlimited</title>
+	<meta name="description" content="Read the latest {data.props.slug} news and updates on Sports Unlimited. Find all {data.props.slug} related sports stories, analysis and coverage." />
+	
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://www.sportsunlimited.ng/tags/{data.props.slug}" />
+	<meta property="og:title" content="{data.props.slug} News | Sports Unlimited" />
+	<meta property="og:description" content="Read the latest {data.props.slug} news and updates on Sports Unlimited. Find all {data.props.slug} related sports stories, analysis and coverage." />
+	<meta property="og:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
+	<meta property="og:site_name" content="Sports Unlimited" />
+	
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:url" content="https://www.sportsunlimited.ng/tags/{data.props.slug}" />
+	<meta name="twitter:title" content="{data.props.slug} News" />
+	<meta name="twitter:description" content="Read the latest {data.props.slug} news and updates on Sports Unlimited." />
+	<meta name="twitter:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
+	
+	<!-- Additional SEO -->
+	<meta name="keywords" content="{data.props.slug}, {data.props.slug} news, Nigerian sports, sports unlimited, {data.props.slug} updates" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://www.sportsunlimited.ng/tags/{data.props.slug}" />
+</svelte:head>
+
 {#if posts.length === 0}
 	<div class="no-tags">
 		<h2>
