@@ -5,7 +5,11 @@
 	import type { PageData } from './$types';
 	
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 	console.log(data);
 
 	const socialInfo = [
@@ -139,7 +143,7 @@
 			alt="Cover image for {data.title}"
 		/>
 	{:else}
-		<div class="post__cover--none" />
+		<div class="post__cover--none"></div>
 	{/if}
 	<div class="post__container">
 		<h1 class="post__title text-4xl font-bold mb-4">{data.title}</h1>

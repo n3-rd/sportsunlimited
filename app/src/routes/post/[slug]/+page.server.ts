@@ -11,5 +11,5 @@ export const load = (async ({ params }) => {
 	return { props: { post, meta } };
 	
 
-	throw error(404, 'Not found');
+	error(404, 'Not found');
 }) satisfies PageLoad;

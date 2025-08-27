@@ -1,5 +1,6 @@
 <script>
-	import { debounce } from "lodash";
+	import pkg from "lodash";
+	const { debounce } = pkg;
 
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import { HamburgerMenu, MagnifyingGlass } from "svelte-radix";
@@ -9,9 +10,9 @@
 	import PostThumbs from "./PostThumbs.svelte";
 	import Spinner from "./Spinner.svelte";
 
-	let results = [];
-	let search = "";
-	let loading = false;
+	let results = $state([]);
+	let search = $state("");
+	let loading = $state(false);
 
 	const debouncedSearch = debounce(() => {
 		fetchSearchResults();

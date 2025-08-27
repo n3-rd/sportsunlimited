@@ -1,6 +1,10 @@
 <script lang="ts">
-export let height = "80px"
-export let width = "80px"
+  interface Props {
+    height?: string;
+    width?: string;
+  }
+
+  let { height = "80px", width = "80px" }: Props = $props();
 </script>
 
 <div class="lds-ring"

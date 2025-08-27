@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
     import { urlFor } from "$lib/utils/image";
     import { Clock } from "svelte-radix";
     import dayjs from 'dayjs';
     import relativeTime from 'dayjs/plugin/relativeTime';
     dayjs.extend(relativeTime);
-    export let pair;
+   let { pair } = $props();
     console.log('pair',pair);
 </script>
 

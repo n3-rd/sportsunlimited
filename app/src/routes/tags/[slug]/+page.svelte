@@ -3,14 +3,14 @@
 	import { onDestroy } from 'svelte';
 	import PostThumbs from '../../../components/PostThumbs.svelte';
 
-	export let data;
+	let { data } = $props();
 
-	let posts: string | any[];
+	let posts: string | any[] = $state();
 	posts = data.props.posts; // make posts reactive
 
 	
 
-let displayCount = 8; // Initial number of posts to display
+let displayCount = $state(8); // Initial number of posts to display
 
 function loadMore() {
 	displayCount += 8; // Load 8 more posts each time
@@ -62,7 +62,7 @@ function loadMore() {
 <PostThumbs  posts={posts.slice(0, displayCount)}/>
 </div>
 {#if posts.length > displayCount}
-<button on:click={loadMore}>Load More</button>
+<button onclick={loadMore}>Load More</button>
 {/if}
 {/if}
 

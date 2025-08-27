@@ -1,5 +1,5 @@
-<script>
-	export let links = [
+<script lang="ts">
+	let { links = [
 		{ name: 'Home', url: '/' },
 		{ name: 'About', url: '/about' },
 
@@ -11,7 +11,7 @@
 		{ name: 'Disclaimer', url: '/disclaimer' },
 		{ name: 'Sitemap', url: '/sitemap.xml' },
 	
-	];
+	] } = $props();
 </script>
 
 <footer>

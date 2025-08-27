@@ -6,9 +6,9 @@
 	import Textarea from "$lib/components/ui/textarea/textarea.svelte";
 
     let email = 'sportsunlimitedng@gmail.com'
-    let subject:string = ''
-    let message:string = ''
-    let senderEmail:string = ''
+    let subject:string = $state('')
+    let message:string = $state('')
+    let senderEmail:string = $state('')
 
     const returnToContact = ()=>{
         setTimeout(()=>{

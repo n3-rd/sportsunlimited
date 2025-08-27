@@ -9,7 +9,11 @@
     dayjs.extend(relativeTime);
     
 
-    export let posts:any;
+    interface Props {
+        posts: any;
+    }
+
+    let { posts }: Props = $props();
 </script>
 {#if posts?.length}
 {#each posts as post}

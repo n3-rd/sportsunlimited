@@ -8,7 +8,7 @@
  
   const plugin = Autoplay({ delay: 4000, stopOnInteraction: true });
 
-  export let items;
+  let { items } = $props();
 
 </script>
 

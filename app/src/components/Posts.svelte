@@ -11,12 +11,10 @@
     import PostThumbs from "./PostThumbs.svelte";
     dayjs.extend(relativeTime);
  
-    export let posts;
-    export let latest = posts.slice(0, 8);
-    export let pairPosts = latest.slice(0, 2);
+    let { posts = $bindable(), latest = posts.slice(0, 8), pairPosts = latest.slice(0, 2) } = $props();
     posts = posts.slice(2); // Remove the first 2 posts from the `posts` array
 
-    let displayCount = 8; // Initial number of posts to display
+    let displayCount = $state(8); // Initial number of posts to display
 
     function loadMore() {
         displayCount += 8; // Load 8 more posts each time
@@ -34,7 +32,7 @@
         <PostThumbs posts={posts.slice(0, displayCount)} /> <!-- Include only the posts array -->
     </div>
     {#if posts.length > displayCount}
-        <button on:click={loadMore}>Load More</button>
+        <button onclick={loadMore}>Load More</button>
     {/if}
     {:else}
         <Welcome />

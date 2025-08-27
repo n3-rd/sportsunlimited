@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import "../app.pcss";
     import Footer from '../components/Footer.svelte';
     import Header from '../components/Header.svelte';
@@ -7,18 +7,18 @@
     import { inject } from '@vercel/analytics';
 	import Sidebar from "../components/Sidebar.svelte";
     import { fade } from 'svelte/transition';
-    export let data;
-    $: pathname = data.pathname;
     import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import Spinner from "../components/Spinner.svelte";
+    let { data, children } = $props();
 
-let isLoading = false;
+let isLoading = $state(false);
 
 beforeNavigate(() => (isLoading = true));
 afterNavigate(() => (isLoading = false));
 
     // Inject the Analytics functionality
     inject();
+    let pathname = $derived(data.pathname);
 </script>
 {#if isLoading}
 <div class="h-screen w-screen fixed z-[999] bg-[#0000009d] flex justify-center items-center mix-blend-darken">
@@ -30,7 +30,7 @@ afterNavigate(() => (isLoading = false));
     <main class="w-full md:w-3/4">
         {#key pathname}
         <div in:fade={{ duration: 300, delay: 400 }} out:fade={{ duration: 300 }}>
-            <slot />
+            {@render children?.()}
         </div>
     {/key}
      

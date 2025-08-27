@@ -1,7 +1,11 @@
 <script lang="ts">
 	import Button from "$lib/components/ui/button/button.svelte";
 
-export let tags: string[];
+    interface Props {
+        tags: string[];
+    }
+
+    let { tags }: Props = $props();
 console.log('tags',tags);
 </script>
 

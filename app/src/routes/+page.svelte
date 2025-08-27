@@ -5,7 +5,11 @@
 	import Welcome from '../components/Welcome.svelte';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 	console.log(data);
 </script>
 
