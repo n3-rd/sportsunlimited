@@ -31,21 +31,19 @@ on:mouseleave={plugin.reset}
                    <div class="carousel-post w-full h-[28rem] bg-cover bg-top relative"
                        style="background-image: url({urlFor(post.mainImage.asset).width(800).height(450).quality(80).url()}) "
                    >
-                       <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-900 flex flex-col gap-3 px-10 py-5 text-white">
-                           <div class="info flex gap-2">
-                               <p class="date capitalize">
+                       <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent flex flex-col gap-3 px-6 md:px-10 py-6 md:py-8 text-white">
+                           <div class="info flex items-center gap-3 text-sm">
+                               <span class="date capitalize bg-white/20 px-3 py-1 rounded-full">
                                    {dayjs(post._createdAt).fromNow()}
-                                
-                               </p>
-                               {#if post.tags}
-                               <p>-</p>
-                               <p class="tag">
+                               </span>
+                               {#if post.tags && post.tags[0]}
+                               <span class="tag bg-red-600 px-3 py-1 rounded-full font-semibold text-xs uppercase tracking-wide">
                                    {post.tags[0]}
-                               </p>
+                               </span>
                                {/if}
                            </div>
                         
-                               <h1 class="text-3xl font-bold">
+                               <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">
                                 {post.title}
                                </h1>
                           

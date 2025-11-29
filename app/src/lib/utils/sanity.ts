@@ -22,6 +22,41 @@ export async function getPosts(): Promise<Post[]> {
 	);
 }
 
+export async function getFeaturedPosts(limit: number = 5): Promise<Post[]> {
+	return await client.fetch(
+		groq`*[_type == "post" && defined(slug.current)] | order(_createdAt desc) [0...$limit]`,
+		{ limit }
+	);
+}
+
+export async function getRelatedPosts(currentSlug: string, tags: string[] = [], limit: number = 4): Promise<Post[]> {
+	if (!tags || tags.length === 0) {
+		return await client.fetch(
+			groq`*[_type == "post" && defined(slug.current) && slug.current != $currentSlug] | order(_createdAt desc) [0...$limit]`,
+			{ currentSlug, limit }
+		);
+	}
+	return await client.fetch(
+		groq`*[_type == "post" && defined(slug.current) && slug.current != $currentSlug && count((tags[])[@ in $tags]) > 0] | order(_createdAt desc) [0...$limit]`,
+		{ currentSlug, tags, limit }
+	);
+}
+
+export async function getPostsByTag(tag: string, limit: number = 6): Promise<Post[]> {
+	return await client.fetch(
+		groq`*[_type == "post" && defined(slug.current) && $tag in tags[]] | order(_createdAt desc) [0...$limit]`,
+		{ tag, limit }
+	);
+}
+
+export async function getTrendingPosts(limit: number = 5): Promise<Post[]> {
+	// Get the most recent posts as trending (can be enhanced with view counts later)
+	return await client.fetch(
+		groq`*[_type == "post" && defined(slug.current)] | order(_createdAt desc) [0...$limit]`,
+		{ limit }
+	);
+}
+
 export async function getTags(): Promise<string[]> {
 	return await client.fetch(groq`*[_type == "post" && defined(tags)][].tags[] | order(value asc)`);
 }
