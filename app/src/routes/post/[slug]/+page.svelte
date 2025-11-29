@@ -5,12 +5,14 @@
 	import type { PageData } from './$types';
 	
 
+	import RelatedPosts from '../../../components/RelatedPosts.svelte';
+	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
+
 	interface Props {
 		data: PageData;
 	}
 
 	let { data }: Props = $props();
-	console.log(data);
 
 	const socialInfo = [
 		{
@@ -127,12 +129,50 @@
 		},
 		"articleSection": "Sports",
 		"keywords": "${data.tags ? data.tags.join(', ') : 'Nigerian sports news'}",
-		"url": "https://www.sportsunlimited.ng/post/${data.slug.current}"
+		"url": "https://www.sportsunlimited.ng/post/${data.slug.current}",
+		"wordCount": "${data.body ? JSON.stringify(data.body).split(' ').length : 0}"
+	}
+	</script>`}
+	
+	<!-- Breadcrumb Structured Data -->
+	{@html `<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		"itemListElement": [
+			{
+				"@type": "ListItem",
+				"position": 1,
+				"name": "Home",
+				"item": "https://www.sportsunlimited.ng/"
+			},
+			{
+				"@type": "ListItem",
+				"position": 2,
+				"name": "Articles",
+				"item": "https://www.sportsunlimited.ng/"
+			},
+			{
+				"@type": "ListItem",
+				"position": 3,
+				"name": "${data.title.replace(/"/g, '\\"')}",
+				"item": "https://www.sportsunlimited.ng/post/${data.slug.current}"
+			}
+		]
 	}
 	</script>`}
 </svelte:head>
 
-<!-- Rest of your code -->
+<!-- Breadcrumbs -->
+<Breadcrumbs 
+	items={[
+		{ name: 'Home', url: '/' },
+		{ name: 'Articles', url: '/' },
+		{ name: data.title, url: `/post/${data.slug.current}` }
+	]} 
+/>
+
+<!-- Article Content -->
 <section class="post py-7">
 	{#if data.mainImage}
 		<img
@@ -141,51 +181,65 @@
 			"
 			src={urlFor(data.mainImage).url()}
 			alt="Cover image for {data.title}"
+			loading="eager"
 		/>
 	{:else}
 		<div class="post__cover--none"></div>
 	{/if}
-	<div class="post__container">
-		<h1 class="post__title text-4xl font-bold mb-4">{data.title}</h1>
-		{#if data.excerpt}
-			<p class="post__excerpt text-gray-600 mb-4">{data.excerpt}</p>
-		{/if}
+	<div class="post__container max-w-4xl mx-auto">
+		<header class="post-header mb-6">
+			<h1 class="post__title text-4xl md:text-5xl font-bold mb-4 text-gray-900 leading-tight">{data.title}</h1>
+			{#if data.excerpt}
+				<p class="post__excerpt text-xl text-gray-600 mb-4 leading-relaxed">{data.excerpt}</p>
+			{/if}
 
-		{#if data.tags}
-			<p class="post__tags mb-4">
-				{#each data.tags as tag}
-					<a href={`/tags/${tag}`} class="post__tag inline-block bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-sm mr-2 mb-2">{tag}</a>
-				{/each}
-			</p>
-		{/if}
-
-		<div class="share py-4 flex-col md:flex-row gap-3">
-			<div class="share">
-				Share:
+			<div class="post-meta flex flex-wrap items-center gap-4 mb-4 text-sm text-gray-500">
+				<span class="post__date">
+					{formatDate(data._createdAt)}
+				</span>
+				{#if data.tags && data.tags.length > 0}
+					<span class="separator">•</span>
+					<div class="post__tags flex flex-wrap gap-2">
+						{#each data.tags as tag}
+							<a href={`/tags/${tag}`} class="post__tag inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-xs font-medium transition-colors">
+								{tag}
+							</a>
+						{/each}
+					</div>
+				{/if}
 			</div>
-			<div>
-				{#each socialInfo as { name, url, icon }}
-				<a href = {url} target="_blank" rel="noopener noreferrer" class="inline-block mr-4">
-					<img src={icon} alt={name} class="h-9 w-9" />
-				</a>
-			{/each}
-			</div>
-			
-		</div>
-		<p class="post__date text-gray-500 mb-4">
-			{formatDate(data._createdAt)}
-		</p>
 
-		<div class="share">
-			
-		</div>
-		<div class="post__content
-		prose 
-		">
+			<div class="share py-4 border-t border-b border-gray-200 my-6">
+				<div class="flex flex-col md:flex-row md:items-center gap-4">
+					<div class="share-label font-semibold text-gray-900">
+						Share this article:
+					</div>
+					<div class="share-buttons flex gap-3">
+						{#each socialInfo as { name, url, icon }}
+							<a href={url} target="_blank" rel="noopener noreferrer" class="share-button inline-block hover:opacity-80 transition-opacity" aria-label={`Share on ${name}`}>
+								<img src={icon} alt={name} class="h-8 w-8" />
+							</a>
+						{/each}
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="post__content prose prose-lg max-w-none">
 			<PortableText value={data.body} components={{}} />
 		</div>
 	</div>
 </section>
+
+<!-- Related Posts Section -->
+{#if data.relatedPosts && data.relatedPosts.length > 0}
+	<section class="related-posts py-12 bg-gray-50 mt-12">
+		<div class="container max-w-6xl mx-auto">
+			<h2 class="text-3xl font-bold text-gray-900 mb-8">Related Articles</h2>
+			<RelatedPosts posts={data.relatedPosts} />
+		</div>
+	</section>
+{/if}
 
 
 <style>

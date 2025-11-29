@@ -1,15 +1,19 @@
 import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
-import { getPost } from '$lib/utils/sanity';
+import type { PageServerLoad } from './$types';
+import { getPost, getRelatedPosts } from '$lib/utils/sanity';
 
 export const load = (async ({ params }) => {
 	const post = await getPost(params.slug);
-	const meta = {
-		title: post.title,
-		description: post.excerpt,
-	};
-	return { props: { post, meta } };
 	
+	if (!post) {
+		error(404, 'Not found');
+	}
 
-	error(404, 'Not found');
-}) satisfies PageLoad;
+	// Fetch related posts based on tags
+	const relatedPosts = await getRelatedPosts(params.slug, post.tags || [], 4);
+
+	return {
+		post,
+		relatedPosts
+	};
+}) satisfies PageServerLoad;

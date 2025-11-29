@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Card from '../components/Card.svelte';
 	import Posts from '../components/Posts.svelte';
 	import Tags from '../components/Tags.svelte';
-	import Welcome from '../components/Welcome.svelte';
+	import { generateOrganizationStructuredData, generateWebsiteStructuredData } from '$lib/utils/seo';
+	import { urlFor } from '$lib/utils/image';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -10,21 +10,20 @@
 	}
 
 	let { data }: Props = $props();
-	console.log(data);
 </script>
 
 <svelte:head>
 	<title>Sports Unlimited - Latest Nigerian Sports News | NPFL, Football & More</title>
 	<meta
 		name="description"
-		content="Get the latest Nigerian sports news on Football, NPFL, Basketball, Athletics, and more. Your premier destination for sports updates, interviews, and analysis in Nigeria."
+		content="Get the latest Nigerian sports news on Football, NPFL, Basketball, Athletics, and more. Your premier destination for sports updates, interviews, and analysis in Nigeria. Breaking news, match reports, player interviews, and in-depth analysis."
 	/>
 	
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://www.sportsunlimited.ng/" />
 	<meta property="og:title" content="Sports Unlimited - Latest Nigerian Sports News | NPFL, Football & More" />
-	<meta property="og:description" content="Get the latest Nigerian sports news on Football, NPFL, Basketball, Athletics, and more. Your premier destination for sports updates, interviews, and analysis in Nigeria." />
+	<meta property="og:description" content="Get the latest Nigerian sports news on Football, NPFL, Basketball, Athletics, and more. Your premier destination for sports updates, interviews, and analysis in Nigeria. Breaking news, match reports, player interviews, and in-depth analysis." />
 	<meta property="og:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
@@ -36,12 +35,12 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:url" content="https://www.sportsunlimited.ng/" />
 	<meta name="twitter:title" content="Sports Unlimited - Latest Nigerian Sports News" />
-	<meta name="twitter:description" content="Get the latest Nigerian sports news on Football, NPFL, Basketball, Athletics, and more. Your premier destination for sports updates, interviews, and analysis in Nigeria." />
+	<meta name="twitter:description" content="Get the latest Nigerian sports news on Football, NPFL, Basketball, Athletics, and more. Your premier destination for sports updates, interviews, and analysis in Nigeria. Breaking news, match reports, player interviews, and in-depth analysis." />
 	<meta name="twitter:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
 	<meta name="twitter:image:alt" content="Sports Unlimited - Nigerian Sports News" />
 	
 	<!-- Additional SEO meta tags -->
-	<meta name="keywords" content="Nigerian sports news, NPFL, football Nigeria, basketball Nigeria, athletics Nigeria, sports unlimited, Nigeria league, sports interviews, African sports, Nigerian Premier League" />
+	<meta name="keywords" content="Nigerian sports news, NPFL, football Nigeria, basketball Nigeria, athletics Nigeria, sports unlimited, Nigeria league, sports interviews, African sports, Nigerian Premier League, Super Eagles, Nigerian football, sports analysis, match reports, player news, sports features" />
 	<meta name="author" content="Michael Jemegah" />
 	<meta name="publisher" content="Sports Unlimited" />
 	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -53,46 +52,89 @@
 	<!-- Canonical URL -->
 	<link rel="canonical" href="https://www.sportsunlimited.ng/" />
 	
+	<!-- Additional SEO -->
+	<meta name="news_keywords" content="Nigerian sports, NPFL, football, basketball, athletics, Super Eagles, sports news Nigeria" />
+	<meta name="article:publisher" content="https://www.sportsunlimited.ng" />
+	<meta name="application-name" content="Sports Unlimited" />
+	<meta name="apple-mobile-web-app-title" content="Sports Unlimited" />
+	<meta name="theme-color" content="#ef4444" />
+	
 	<!-- Structured Data for Organization -->
-	<script type="application/ld+json">
-	{
-		"@context": "https://schema.org",
-		"@type": "Organization",
-		"name": "Sports Unlimited",
-		"url": "https://www.sportsunlimited.ng",
-		"logo": "https://i.postimg.cc/CLVXPt7j/SU.png",
-		"description": "Nigeria's premier sports news website covering NPFL, Football, Basketball, Athletics and more.",
-		"address": {
-			"@type": "PostalAddress",
-			"addressCountry": "Nigeria"
-		},
-		"sameAs": []
-	}
-	</script>
+	{@html generateOrganizationStructuredData()}
 	
 	<!-- Structured Data for Website -->
-	<script type="application/ld+json">
+	{@html generateWebsiteStructuredData()}
+	
+	<!-- Structured Data for CollectionPage -->
+	{@html `<script type="application/ld+json">
 	{
 		"@context": "https://schema.org",
-		"@type": "WebSite",
-		"name": "Sports Unlimited",
-		"url": "https://www.sportsunlimited.ng",
+		"@type": "CollectionPage",
+		"name": "Sports Unlimited - Latest Nigerian Sports News",
 		"description": "Get the latest Nigerian sports news on Football, NPFL, Basketball, Athletics, and more.",
-		"publisher": {
-			"@type": "Organization",
-			"name": "Sports Unlimited"
-		},
-		"potentialAction": {
-			"@type": "SearchAction",
-			"target": "https://www.sportsunlimited.ng/search?q={search_term_string}",
-			"query-input": "required name=search_term_string"
+		"url": "https://www.sportsunlimited.ng",
+		"mainEntity": {
+			"@type": "ItemList",
+			"numberOfItems": ${data.posts?.length || 0},
+			"itemListElement": [
+				${data.posts?.slice(0, 10).map((post, index) => `{
+					"@type": "ListItem",
+					"position": ${index + 1},
+					"item": {
+						"@type": "NewsArticle",
+						"headline": ${JSON.stringify(post.title || '')},
+						"url": "https://www.sportsunlimited.ng/post/${post.slug?.current || ''}",
+						"datePublished": "${post._createdAt || ''}",
+						"image": "${post.mainImage ? urlFor(post.mainImage).width(1200).height(630).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png'}"
+					}
+				}`).join(',') || ''}
+			]
 		}
 	}
-	</script>
+	</script>`}
+	
+	<!-- Structured Data for Featured Article -->
+	{#if data.posts && data.posts[0]}
+		{@html `<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "NewsArticle",
+			"headline": ${JSON.stringify(data.posts[0].title || '')},
+			"description": ${JSON.stringify(data.posts[0].excerpt || data.posts[0].title || '')},
+			"image": "${data.posts[0].mainImage ? urlFor(data.posts[0].mainImage).width(1200).height(630).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png'}",
+			"datePublished": "${data.posts[0]._createdAt || ''}",
+			"dateModified": "${data.posts[0]._createdAt || ''}",
+			"author": {
+				"@type": "Organization",
+				"name": "Sports Unlimited"
+			},
+			"publisher": {
+				"@type": "Organization",
+				"name": "Sports Unlimited",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://i.postimg.cc/CLVXPt7j/SU.png"
+				}
+			},
+			"mainEntityOfPage": {
+				"@type": "WebPage",
+				"@id": "https://www.sportsunlimited.ng/post/${data.posts[0].slug?.current || ''}"
+			}
+		}
+		</script>`}
+	{/if}
 </svelte:head>
 
-<section>
-	
-		<Tags tags={data.tags} />
-<Posts posts={data.posts} />
-</section>
+<main class="homepage-wrapper" itemscope itemtype="https://schema.org/CollectionPage">
+	<!-- Category Navigation - Sticky Top -->
+	{#if data.tags && data.tags.length > 0}
+		<nav class="category-nav top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm mb-12 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-5" aria-label="Category navigation">
+			<div class="max-w-7xl mx-auto">
+				<Tags tags={data.tags} />
+			</div>
+		</nav>
+	{/if}
+
+	<!-- Main Content -->
+	<Posts posts={data.posts} featuredPosts={data.featuredPosts} categoryPosts={data.categoryPosts} />
+</main>
