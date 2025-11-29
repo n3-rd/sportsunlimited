@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Carousel from "$lib/components/ui/carousel/index.js";
-	import { urlFor } from "$lib/utils/image";
+	import { urlFor, getResponsiveImageSrcset } from "$lib/utils/image";
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { Clock } from "svelte-radix";
@@ -34,10 +34,13 @@
 						<a href={`/post/${post.slug.current}`} class="block">
 							<div class="hero-container relative h-[300px] md:h-[350px] lg:h-[400px] overflow-hidden rounded-xl shadow-lg">
 								<img 
-									src={urlFor(post.mainImage.asset).width(1200).height(600).quality(90).url()} 
+									src={urlFor(post.mainImage.asset).width(1200).height(600).quality(85).url()} 
+									srcset={getResponsiveImageSrcset(post.mainImage.asset, 1200)}
+									sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
 									alt={post.title}
 									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
 									loading={index === 0 ? "eager" : "lazy"}
+									fetchpriority={index === 0 ? "high" : "low"}
 								/>
 								<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10"></div>
 								
@@ -55,9 +58,9 @@
 											</div>
 										</div>
 										
-										<h1 class="text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3 group-hover:text-red-500 transition-colors duration-300 drop-shadow-lg">
+										<h2 class="text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3 group-hover:text-red-500 transition-colors duration-300 drop-shadow-lg">
 											{post.title}
-										</h1>
+										</h2>
 										
 										{#if post.excerpt}
 											<p class="text-sm md:text-base lg:text-lg text-gray-100 leading-relaxed line-clamp-2 max-w-3xl drop-shadow">

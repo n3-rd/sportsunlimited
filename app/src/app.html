@@ -14,10 +14,12 @@
 		<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
 		<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://cdn.sanity.io" />
 		
 		<!-- Preconnect for critical resources -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="preconnect" href="https://cdn.sanity.io" crossorigin />
 		
 		<!-- Critical CSS preload -->
 		<link
@@ -52,15 +54,14 @@
 
 	
 	</head>
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y4NBZCC8HQ"></script>
+	<!-- Google tag (gtag.js) - Deferred for performance -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y4NBZCC8HQ" defer></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() {
 			dataLayer.push(arguments);
 		}
 		gtag('js', new Date());
-
 		gtag('config', 'G-Y4NBZCC8HQ');
 	</script>
 	<body data-sveltekit-preload-data="hover">

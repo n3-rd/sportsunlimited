@@ -52,12 +52,19 @@
 	<!-- Canonical URL -->
 	<link rel="canonical" href="https://www.sportsunlimited.ng/" />
 	
+	<!-- Sitemap and RSS -->
+	<link rel="sitemap" type="application/xml" href="https://www.sportsunlimited.ng/sitemap.xml" />
+	<link rel="alternate" type="application/rss+xml" title="Sports Unlimited RSS Feed" href="https://www.sportsunlimited.ng/rss.xml" />
+	
 	<!-- Additional SEO -->
 	<meta name="news_keywords" content="Nigerian sports, NPFL, football, basketball, athletics, Super Eagles, sports news Nigeria" />
 	<meta name="article:publisher" content="https://www.sportsunlimited.ng" />
 	<meta name="application-name" content="Sports Unlimited" />
 	<meta name="apple-mobile-web-app-title" content="Sports Unlimited" />
 	<meta name="theme-color" content="#ef4444" />
+	
+	<!-- Google Search Console Verification (Add your verification code) -->
+	<!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
 	
 	<!-- Structured Data for Organization -->
 	{@html generateOrganizationStructuredData()}
@@ -126,6 +133,9 @@
 </svelte:head>
 
 <main class="homepage-wrapper" itemscope itemtype="https://schema.org/CollectionPage">
+	<!-- Main H1 for SEO -->
+	<h1 class="sr-only">Sports Unlimited - Latest Nigerian Sports News</h1>
+	
 	<!-- Category Navigation - Sticky Top -->
 	{#if data.tags && data.tags.length > 0}
 		<nav class="category-nav top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm mb-12 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-5" aria-label="Category navigation">
