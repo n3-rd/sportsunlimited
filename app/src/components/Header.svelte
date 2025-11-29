@@ -1,31 +1,7 @@
 <script>
-	import pkg from "lodash";
-	const { debounce } = pkg;
-
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-	import { HamburgerMenu, MagnifyingGlass } from "svelte-radix";
-	import * as Dialog from "$lib/components/ui/dialog";
-	import Input from "$lib/components/ui/input/input.svelte";
-	import { searchPosts } from "$lib/utils/sanity";
-	import PostThumbs from "./PostThumbs.svelte";
-	import Spinner from "./Spinner.svelte";
-
-	let results = $state([]);
-	let search = $state("");
-	let loading = $state(false);
-
-	const debouncedSearch = debounce(() => {
-		fetchSearchResults();
-	}, 300);
-
-	async function fetchSearchResults() {
-		loading = true;
-		searchPosts(search).then((res) => {
-			results = res;
-			console.log(results);
-			loading = false;
-		});
-	}
+	import { HamburgerMenu } from "svelte-radix";
+	import SearchDialog from "./SearchDialog.svelte";
 </script>
 
 <div class="navigation w-full sticky top-0 z-50 bg-gray-900 shadow-lg">
@@ -51,63 +27,37 @@
 			</nav>
 
 			<!-- Search Dialog -->
-			<Dialog.Root>
-				<Dialog.Trigger>
-					<button class="search-button p-2 hover:bg-gray-800 rounded-lg transition-colors" aria-label="Search articles">
-						<MagnifyingGlass />
-					</button>
-				</Dialog.Trigger>
-				<Dialog.Content class="max-w-2xl">
-					<Dialog.Header>
-						<Dialog.Title>Search Articles</Dialog.Title>
-						<Dialog.Description>Find the latest sports news and stories</Dialog.Description>
-						<Input 
-							type="text" 
-							placeholder="Search articles..." 
-							bind:value={search} 
-							on:keypress={() => debouncedSearch()}
-							class="mt-4"
-						/>
-					</Dialog.Header>
-					<div class="max-h-96 overflow-y-auto mt-4">
-						{#if loading}
-							<div class="w-full flex justify-center items-center py-8">
-								<Spinner />
-							</div>
-						{:else if results.length > 0}
-							<div class="w-full">
-								<PostThumbs posts={results} />
-							</div>
-						{:else if results.length === 0 && search.length > 0}
-							<div class="text-center py-8 text-gray-500">
-								<p>No articles found matching "{search}"</p>
-							</div>
-						{/if}
-					</div>
-				</Dialog.Content>
-			</Dialog.Root>
+			<SearchDialog />
 
 			<!-- Mobile Menu -->
 			<div class="mobile-menu block md:hidden">
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger>
-						<button class="p-2 hover:bg-gray-800 rounded-lg transition-colors" aria-label="Menu">
+						<button class="mobile-menu-button p-2 hover:bg-gray-800 rounded-lg transition-colors" aria-label="Menu">
 							<HamburgerMenu />
 						</button>
 					</DropdownMenu.Trigger>
-					<DropdownMenu.Content>
-						<DropdownMenu.Group>
-							<DropdownMenu.Item>
-								<a href="/">Home</a>
+					<DropdownMenu.Content class="mobile-menu-content w-56 mt-2 bg-white border border-gray-200 shadow-xl">
+						<DropdownMenu.Group class="p-1">
+							<DropdownMenu.Item class="mobile-menu-item">
+								<a href="/" class="flex items-center gap-3 w-full py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-900 font-medium">
+									Home
+								</a>
 							</DropdownMenu.Item>
-							<DropdownMenu.Item>
-								<a href="/tags">Categories</a>
+							<DropdownMenu.Item class="mobile-menu-item">
+								<a href="/tags" class="flex items-center gap-3 w-full py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-900 font-medium">
+									Categories
+								</a>
 							</DropdownMenu.Item>
-							<DropdownMenu.Item>
-								<a href="/about">About</a>
+							<DropdownMenu.Item class="mobile-menu-item">
+								<a href="/about" class="flex items-center gap-3 w-full py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-900 font-medium">
+									About
+								</a>
 							</DropdownMenu.Item>
-							<DropdownMenu.Item>
-								<a href="/contact">Contact</a>
+							<DropdownMenu.Item class="mobile-menu-item">
+								<a href="/contact" class="flex items-center gap-3 w-full py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-900 font-medium">
+									Contact
+								</a>
 							</DropdownMenu.Item>
 						</DropdownMenu.Group>
 					</DropdownMenu.Content>
@@ -116,3 +66,28 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	:global(.mobile-menu-content) {
+		animation: slideDown 0.2s ease-out;
+	}
+	
+	@keyframes slideDown {
+		from {
+			opacity: 0;
+			transform: translateY(-8px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	
+	:global(.mobile-menu-item) {
+		margin: 0.125rem 0;
+	}
+	
+	:global(.mobile-menu-item a:hover) {
+		color: #ef4444;
+	}
+</style>

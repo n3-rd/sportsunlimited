@@ -1,11 +1,17 @@
 import { getTaggedPosts } from '$lib/utils/sanity';
+import type { PageLoad } from './$types';
 
-
-export async function load({ params}) {
-    const capitalizeFirstLetter = (string:string) =>{
-        return string.charAt(0).toUpperCase() + string.slice(1);
+export const load: PageLoad = async ({ params }) => {
+    const capitalizeFirstLetter = (string: string) => {
+        const words = string.split('-');
+        return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
     const { slug } = params;
-    const posts = await getTaggedPosts(capitalizeFirstLetter(slug));
-    return { props: { posts, slug } };
+    const tag = capitalizeFirstLetter(slug);
+    const posts = await getTaggedPosts(tag);
+    return { 
+        posts,
+        tag,
+        slug
+    };
 }
