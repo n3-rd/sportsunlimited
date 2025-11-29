@@ -36,7 +36,7 @@
             {/key}
         </main>
         <aside class="w-full md:w-1/4 h-full" role="complementary" aria-label="Sidebar">
-            <Sidebar trendingPosts={data?.trendingPosts} tags={data?.tags} />
+            <Sidebar trendingPosts={data?.trendingPosts} tags={data?.tags} npflTable={data?.npflTable} npflFixtures={data?.npflFixtures} />
         </aside>
     </div>
 </div>

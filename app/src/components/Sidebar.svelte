@@ -3,14 +3,18 @@
     import relativeTime from 'dayjs/plugin/relativeTime';
     import { Clock } from "svelte-radix";
     import Button from "$lib/components/ui/button/button.svelte";
+    import NPFLTable from './NPFLTable.svelte';
+    import NPFLFixtures from './NPFLFixtures.svelte';
     dayjs.extend(relativeTime);
 
     interface Props {
         trendingPosts?: any[];
         tags?: string[];
+        npflTable?: any[];
+        npflFixtures?: any[];
     }
 
-    let { trendingPosts = [], tags: popularTags = [] }: Props = $props();
+    let { trendingPosts = [], tags: popularTags = [], npflTable = [], npflFixtures = [] }: Props = $props();
 </script>
 
 <div class="flex flex-col h-full w-full gap-6 sticky top-24">
@@ -38,6 +42,38 @@
                     </a>
                 {/each}
             </div>
+        </section>
+    {/if}
+
+    <!-- NPFL Top 5 Table -->
+    {#if npflTable && npflTable.length > 0}
+        <section class="npfl-table-section bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-900">NPFL Top 5</h3>
+                <a 
+                    href="/npfl/standings" 
+                    class="text-xs font-medium text-red-600 hover:text-red-700 transition-colors"
+                >
+                    View All →
+                </a>
+            </div>
+            <NPFLTable table={npflTable} limit={5} compact={true} />
+        </section>
+    {/if}
+
+    <!-- NPFL Upcoming Fixtures -->
+    {#if npflFixtures && npflFixtures.length > 0}
+        <section class="npfl-fixtures-section bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-900">Upcoming Fixtures</h3>
+                <a 
+                    href="/npfl/fixtures" 
+                    class="text-xs font-medium text-red-600 hover:text-red-700 transition-colors"
+                >
+                    View All →
+                </a>
+            </div>
+            <NPFLFixtures fixtures={npflFixtures} limit={3} compact={true} />
         </section>
     {/if}
 
