@@ -3,6 +3,7 @@
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { Clock } from "svelte-radix";
+	import { calculateReadingTime } from "$lib/utils/index";
 	dayjs.extend(relativeTime);
 
 	interface Props {
@@ -10,6 +11,8 @@
 	}
 
 	let { post }: Props = $props();
+	
+	const readingTime = calculateReadingTime(post.body || []);
 </script>
 
 <a href={`/post/${post.slug.current}`} class="compact-post-card group block">
@@ -30,6 +33,8 @@
 			<div class="flex items-center gap-2 text-xs text-gray-500">
 				<Clock size="12" />
 				<span>{dayjs(post._createdAt).fromNow()}</span>
+				<span class="text-gray-400">•</span>
+				<span>{readingTime} min</span>
 				{#if post.tags && post.tags[0]}
 					<span class="text-gray-400">•</span>
 					<span class="text-red-600 font-semibold text-xs uppercase">{post.tags[0]}</span>
