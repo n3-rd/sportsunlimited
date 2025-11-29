@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { PortableText } from '@portabletext/svelte';
 	import { formatDate, calculateReadingTime } from '$lib/utils/index';
-	import { urlFor } from '$lib/utils/image';
+	import { urlFor, getResponsiveImageSrcset } from '$lib/utils/image';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import { Clock, Copy, Check } from 'svelte-radix';
@@ -232,9 +232,12 @@
 			class="post__cover
 			object-cover object-top w-full h-[30rem] mb-8 rounded-lg shadow-lg
 			"
-			src={urlFor(data.mainImage).url()}
+			src={urlFor(data.mainImage).width(1200).height(630).quality(90).url()}
+			srcset={getResponsiveImageSrcset(data.mainImage, 1200)}
+			sizes="(max-width: 768px) 100vw, 1200px"
 			alt="Cover image for {data.title}"
 			loading="eager"
+			fetchpriority="high"
 		/>
 	{:else}
 		<div class="post__cover--none"></div>

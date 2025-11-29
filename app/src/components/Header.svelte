@@ -7,11 +7,11 @@
 <div class="navigation w-full sticky top-0 z-50 bg-gray-900 shadow-lg">
 	<div class="nav-container w-full flex flex-row items-center justify-between text-white py-4 px-4 md:px-8">
 		<div class="brand-container">
-			<h1 class="brand font-bold text-xl md:text-2xl">
+			<div class="brand font-bold text-xl md:text-2xl">
 				<a href="/" class="hover:text-gray-300 transition-colors" aria-label="Sports Unlimited Home">
 					Sports Unlimited
 				</a>
-			</h1>
+			</div>
 			<p class="brand-tagline hidden md:block text-xs text-gray-400 mt-0.5">
 				Nigeria's Premier Sports News
 			</p>

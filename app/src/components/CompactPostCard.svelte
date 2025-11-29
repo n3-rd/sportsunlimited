@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { urlFor } from "$lib/utils/image";
+	import { urlFor, getResponsiveImageSrcset } from "$lib/utils/image";
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { Clock } from "svelte-radix";
@@ -20,9 +20,12 @@
 		<div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden">
 			<img 
 				src={urlFor(post.mainImage.asset).width(300).height(300).quality(80).url()} 
+				srcset={getResponsiveImageSrcset(post.mainImage.asset, 300)}
+				sizes="(max-width: 768px) 96px, 128px"
 				alt={post.title}
 				class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
 				loading="lazy"
+				fetchpriority="low"
 			/>
 		</div>
 		

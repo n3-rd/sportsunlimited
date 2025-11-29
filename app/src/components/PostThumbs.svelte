@@ -1,7 +1,7 @@
 
 <script lang="ts">
 	import { truncateText } from "$lib/utils/index";
-	import { urlFor } from "$lib/utils/image";
+	import { urlFor, getResponsiveImageSrcset } from "$lib/utils/image";
 	import { Clock } from "svelte-radix";
     import dayjs from 'dayjs';
     import relativeTime from 'dayjs/plugin/relativeTime';
@@ -23,8 +23,11 @@
 					<div class="post-image w-1/3 md:w-2/5 flex-shrink-0 h-28 md:h-full rounded-lg overflow-hidden">
 						<img 
 							src={urlFor(post.mainImage.asset).width(400).height(300).quality(85).url()} 
+							srcset={getResponsiveImageSrcset(post.mainImage.asset, 400)}
+							sizes="(max-width: 768px) 33vw, 40vw"
 							alt={post.title}
 							loading="lazy"
+							fetchpriority="low"
 							class="post-image w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
 							width="400"
 							height="300"
