@@ -9,8 +9,8 @@ export const load = (async ({ params }) => {
 		error(404, 'Not found');
 	}
 
-	// Fetch related posts based on tags
-	const relatedPosts = await getRelatedPosts(params.slug, post.tags || [], 4);
+	// Fetch related posts based on text matching (title and excerpt)
+	const relatedPosts = await getRelatedPosts(params.slug, post.title || '', post.excerpt || '', 4);
 
 	return {
 		post,

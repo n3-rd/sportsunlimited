@@ -29,16 +29,50 @@ export async function getFeaturedPosts(limit: number = 5): Promise<Post[]> {
 	);
 }
 
-export async function getRelatedPosts(currentSlug: string, tags: string[] = [], limit: number = 4): Promise<Post[]> {
-	if (!tags || tags.length === 0) {
+export async function getRelatedPosts(currentSlug: string, title: string = '', excerpt: string = '', limit: number = 4): Promise<Post[]> {
+	// Extract keywords from title and excerpt for text matching
+	// Get significant words (longer than 3 chars, exclude common words)
+	const commonWords = new Set(['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'its', 'may', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use']);
+	const combinedText = `${title} ${excerpt}`.toLowerCase();
+	const words = combinedText
+		.split(/\s+/)
+		.filter(word => word.length > 3 && !commonWords.has(word))
+		.map(word => word.replace(/[^\w]/g, ''))
+		.filter(word => word.length > 3);
+	const searchTerms = [...new Set(words)].slice(0, 3);
+	
+	if (!title || searchTerms.length === 0) {
+		// Fallback to recent posts if no title available
 		return await client.fetch(
-			groq`*[_type == "post" && defined(slug.current) && slug.current != $currentSlug] | order(_createdAt desc) [0...$limit]`,
+			groq`*[_type == "post" && defined(slug.current) && slug.current != $currentSlug] | order(_createdAt desc) [0...$limit] {
+				_type,
+				_createdAt,
+				title,
+				slug,
+				excerpt,
+				mainImage,
+				tags
+			}`,
 			{ currentSlug, limit }
 		);
 	}
+
+	// Use GROQ's match operator to find posts with similar text
+	// Create a search pattern from the most significant terms
+	// Match against title or excerpt fields
+	const searchPattern = searchTerms.join(' ');
+	
 	return await client.fetch(
-		groq`*[_type == "post" && defined(slug.current) && slug.current != $currentSlug && count((tags[])[@ in $tags]) > 0] | order(_createdAt desc) [0...$limit]`,
-		{ currentSlug, tags, limit }
+		groq`*[_type == "post" && defined(slug.current) && slug.current != $currentSlug && (title match $searchPattern || excerpt match $searchPattern)] | order(_createdAt desc) [0...$limit] {
+			_type,
+			_createdAt,
+			title,
+			slug,
+			excerpt,
+			mainImage,
+			tags
+		}`,
+		{ currentSlug, searchPattern: `*${searchPattern}*`, limit }
 	);
 }
 

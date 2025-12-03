@@ -318,11 +318,11 @@
 	</button>
 {/if}
 
-<!-- Related Posts Section -->
+<!-- Recommended Posts Section -->
 {#if data.relatedPosts && data.relatedPosts.length > 0}
 	<section class="related-posts py-12 bg-gray-50 mt-12">
-		<div class="container max-w-6xl mx-auto">
-			<h2 class="text-3xl font-bold text-gray-900 mb-8">Related Articles</h2>
+		<div class="container max-w-6xl mx-auto px-4">
+			<h2 class="text-3xl font-bold text-gray-900 mb-8">Recommended Articles</h2>
 			<RelatedPosts posts={data.relatedPosts} />
 		</div>
 	</section>
