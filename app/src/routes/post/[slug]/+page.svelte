@@ -60,6 +60,17 @@
 		window.addEventListener('scroll', updateReadingProgress);
 		updateReadingProgress();
 
+		// Initialize Google Ads after a short delay to ensure script is loaded
+		setTimeout(() => {
+			try {
+				if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
+					((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+				}
+			} catch (e) {
+				console.error('Ad initialization error:', e);
+			}
+		}, 500);
+
 		return () => {
 			window.removeEventListener('scroll', updateReadingProgress);
 		};
@@ -298,6 +309,18 @@
 				</div>
 			</div>
 		</header>
+
+		<!-- Ad Unit - After Header -->
+		<div class="ad-container my-8 flex justify-center">
+			<ins
+				class="adsbygoogle"
+				style="display:block"
+				data-ad-client="ca-pub-3810788597906222"
+				data-ad-slot="3550867773"
+				data-ad-format="auto"
+				data-full-width-responsive="true"
+			></ins>
+		</div>
 
 		<div class="post__content prose prose-lg max-w-none">
 			<PortableText value={data.body} components={{}} />
