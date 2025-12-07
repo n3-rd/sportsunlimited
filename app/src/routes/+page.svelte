@@ -130,32 +130,6 @@
 		}
 		</script>`}
 	{/if}
-
-	<!-- desktop in-feed ads -->
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810788597906222"
-	crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-	style="display:block"
-	data-ad-format="fluid"
-	data-ad-layout-key="+30+qn-3c-6z+rp"
-	data-ad-client="ca-pub-3810788597906222"
-	data-ad-slot="7096496582"></ins>
-<script>
-	(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<!-- mobile in-feed ads -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810788597906222"
-crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-style="display:block"
-data-ad-format="fluid"
-data-ad-layout-key="-6t+ed+2i-1n-4w"
-data-ad-client="ca-pub-3810788597906222"
-data-ad-slot="9074248071"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
 </svelte:head>
 
 <main class="homepage-wrapper" itemscope itemtype="https://schema.org/CollectionPage">
@@ -170,6 +144,36 @@ data-ad-slot="9074248071"></ins>
 			</div>
 		</nav>
 	{/if}
+
+	<!-- Desktop in-feed ads (below header) -->
+	<div class="hidden md:block mb-8 -mx-4 md:-mx-6 lg:-mx-8">
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810788597906222"
+		crossorigin="anonymous"></script>
+		<ins class="adsbygoogle"
+		style="display:block"
+		data-ad-format="fluid"
+		data-ad-layout-key="+30+qn-3c-6z+rp"
+		data-ad-client="ca-pub-3810788597906222"
+		data-ad-slot="7096496582"></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</div>
+
+	<!-- Mobile in-feed ads (below header) -->
+	<div class="block md:hidden mb-8 -mx-4">
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810788597906222"
+		crossorigin="anonymous"></script>
+		<ins class="adsbygoogle"
+		style="display:block"
+		data-ad-format="fluid"
+		data-ad-layout-key="-6t+ed+2i-1n-4w"
+		data-ad-client="ca-pub-3810788597906222"
+		data-ad-slot="9074248071"></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</div>
 
 	<!-- Main Content -->
 	<Posts posts={data.posts} featuredPosts={data.featuredPosts} categoryPosts={data.categoryPosts} />
