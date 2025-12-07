@@ -1,8 +1,4 @@
-import PocketBase from 'pocketbase';
-
-// Initialize PocketBase client
-// Replace with your actual PocketBase URL
-const pb = new PocketBase('http://127.0.0.1:8090');
+import { pb } from '$lib/pocketbase';
 
 export interface Post {
     id: string;
