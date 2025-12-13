@@ -18,16 +18,23 @@
 	];
 </script>
 
-<footer class="footer bg-gray-900 text-white mt-auto">
+<footer class="footer bg-black text-white mt-auto">
 	<div class="footer-container container max-w-6xl mx-auto px-4 py-12">
 		<div class="footer-content grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-			<!-- Brand Section -->
-			<div class="footer-brand">
-				<h3 class="text-2xl font-bold mb-3">Sports Unlimited</h3>
-				<p class="text-gray-400 text-sm mb-4">
-					Nigeria's premier destination for the latest sports news, interviews, and analysis covering NPFL, Football, Basketball, Athletics, and more.
-				</p>
+		<!-- Brand Section -->
+		<div class="footer-brand">
+			<div class="flex items-center gap-3 mb-3">
+				<img 
+					src="/android-chrome-512x512.png" 
+					alt="Sports Unlimited Logo" 
+					class="w-12 h-10 object-contain"
+				/>
+				<h3 class="text-2xl font-bold">Sports Unlimited</h3>
 			</div>
+			<p class="text-gray-400 text-sm mb-4">
+				Nigeria's premier destination for the latest sports news, interviews, and analysis covering NPFL, Football, Basketball, Athletics, and more.
+			</p>
+		</div>
 
 			<!-- Navigation Links -->
 			<div class="footer-links">

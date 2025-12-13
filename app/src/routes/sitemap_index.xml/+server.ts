@@ -24,3 +24,7 @@ export async function GET({ setHeaders }) {
 	return new Response(sitemapIndex);
 }
 
+
+
+
+
