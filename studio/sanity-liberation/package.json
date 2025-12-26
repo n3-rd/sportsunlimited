@@ -41,6 +41,15 @@
 	},
 	"dependencies": {
 		"@sanity/client": "^7.13.1",
+		"@tiptap/core": "^3.14.0",
+		"@tiptap/extension-bold": "^3.14.0",
+		"@tiptap/extension-document": "^3.14.0",
+		"@tiptap/extension-heading": "^3.14.0",
+		"@tiptap/extension-italic": "^3.14.0",
+		"@tiptap/extension-paragraph": "^3.14.0",
+		"@tiptap/extension-text": "^3.14.0",
+		"@tiptap/pm": "^3.14.0",
+		"@tiptap/starter-kit": "^3.14.0",
 		"lucide-svelte": "^0.556.0",
 		"pocketbase": "^0.26.5"
 	}
