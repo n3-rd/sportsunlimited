@@ -67,6 +67,18 @@
 					// Handle keywords
 					formData.append('keywords', JSON.stringify(post.keywords || []));
 					
+					// Preserve original timestamps from Sanity
+					// Convert Sanity ISO timestamps to format PocketBase expects
+					if (post._createdAt) {
+						// Sanity timestamps are already ISO 8601, but ensure proper format
+						const createdDate = new Date(post._createdAt).toISOString();
+						formData.append('created', createdDate);
+					}
+					if (post._updatedAt) {
+						const updatedDate = new Date(post._updatedAt).toISOString();
+						formData.append('updated', updatedDate);
+					}
+					
 					// Handle body - convert from Sanity blocks to HTML string
 					let bodyContent = '';
 					if (post.body) {
@@ -85,19 +97,33 @@
 					if (post.mainImage?.asset?._ref) {
 						try {
 							const ref = post.mainImage.asset._ref;
-							const [_type, id, dimensions, format] = ref.split('-');
-							if (id && dimensions && format) {
+							// Sanity ref format: image-{id}-{width}x{height}-{format}
+							// Example: image-abc123-1200x800-jpg
+							const parts = ref.split('-');
+							if (parts.length >= 4 && parts[0] === 'image') {
+								const id = parts[1];
+								const dimensions = parts[2];
+								const format = parts[3] || 'jpg';
+								
 								const url = `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${dimensions}.${format}`;
+								logs = [...logs, `Fetching image: ${id}.${format}`];
+								
 								const resp = await fetch(url);
 								if (resp.ok) {
 									const blob = await resp.blob();
-									const file = new File([blob], `${id}.${format}`, { type: blob.type });
+									const mimeType = blob.type || `image/${format === 'jpg' ? 'jpeg' : format}`;
+									const file = new File([blob], `${id}.${format}`, { type: mimeType });
 									formData.append('mainImage', file);
+									logs = [...logs, `✓ Image added for ${post.title} (${(blob.size / 1024).toFixed(1)}KB)`];
+								} else {
+									logs = [...logs, `⚠ Image fetch failed: ${resp.status} ${resp.statusText}`];
 								}
+							} else {
+								logs = [...logs, `⚠ Invalid image ref format: ${ref}`];
 							}
-						} catch (e) {
+						} catch (e: any) {
 							console.error('Image fetch failed', e);
-							logs = [...logs, `Warning: Could not fetch image for ${post.title}`];
+							logs = [...logs, `⚠ Image error: ${e.message || e}`];
 						}
 					}
 

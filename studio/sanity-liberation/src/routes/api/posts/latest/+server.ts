@@ -13,7 +13,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		// Add image URLs to each post
 		const postsWithImages = records.items.map((post: Record<string, unknown>) => {
 			if (post.mainImage) {
-				(post as Record<string, unknown>).mainImageUrl = pb.files.getUrl(post, post.mainImage as string);
+				(post as Record<string, unknown>).mainImageUrl = pb.files.getURL(post, post.mainImage as string);
 			}
 			return post;
 		});
@@ -21,8 +21,24 @@ export const GET: RequestHandler = async ({ url }) => {
 		return json(postsWithImages);
 	} catch (error: unknown) {
 		console.error('Error fetching latest posts:', error);
+		
+		// Handle PocketBase auto-cancellation errors
+		if (error && typeof error === 'object' && 'isAbort' in error && (error as { isAbort: boolean }).isAbort) {
+			return json(
+				{ error: 'Request was cancelled. Please ensure PocketBase is running.' },
+				{ status: 503 }
+			);
+		}
+		
 		const message = error instanceof Error ? error.message : 'Failed to fetch latest posts';
-		const status = error && typeof error === 'object' && 'status' in error ? (error.status as number) : 500;
+		let status = 500;
+		if (error && typeof error === 'object' && 'status' in error) {
+			const errorStatus = error.status as number;
+			// Ensure status is in valid range (200-599)
+			if (errorStatus > 0) {
+				status = Math.max(200, Math.min(599, errorStatus));
+			}
+		}
 		return json(
 			{ error: message },
 			{ status }

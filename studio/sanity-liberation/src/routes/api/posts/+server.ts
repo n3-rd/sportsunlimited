@@ -6,8 +6,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const formData = await request.formData();
 		
-		// PocketBase can accept FormData directly, but we need to handle arrays properly
-		// Convert tags array and keywords JSON
+		// Build new FormData with properly formatted data
 		const processedFormData = new FormData();
 		const tags: string[] = [];
 		let keywords: string[] = [];
@@ -22,20 +21,39 @@ export const POST: RequestHandler = async ({ request }) => {
 					keywords = [];
 				}
 			} else if (value instanceof File) {
+				// Keep files as-is in FormData
 				processedFormData.append(key, value);
 			} else {
-				processedFormData.append(key, value);
+				// Add all other fields
+				processedFormData.append(key, value as string);
 			}
 		}
 		
-		// Add tags as individual entries (PocketBase expects multiple entries with same key for arrays)
+		// Add tags as array (PocketBase handles arrays in FormData)
 		for (const tag of tags) {
 			processedFormData.append('tags', tag);
 		}
 		
 		// Add keywords as JSON string
-		processedFormData.append('keywords', JSON.stringify(keywords));
+		if (keywords.length > 0) {
+			processedFormData.append('keywords', JSON.stringify(keywords));
+		}
 		
+		// Handle timestamps - ensure they're in correct format
+		const created = processedFormData.get('created');
+		if (created && typeof created === 'string') {
+			processedFormData.set('created', new Date(created).toISOString());
+		}
+		const updated = processedFormData.get('updated');
+		if (updated && typeof updated === 'string') {
+			processedFormData.set('updated', new Date(updated).toISOString());
+		}
+		
+		// Log for debugging
+		const hasFile = Array.from(processedFormData.entries()).some(([_, v]) => v instanceof File);
+		console.log('Creating post with FormData, has file:', hasFile);
+		
+		// Create record using FormData directly (PocketBase handles multipart/form-data)
 		const record = await pb.collection('posts').create(processedFormData);
 		
 		return json(record);
@@ -68,7 +86,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		// Add image URLs to each post
 		const postsWithImages = records.items.map((post: any) => {
 			if (post.mainImage) {
-				post.mainImageUrl = pb.files.getUrl(post, post.mainImage);
+				post.mainImageUrl = pb.files.getURL(post, post.mainImage);
 			}
 			return post;
 		});
@@ -79,9 +97,19 @@ export const GET: RequestHandler = async ({ url }) => {
 		});
 	} catch (error: any) {
 		console.error('Error fetching posts:', error);
+		
+		// Handle PocketBase auto-cancellation errors
+		if (error?.isAbort) {
+			return json(
+				{ error: 'Request was cancelled. Please ensure PocketBase is running.' },
+				{ status: 503 }
+			);
+		}
+		
+		const status = error?.status && error.status > 0 ? Math.max(200, Math.min(599, error.status)) : 500;
 		return json(
 			{ error: error.message || 'Failed to fetch posts' },
-			{ status: error.status || 500 }
+			{ status }
 		);
 	}
 };

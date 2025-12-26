@@ -8,15 +8,25 @@ export const GET: RequestHandler = async ({ params }) => {
 		
 		// Add image URL if mainImage exists
 		if (record.mainImage) {
-			(record as any).mainImageUrl = pb.files.getUrl(record, record.mainImage);
+			(record as any).mainImageUrl = pb.files.getURL(record, record.mainImage);
 		}
 		
 		return json(record);
 	} catch (error: any) {
 		console.error('Error fetching post:', error);
+		
+		// Handle PocketBase auto-cancellation errors
+		if (error?.isAbort) {
+			return json(
+				{ error: 'Request was cancelled. Please ensure PocketBase is running.' },
+				{ status: 503 }
+			);
+		}
+		
+		const status = error?.status && error.status > 0 ? Math.max(200, Math.min(599, error.status)) : 500;
 		return json(
 			{ error: error.message || 'Failed to fetch post' },
-			{ status: error.status || 500 }
+			{ status }
 		);
 	}
 };
@@ -25,7 +35,7 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 	try {
 		const formData = await request.formData();
 		
-		// Process FormData similar to POST
+		// Build new FormData with properly formatted data
 		const processedFormData = new FormData();
 		const tags: string[] = [];
 		let keywords: string[] = [];
@@ -40,20 +50,35 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 					keywords = [];
 				}
 			} else if (value instanceof File) {
+				// Keep files as-is in FormData
 				processedFormData.append(key, value);
 			} else {
-				processedFormData.append(key, value);
+				// Add all other fields
+				processedFormData.append(key, value as string);
 			}
 		}
 		
-		// Add tags as individual entries
+		// Add tags as array
 		for (const tag of tags) {
 			processedFormData.append('tags', tag);
 		}
 		
 		// Add keywords as JSON string
-		processedFormData.append('keywords', JSON.stringify(keywords));
+		if (keywords.length > 0) {
+			processedFormData.append('keywords', JSON.stringify(keywords));
+		}
 		
+		// Handle timestamps
+		const updated = processedFormData.get('updated');
+		if (updated && typeof updated === 'string') {
+			processedFormData.set('updated', new Date(updated).toISOString());
+		}
+		const created = processedFormData.get('created');
+		if (created && typeof created === 'string') {
+			processedFormData.set('created', new Date(created).toISOString());
+		}
+		
+		// Update record using FormData directly
 		const record = await pb.collection('posts').update(params.id, processedFormData);
 		
 		return json(record);

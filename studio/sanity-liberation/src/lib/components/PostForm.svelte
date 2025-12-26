@@ -52,18 +52,18 @@
 	let mainImage = $state<File | null>(null); // File object
 	let mainImagePreview = $state<string | null>(null);
 	
-	// Initialize preview from existing post image
-	$effect(() => {
-		if (post?.mainImage && !mainImage && !mainImagePreview) {
-			try {
-				mainImagePreview = pb.files.getUrl(post, post.mainImage);
-			} catch {
-				// Fallback URL construction
-				const pbUrl = import.meta.env.PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8099';
-				mainImagePreview = `${pbUrl}/api/files/posts/${post.id}/${post.mainImage}`;
+		// Initialize preview from existing post image
+		$effect(() => {
+			if (post?.mainImage && !mainImage && !mainImagePreview) {
+				try {
+					mainImagePreview = pb.files.getURL(post, post.mainImage);
+				} catch {
+					// Fallback URL construction
+					const pbUrl = import.meta.env.PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8099';
+					mainImagePreview = `${pbUrl}/api/files/posts/${post.id}/${post.mainImage}`;
+				}
 			}
-		}
-	});
+		});
 
 	let loading = $state(false);
 	let keywordInput = $state('');

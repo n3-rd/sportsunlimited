@@ -20,7 +20,7 @@ function mapRecordToPost(record: any): Post {
     return {
         ...record,
         keywords: record.keywords ? (typeof record.keywords === 'string' ? JSON.parse(record.keywords) : record.keywords) : [],
-        mainImage: record.mainImage ? pb.files.getUrl(record, record.mainImage) : '',
+        mainImage: record.mainImage ? pb.files.getURL(record, record.mainImage) : '',
     };
 }
 
