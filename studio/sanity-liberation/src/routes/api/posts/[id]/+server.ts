@@ -5,6 +5,12 @@ import { pb } from '$lib/pocketbase';
 export const GET: RequestHandler = async ({ params }) => {
 	try {
 		const record = await pb.collection('posts').getOne(params.id);
+		
+		// Add image URL if mainImage exists
+		if (record.mainImage) {
+			(record as any).mainImageUrl = pb.files.getUrl(record, record.mainImage);
+		}
+		
 		return json(record);
 	} catch (error: any) {
 		console.error('Error fetching post:', error);

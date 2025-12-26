@@ -10,7 +10,15 @@ export const GET: RequestHandler = async ({ url }) => {
 			sort: '-created'
 		});
 		
-		return json(records.items);
+		// Add image URLs to each post
+		const postsWithImages = records.items.map((post: Record<string, unknown>) => {
+			if (post.mainImage) {
+				(post as Record<string, unknown>).mainImageUrl = pb.files.getUrl(post, post.mainImage as string);
+			}
+			return post;
+		});
+		
+		return json(postsWithImages);
 	} catch (error: unknown) {
 		console.error('Error fetching latest posts:', error);
 		const message = error instanceof Error ? error.message : 'Failed to fetch latest posts';

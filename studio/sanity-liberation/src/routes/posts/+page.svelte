@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Search, Edit, Trash2, Calendar, FileText } from 'lucide-svelte';
+	import { Plus, Search, Edit, Trash2, Calendar, FileText, Image as ImageIcon } from 'lucide-svelte';
 
 	let posts: any[] = $state([]);
 	let loading = $state(true);
@@ -100,48 +100,72 @@
 		{:else}
 			<ul class="divide-y divide-[#333333]">
 				{#each filteredPosts as post (post.id)}
+					{@const imageUrl = post.mainImageUrl || null}
 					<li>
 						<div
-							class="p-4 sm:p-6 hover:bg-[#1f1f1f] transition-colors flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+							class="p-4 sm:p-6 hover:bg-[#1f1f1f] transition-colors flex flex-col sm:flex-row gap-4"
 						>
-							<div class="flex-1 min-w-0">
-								<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
-									<h3 class="text-base sm:text-lg font-semibold text-white truncate">
-										{post.title || 'Untitled Post'}
-									</h3>
-									<span
-										class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#10b981] text-white flex-shrink-0"
-									>
-										{post.status || 'Published'}
-									</span>
-								</div>
-								{#if post.excerpt}
-									<p class="text-sm text-[#d1d5db] line-clamp-2 mb-3">{post.excerpt}</p>
-								{/if}
-								<div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-[#9ca3af]">
-									<div class="flex items-center gap-1.5">
-										<Calendar class="h-4 w-4" />
-										<span>{new Date(post.created).toLocaleDateString()}</span>
-									</div>
-									<span class="hidden sm:inline">•</span>
-									<span class="font-mono truncate max-w-xs">{post.slug}</span>
-								</div>
-							</div>
-							<div class="flex items-center gap-2 sm:ml-4 flex-shrink-0">
+							<!-- Image -->
+							{#if imageUrl}
 								<a
 									href="/posts/{post.id}"
-									class="p-2.5 sm:p-3 text-[#9ca3af] hover:text-white hover:bg-[#2a2a2a] rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#60a5fa] focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
-									aria-label="Edit {post.title}"
+									class="flex-shrink-0 w-full sm:w-32 h-32 sm:h-24 rounded-lg overflow-hidden border border-[#333333] bg-[#1f1f1f] group"
 								>
-									<Edit class="h-5 w-5" />
+									<img
+										src={imageUrl}
+										alt={post.title || 'Post image'}
+										class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+									/>
 								</a>
-								<button
-									onclick={() => deletePost(post.id)}
-									class="p-2.5 sm:p-3 text-[#9ca3af] hover:text-[#ef4444] hover:bg-[#2a2a2a] rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#ef4444] focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
-									aria-label="Delete {post.title}"
+							{:else}
+								<div
+									class="flex-shrink-0 w-full sm:w-32 h-32 sm:h-24 rounded-lg border border-[#333333] bg-[#1f1f1f] flex items-center justify-center"
 								>
-									<Trash2 class="h-5 w-5" />
-								</button>
+									<ImageIcon class="h-8 w-8 text-[#4b5563]" />
+								</div>
+							{/if}
+
+							<!-- Content -->
+							<div class="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+								<div class="flex-1 min-w-0">
+									<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+										<h3 class="text-base sm:text-lg font-semibold text-white truncate">
+											{post.title || 'Untitled Post'}
+										</h3>
+										<span
+											class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#10b981] text-white shrink-0"
+										>
+											{post.status || 'Published'}
+										</span>
+									</div>
+									{#if post.excerpt}
+										<p class="text-sm text-[#d1d5db] line-clamp-2 mb-3">{post.excerpt}</p>
+									{/if}
+									<div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-[#9ca3af]">
+										<div class="flex items-center gap-1.5">
+											<Calendar class="h-4 w-4" />
+											<span>{new Date(post.created).toLocaleDateString()}</span>
+										</div>
+										<span class="hidden sm:inline">•</span>
+										<span class="font-mono truncate max-w-xs">{post.slug}</span>
+									</div>
+								</div>
+								<div class="flex items-center gap-2 sm:ml-4 shrink-0">
+									<a
+										href="/posts/{post.id}"
+										class="p-2.5 sm:p-3 text-[#9ca3af] hover:text-white hover:bg-[#2a2a2a] rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#60a5fa] focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
+										aria-label="Edit {post.title}"
+									>
+										<Edit class="h-5 w-5" />
+									</a>
+									<button
+										onclick={() => deletePost(post.id)}
+										class="p-2.5 sm:p-3 text-[#9ca3af] hover:text-[#ef4444] hover:bg-[#2a2a2a] rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#ef4444] focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
+										aria-label="Delete {post.title}"
+									>
+										<Trash2 class="h-5 w-5" />
+									</button>
+								</div>
 							</div>
 						</div>
 					</li>

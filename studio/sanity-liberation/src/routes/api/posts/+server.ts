@@ -65,7 +65,18 @@ export const GET: RequestHandler = async ({ url }) => {
 			...(filter && { filter })
 		});
 		
-		return json(records);
+		// Add image URLs to each post
+		const postsWithImages = records.items.map((post: any) => {
+			if (post.mainImage) {
+				post.mainImageUrl = pb.files.getUrl(post, post.mainImage);
+			}
+			return post;
+		});
+		
+		return json({
+			...records,
+			items: postsWithImages
+		});
 	} catch (error: any) {
 		console.error('Error fetching posts:', error);
 		return json(
