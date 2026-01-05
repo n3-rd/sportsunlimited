@@ -1,17 +1,16 @@
 <script lang="ts">
-	import { MagnifyingGlass } from "svelte-radix";
-	import * as Dialog from "$lib/components/ui/dialog";
-	import Input from "$lib/components/ui/input/input.svelte";
-	import { searchPosts } from "$lib/utils/sanity";
-	import { urlFor } from "$lib/utils/image";
-	import { Clock } from "svelte-radix";
+	import { MagnifyingGlass } from 'svelte-radix';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import { urlFor } from '$lib/utils/image';
+	import { Clock } from 'svelte-radix';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
-	import Spinner from "./Spinner.svelte";
-	import { onMount } from "svelte";
+	import Spinner from './Spinner.svelte';
+	import { onMount } from 'svelte';
 	dayjs.extend(relativeTime);
 
-	let search = $state("");
+	let search = $state('');
 	let results = $state<any[]>([]);
 	let loading = $state(false);
 	let hasSearched = $state(false);
@@ -22,7 +21,7 @@
 
 	function handleSearch(value: string) {
 		search = value;
-		
+
 		if (debounceTimer) {
 			clearTimeout(debounceTimer);
 		}
@@ -37,8 +36,13 @@
 			loading = true;
 			hasSearched = true;
 			try {
-				const searchResults = await searchPosts(value);
-				results = searchResults || [];
+				const response = await fetch(`/api/posts/search?q=${encodeURIComponent(value)}`);
+				if (response.ok) {
+					const searchResults = await response.json();
+					results = searchResults || [];
+				} else {
+					results = [];
+				}
 			} catch (error) {
 				console.error('Search error:', error);
 				results = [];
@@ -74,77 +78,84 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Trigger>
-		<button 
-			class="search-button p-2 hover:bg-gray-800 rounded-lg transition-colors relative" 
+		<button
+			class="search-button relative rounded-lg p-2 transition-colors hover:bg-gray-800"
 			aria-label="Search articles"
 		>
 			<MagnifyingGlass />
-			<span class="hidden md:inline-block absolute -top-1 -right-1 bg-gray-700 text-xs px-1.5 py-0.5 rounded text-gray-300">
+			<span
+				class="absolute -right-1 -top-1 hidden rounded bg-gray-700 px-1.5 py-0.5 text-xs text-gray-300 md:inline-block"
+			>
 				⌘K
 			</span>
 		</button>
 	</Dialog.Trigger>
-	<Dialog.Content class="max-w-3xl max-h-[80vh] flex flex-col">
+	<Dialog.Content class="flex max-h-[80vh] max-w-3xl flex-col">
 		<Dialog.Header class="pb-4">
 			<Dialog.Title class="text-2xl font-bold">Search Articles</Dialog.Title>
 			<Dialog.Description class="text-gray-600">
 				Find the latest sports news and stories. Type at least 2 characters to search.
 			</Dialog.Description>
-			<div class="mt-4 relative">
+			<div class="relative mt-4">
 				<MagnifyingGlass class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size="20" />
-				<Input 
-					type="text" 
-					placeholder="Search for articles, players, teams..." 
+				<Input
+					type="text"
+					placeholder="Search for articles, players, teams..."
 					bind:value={search}
 					oninput={(e) => handleSearch((e.target as HTMLInputElement).value)}
-					class="pl-10 pr-4 py-3 text-base"
+					class="py-3 pl-10 pr-4 text-base"
 					autofocus
 				/>
 			</div>
 		</Dialog.Header>
 
-		<div class="flex-1 overflow-y-auto mt-4 min-h-0">
+		<div class="mt-4 min-h-0 flex-1 overflow-y-auto">
 			{#if loading}
-				<div class="w-full flex flex-col justify-center items-center py-12">
+				<div class="flex w-full flex-col items-center justify-center py-12">
 					<Spinner />
-					<p class="text-gray-500 mt-4">Searching articles...</p>
+					<p class="mt-4 text-gray-500">Searching articles...</p>
 				</div>
 			{:else if hasSearched && search.length >= 2}
 				{#if results.length > 0}
 					<div class="search-results">
 						<div class="mb-4 px-1">
 							<p class="text-sm text-gray-600">
-								Found <strong class="text-gray-900">{results.length}</strong> {results.length === 1 ? 'article' : 'articles'} for "<strong class="text-gray-900">{search}</strong>"
+								Found <strong class="text-gray-900">{results.length}</strong>
+								{results.length === 1 ? 'article' : 'articles'} for "<strong class="text-gray-900"
+									>{search}</strong
+								>"
 							</p>
 						</div>
 						<div class="space-y-2">
 							{#each results as post}
-								<a 
+								<a
 									href={`/post/${post.slug.current}`}
-									class="search-result-item block p-4 rounded-lg border border-gray-200 hover:border-red-600 hover:shadow-md transition-all group"
-									onclick={() => open = false}
+									class="search-result-item group block rounded-lg border border-gray-200 p-4 transition-all hover:border-red-600 hover:shadow-md"
+									onclick={() => (open = false)}
 								>
 									<div class="flex gap-4">
 										{#if post.mainImage}
-											<div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
-												<img 
-													src={urlFor(post.mainImage.asset).width(200).height(200).quality(80).url()} 
+											<div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+												<img
+													src={urlFor(post.mainImage.asset)
+														.width(200)
+														.height(200)
+														.quality(80)
+														.url()}
 													alt={post.title}
-													class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+													class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
 													loading="lazy"
 												/>
 											</div>
 										{/if}
-										<div class="flex-1 min-w-0">
-											<h3 
-												class="text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2 line-clamp-2"
+										<div class="min-w-0 flex-1">
+											<h3
+												class="mb-2 line-clamp-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-red-600"
 											>
 												{@html highlightText(post.title || '', search)}
 											</h3>
 											{#if post.excerpt}
-												<p 
-													class="text-sm text-gray-600 mb-2 line-clamp-2"
-												>
+												<p class="mb-2 line-clamp-2 text-sm text-gray-600">
 													{@html highlightText(post.excerpt, search)}
 												</p>
 											{/if}
@@ -155,7 +166,9 @@
 												</div>
 												{#if post.tags && post.tags[0]}
 													<span class="text-gray-400">•</span>
-													<span class="bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-semibold text-xs uppercase">
+													<span
+														class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold uppercase text-red-700"
+													>
 														{post.tags[0]}
 													</span>
 												{/if}
@@ -167,17 +180,17 @@
 						</div>
 					</div>
 				{:else}
-					<div class="text-center py-12">
+					<div class="py-12 text-center">
 						<div class="mb-4">
 							<MagnifyingGlass size="48" class="mx-auto text-gray-300" />
 						</div>
-						<h3 class="text-lg font-semibold text-gray-900 mb-2">No articles found</h3>
-						<p class="text-gray-600 mb-4">
+						<h3 class="mb-2 text-lg font-semibold text-gray-900">No articles found</h3>
+						<p class="mb-4 text-gray-600">
 							We couldn't find any articles matching "<strong>{search}</strong>"
 						</p>
 						<div class="text-sm text-gray-500">
 							<p class="mb-2">Try:</p>
-							<ul class="list-disc list-inside space-y-1">
+							<ul class="list-inside list-disc space-y-1">
 								<li>Checking your spelling</li>
 								<li>Using different keywords</li>
 								<li>Searching for a more general term</li>
@@ -186,20 +199,20 @@
 					</div>
 				{/if}
 			{:else if search.length > 0 && search.length < 2}
-				<div class="text-center py-12">
+				<div class="py-12 text-center">
 					<p class="text-gray-500">Type at least 2 characters to search</p>
 				</div>
 			{:else}
-				<div class="text-center py-12">
+				<div class="py-12 text-center">
 					<div class="mb-4">
 						<MagnifyingGlass size="48" class="mx-auto text-gray-300" />
 					</div>
-					<h3 class="text-lg font-semibold text-gray-900 mb-2">Start searching</h3>
-					<p class="text-gray-600 mb-6">
+					<h3 class="mb-2 text-lg font-semibold text-gray-900">Start searching</h3>
+					<p class="mb-6 text-gray-600">
 						Enter keywords to find articles about Nigerian sports news, players, teams, and more.
 					</p>
-					<div class="text-left max-w-md mx-auto">
-						<p class="text-sm font-semibold text-gray-700 mb-2">Popular searches:</p>
+					<div class="mx-auto max-w-md text-left">
+						<p class="mb-2 text-sm font-semibold text-gray-700">Popular searches:</p>
 						<div class="flex flex-wrap gap-2">
 							{#each ['NPFL', 'Super Eagles', 'Football', 'Basketball', 'Athletics'] as popular}
 								<button
@@ -207,7 +220,7 @@
 										search = popular;
 										handleSearch(popular);
 									}}
-									class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+									class="rounded-full bg-gray-100 px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200"
 								>
 									{popular}
 								</button>
@@ -235,4 +248,3 @@
 		font-weight: 600;
 	}
 </style>
-

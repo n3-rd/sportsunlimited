@@ -1,4 +1,4 @@
-import { getPosts, getTags } from "$lib/utils/sanity";
+import { getPosts, getTags } from "$lib/utils/sanity.server";
 
 export async function GET({ setHeaders })  {
     setHeaders({

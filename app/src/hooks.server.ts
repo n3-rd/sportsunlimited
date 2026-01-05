@@ -5,7 +5,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	// Add caching headers for static assets
 	const pathname = event.url.pathname;
-	
+
 	// Cache static assets (images, fonts, etc.) for 1 year
 	if (
 		pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|ttf|eot|css|js)$/i)
@@ -22,11 +22,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 			'public, max-age=3600, must-revalidate'
 		);
 	}
-	// Cache API endpoints and data for 5 minutes
-	else if (pathname.startsWith('/api/') || pathname.endsWith('.xml') || pathname.endsWith('.json')) {
+	// Cache API endpoints and data for 5 minutes, but not SvelteKit data requests
+	else if (pathname.startsWith('/api/') || pathname.endsWith('.xml') || (pathname.endsWith('.json') && !pathname.includes('__data.json'))) {
 		response.headers.set(
 			'Cache-Control',
 			'public, max-age=300, must-revalidate'
+		);
+	}
+	// For SvelteKit data requests, ensure freshness
+	else if (pathname.includes('__data.json')) {
+		response.headers.set(
+			'Cache-Control',
+			'no-store, no-cache, must-revalidate, proxy-revalidate'
 		);
 	}
 
@@ -37,6 +44,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return response;
 };
+
+
+
+
+
+
 
 
 

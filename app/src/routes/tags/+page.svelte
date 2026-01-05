@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getTags } from "$lib/utils/sanity";
 	import type { PageData } from "./$types";
 	import Button from "$lib/components/ui/button/button.svelte";
 

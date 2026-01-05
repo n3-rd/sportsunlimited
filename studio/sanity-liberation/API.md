@@ -28,7 +28,6 @@ Get a paginated list of all posts.
 
 **Endpoint:** `GET /api/posts`
 
-**Query Parameters:**
 - `page` (optional, default: `1`) - Page number
 - `perPage` (optional, default: `50`) - Number of posts per page
 - `sort` (optional, default: `-created`) - Sort order (use `-created` for newest first, `created` for oldest first)
@@ -466,5 +465,4 @@ Currently, there are no rate limits on the API endpoints. However, be respectful
 ## Support
 
 For issues or questions about the API, please refer to the project repository or contact the development team.
-
 
