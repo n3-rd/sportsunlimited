@@ -217,19 +217,6 @@
 		]
 	}
 	</script>`}
-
-<!-- in article ads -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810788597906222"
-crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-style="display:block; text-align:center;"
-data-ad-layout="in-article"
-data-ad-format="fluid"
-data-ad-client="ca-pub-3810788597906222"
-data-ad-slot="1601816694"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
 </svelte:head>
 
 <!-- Reading Progress Bar -->
@@ -323,8 +310,8 @@ data-ad-slot="1601816694"></ins>
 			</div>
 		</header>
 
-		<!-- Ad Unit - After Header -->
-		<div class="ad-container my-8 flex justify-center">
+		<!-- Ad Unit - After Header (less intrusive) -->
+		<div class="ad-container my-6 flex justify-center max-w-2xl mx-auto">
 			<ins
 				class="adsbygoogle"
 				style="display:block"
