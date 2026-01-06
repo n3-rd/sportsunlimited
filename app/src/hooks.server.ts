@@ -15,7 +15,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 			'public, max-age=31536000, immutable'
 		);
 	}
-	// Cache HTML pages for 1 hour
+	// Don't cache home page HTML - always fetch fresh
+	if (pathname === '/') {
+		response.headers.set(
+			'Cache-Control',
+			'no-store, no-cache, must-revalidate, proxy-revalidate'
+		);
+	}
+	// Cache other HTML pages for 1 hour
 	else if (pathname.endsWith('.html') || !pathname.includes('.')) {
 		response.headers.set(
 			'Cache-Control',
