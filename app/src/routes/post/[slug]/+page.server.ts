@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getPost, getRelatedPosts } from '$lib/utils/sanity';
+import { getPost, getRelatedPosts } from '$lib/utils/sanity.server';
 
 export const load = (async ({ params }) => {
 	const post = await getPost(params.slug);

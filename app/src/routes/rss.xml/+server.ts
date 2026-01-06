@@ -1,4 +1,4 @@
-import { getPosts } from "$lib/utils/sanity";
+import { getPosts } from "$lib/utils/sanity.server";
 import { urlFor } from "$lib/utils/image";
 
 export async function GET({ setHeaders }) {
