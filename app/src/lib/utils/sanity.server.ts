@@ -65,11 +65,6 @@ function transformPost(pbPost: PocketBasePost): Post {
 }
 
 
-// Simple in-memory cache for PocketBase requests
-const cache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
-// Deduplicate concurrent requests for the same URL
 async function fetchPocketBase<T>(endpoint: string, options?: RequestInit): Promise<T> {
 	if (!POCKETBASE_URL) {
 		throw new Error('PUBLIC_DB_URL environment variable is not set');
@@ -77,17 +72,6 @@ async function fetchPocketBase<T>(endpoint: string, options?: RequestInit): Prom
 
 	const url = `${POCKETBASE_URL}${endpoint}`;
 	const start = Date.now();
-
-	// Check cache for GET requests
-	const isGet = !options?.method || options.method.toUpperCase() === 'GET';
-	if (isGet && cache.has(url)) {
-		const cached = cache.get(url)!;
-		if (Date.now() - cached.timestamp < CACHE_TTL) {
-			console.log(`[PocketBase] CACHE HIT: ${endpoint} (${Date.now() - start}ms)`);
-			return cached.data;
-		}
-		cache.delete(url);
-	}
 
 	console.log(`[PocketBase] FETCH START: ${endpoint}`);
 	const controller = new AbortController();
@@ -122,11 +106,6 @@ async function fetchPocketBase<T>(endpoint: string, options?: RequestInit): Prom
 
 		const data = await response.json();
 
-		// Cache successful GET requests
-		if (isGet) {
-			cache.set(url, { data, timestamp: Date.now() });
-		}
-
 		const itemCount = data.items?.length ?? 'N/A';
 		console.log(`[PocketBase] FETCH SUCCESS: ${endpoint} (${Date.now() - start}ms) - Items: ${itemCount}`);
 		return data;
@@ -145,7 +124,7 @@ async function fetchPocketBase<T>(endpoint: string, options?: RequestInit): Prom
 
 export async function getPosts(limit = 60): Promise<Post[]> {
 	const data = await fetchPocketBase<PocketBaseListResponse>(
-		`/api/collections/${COLLECTION_NAME}/records?page=1&perPage=${limit}&sort=-created`
+		`/api/collections/${COLLECTION_NAME}/records?page=1&perPage=${limit}&sort=-created&filter=(status="Published" || status="")`
 	);
 
 	return data.items.map(transformPost);
@@ -153,7 +132,7 @@ export async function getPosts(limit = 60): Promise<Post[]> {
 
 export async function getFeaturedPosts(limit = 5): Promise<Post[]> {
 	const data = await fetchPocketBase<PocketBaseListResponse>(
-		`/api/collections/${COLLECTION_NAME}/records?page=1&perPage=${limit}&sort=-created`
+		`/api/collections/${COLLECTION_NAME}/records?page=1&perPage=${limit}&sort=-created&filter=(status="Published" || status="")`
 	);
 
 	return data.items.map(transformPost);
@@ -196,7 +175,7 @@ export async function getRelatedPosts(
 export async function getPostsByTag(tag: string, limit = 6): Promise<Post[]> {
 	const encodedTag = encodeURIComponent(tag);
 	const data = await fetchPocketBase<PocketBaseListResponse>(
-		`/api/collections/${COLLECTION_NAME}/records?filter=tags~"${encodedTag}"&sort=-created&perPage=${limit}`
+		`/api/collections/${COLLECTION_NAME}/records?filter=tags~"${encodedTag}" && (status="Published" || status="")&sort=-created&perPage=${limit}`
 	);
 
 	return data.items.map(transformPost);
@@ -206,17 +185,10 @@ export async function getTrendingPosts(limit = 5): Promise<Post[]> {
 	return getFeaturedPosts(limit);
 }
 
-let tagsCache: { data: string[]; timestamp: number } | null = null;
-const TAGS_CACHE_TTL = 30 * 60 * 1000; // 30 minutes for tags
-
 export async function getTags(): Promise<string[]> {
-	if (tagsCache && Date.now() - tagsCache.timestamp < TAGS_CACHE_TTL) {
-		return tagsCache.data;
-	}
-
-	// Fetch only what's necessary for tags
+	// Fetch only what's necessary for tags (only published posts)
 	const data = await fetchPocketBase<PocketBaseListResponse>(
-		`/api/collections/${COLLECTION_NAME}/records?perPage=200`
+		`/api/collections/${COLLECTION_NAME}/records?perPage=200&filter=(status="Published" || status="")`
 	);
 
 	const allTags: string[] = [];
@@ -227,14 +199,13 @@ export async function getTags(): Promise<string[]> {
 	});
 
 	const uniqueTags = [...new Set(allTags)];
-	tagsCache = { data: uniqueTags, timestamp: Date.now() };
 	return uniqueTags;
 }
 
 export async function getTaggedPosts(tag: string, limit = 100): Promise<Post[]> {
 	const encodedTag = encodeURIComponent(tag);
 	const data = await fetchPocketBase<PocketBaseListResponse>(
-		`/api/collections/${COLLECTION_NAME}/records?filter=tags~"${encodedTag}"&sort=-created&perPage=${limit}`
+		`/api/collections/${COLLECTION_NAME}/records?filter=tags~"${encodedTag}" && (status="Published" || status="")&sort=-created&perPage=${limit}`
 	);
 
 	return data.items.map(transformPost);
@@ -244,7 +215,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 	try {
 		const encodedSlug = encodeURIComponent(slug);
 		const data = await fetchPocketBase<PocketBaseListResponse>(
-			`/api/collections/${COLLECTION_NAME}/records?filter=slug="${encodedSlug}"&perPage=1`
+			`/api/collections/${COLLECTION_NAME}/records?filter=slug="${encodedSlug}" && (status="Published" || status="")&perPage=1`
 		);
 
 		if (data.items && data.items.length > 0) {
