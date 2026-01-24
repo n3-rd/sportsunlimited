@@ -238,21 +238,6 @@
 
 <!-- Article Content -->
 <section class="post py-7">
-	{#if data.mainImage}
-		<img
-			class="post__cover
-			object-cover object-top w-full h-[30rem] mb-8 rounded-lg shadow-lg
-			"
-			src={urlFor(data.mainImage).width(1200).height(630).quality(90).url()}
-			srcset={getResponsiveImageSrcset(data.mainImage, 1200)}
-			sizes="(max-width: 768px) 100vw, 1200px"
-			alt="Cover image for {data.title}"
-			loading="eager"
-			fetchpriority="high"
-		/>
-	{:else}
-		<div class="post__cover--none"></div>
-	{/if}
 	<div class="post__container max-w-4xl mx-auto">
 		<header class="post-header mb-6">
 			<h1 class="post__title text-4xl md:text-5xl font-bold mb-4 text-gray-900 leading-tight">{data.title}</h1>
@@ -310,17 +295,31 @@
 			</div>
 		</header>
 
-		<!-- Ad Unit - After Header (less intrusive) -->
-		<div class="ad-container my-6 flex justify-center max-w-2xl mx-auto">
-			<ins
-				class="adsbygoogle"
-				style="display:block"
-				data-ad-client="ca-pub-3810788597906222"
-				data-ad-slot="3550867773"
-				data-ad-format="auto"
-				data-full-width-responsive="true"
-			></ins>
+		<!-- Ad Unit - After Header -->
+		<div class="ad-container my-8 flex justify-center">
+			<img
+				src="/patent-ad.png"
+				alt="Sponsored advert"
+				loading="eager"
+				class="w-full max-w-3xl h-auto rounded-md shadow-sm"
+			/>
 		</div>
+
+		{#if data.mainImage}
+			<img
+				class="post__cover
+				object-cover object-top w-full h-[30rem] mb-8 rounded-lg shadow-lg
+				"
+				src={urlFor(data.mainImage).width(1200).height(630).quality(90).url()}
+				srcset={getResponsiveImageSrcset(data.mainImage, 1200)}
+				sizes="(max-width: 768px) 100vw, 1200px"
+				alt="Cover image for {data.title}"
+				loading="eager"
+				fetchpriority="high"
+			/>
+		{:else}
+			<div class="post__cover--none"></div>
+		{/if}
 
 		<div class="post__content prose prose-lg max-w-none">
 			<PortableText value={data.body} components={{}} />
