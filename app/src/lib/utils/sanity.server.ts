@@ -39,6 +39,21 @@ function transformPost(pbPost: PocketBasePost): Post {
 		? { current: pbPost.slug }
 		: pbPost.slug || { current: '' };
 
+	// Parse keywords (PocketBase may return array or JSON string)
+	const toKeywords = (v: unknown): string[] | undefined => {
+		if (Array.isArray(v)) return v.filter((k): k is string => typeof k === 'string');
+		if (typeof v === 'string') {
+			try {
+				const parsed = JSON.parse(v);
+				return Array.isArray(parsed) ? parsed.filter((k: unknown): k is string => typeof k === 'string') : undefined;
+			} catch {
+				return undefined;
+			}
+		}
+		return undefined;
+	};
+	const keywords = toKeywords(pbPost.keywords);
+
 	// Construct image URL and transform to mainImage structure
 	let mainImage: Post['mainImage'] | undefined;
 	const imageUrl = getImageUrl(pbPost);
@@ -60,6 +75,7 @@ function transformPost(pbPost: PocketBasePost): Post {
 		excerpt: pbPost.excerpt,
 		mainImage,
 		tags: pbPost.tags || [],
+		...(keywords?.length ? { keywords } : {}),
 		body
 	};
 }
@@ -127,6 +143,7 @@ export async function getPosts(limit = 60): Promise<Post[]> {
 		`/api/collections/${COLLECTION_NAME}/records?page=1&perPage=${limit}&sort=-created&filter=(status="Published" || status="")`
 	);
 
+	if (!data?.items || !Array.isArray(data.items)) return [];
 	return data.items.map(transformPost);
 }
 
@@ -190,6 +207,8 @@ export async function getTags(): Promise<string[]> {
 	const data = await fetchPocketBase<PocketBaseListResponse>(
 		`/api/collections/${COLLECTION_NAME}/records?perPage=200&filter=(status="Published" || status="")`
 	);
+
+	if (!data?.items || !Array.isArray(data.items)) return [];
 
 	const allTags: string[] = [];
 	data.items.forEach(post => {

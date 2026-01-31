@@ -25,6 +25,11 @@
 
 	const articleUrl = `https://www.sportsunlimited.ng/post/${data.slug.current}`;
 
+	const metaKeywords = $derived.by(() => {
+		const k = (data.keywords?.length ? data.keywords : data.tags)?.join(', ');
+		return k ? `${k}, Nigerian sports news, sports unlimited` : 'Nigerian sports news, sports unlimited';
+	});
+
 	function copyLink() {
 		navigator.clipboard.writeText(articleUrl).then(() => {
 			linkCopied = true;
@@ -137,7 +142,7 @@
 	<meta name="twitter:image:alt" content={data.title} />
 	
 	<!-- Additional SEO meta tags -->
-	<meta name="keywords" content={data.tags ? data.tags.join(', ') + ', Nigerian sports news, sports unlimited' : 'Nigerian sports news, sports unlimited'} />
+	<meta name="keywords" content={metaKeywords} />
 	<meta name="author" content="Sports Unlimited" />
 	<meta name="publisher" content="Sports Unlimited" />
 	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -184,7 +189,7 @@
 			"@id": "https://www.sportsunlimited.ng/post/${data.slug.current}"
 		},
 		"articleSection": "Sports",
-		"keywords": "${data.tags ? data.tags.join(', ') : 'Nigerian sports news'}",
+		"keywords": "${(data.keywords?.length ? data.keywords : data.tags)?.join(', ') || 'Nigerian sports news'}",
 		"url": "https://www.sportsunlimited.ng/post/${data.slug.current}",
 		"wordCount": "${data.body ? JSON.stringify(data.body).split(' ').length : 0}"
 	}
