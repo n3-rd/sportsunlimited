@@ -14,6 +14,7 @@ export interface Post {
         mainImageUrl?: string; // For compatibility
     };
     tags?: string[];
+    keywords?: string[];
     body: PortableTextBlock[];
 }
 
@@ -28,7 +29,7 @@ export interface PocketBasePost {
     excerpt?: string;
     mainImage?: string;
     tags?: string[];
-    keywords?: string; // JSON string
+    keywords?: string[] | string; // array from API or JSON string
     body?: string; // JSON string
     status?: string;
 }

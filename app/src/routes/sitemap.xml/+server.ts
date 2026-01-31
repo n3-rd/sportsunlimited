@@ -1,36 +1,55 @@
 import { getPosts, getTags } from "$lib/utils/sanity.server";
 
+export const prerender = false;
+
+const site = 'https://www.sportsunlimited.ng';
+
+function staticSitemapXml(lastmodDate: string): string {
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>${site}</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+<url><loc>${site}/about</loc><lastmod>${lastmodDate}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>${site}/contact</loc><lastmod>${lastmodDate}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>${site}/privacy</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<url><loc>${site}/terms</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<url><loc>${site}/disclaimer</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<url><loc>${site}/tags</loc><lastmod>${lastmodDate}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+</urlset>`;
+}
+
 export async function GET({ setHeaders })  {
     setHeaders({
         'Content-Type': 'application/xml',
         'Cache-Control': 'public, max-age=3600'
     });
 
-    const site = 'https://www.sportsunlimited.ng';
-    
+    const lastmodDate = new Date().toISOString().split('T')[0];
+    const toLastmod = (value: string | undefined): string => {
+        if (!value) return lastmodDate;
+        const d = new Date(value);
+        return isNaN(d.getTime()) ? lastmodDate : d.toISOString().split('T')[0];
+    };
+
+    let posts: Awaited<ReturnType<typeof getPosts>> = null;
+    let tags: Awaited<ReturnType<typeof getTags>> = [];
     try {
-        const [posts, tags] = await Promise.all([
-            getPosts(),
-            getTags()
-        ]);
+        [posts, tags] = await Promise.all([getPosts(), getTags()]);
+    } catch (error) {
+        console.error('Sitemap generation error:', error);
+        return new Response(staticSitemapXml(lastmodDate), {
+            headers: { 'Content-Type': 'application/xml' }
+        });
+    }
 
-        if (!posts) {
-            return new Response("Not found", {
-                status: 404,
-                headers: {
-                    'Content-Type': 'text/plain'
-                }
-            });
-        }
+    if (!posts || !Array.isArray(posts)) {
+        return new Response(staticSitemapXml(lastmodDate), {
+            headers: { 'Content-Type': 'application/xml' }
+        });
+    }
 
-        const now = new Date().toISOString();
-        const lastmodDate = now.split('T')[0]; // YYYY-MM-DD for static pages
-        const toLastmod = (value: string | undefined): string => {
-            if (!value) return lastmodDate;
-            const d = new Date(value);
-            return isNaN(d.getTime()) ? lastmodDate : d.toISOString().split('T')[0];
-        };
-        const uniqueTags = [...new Set(tags)];
+    try {
+        const uniqueTags = [...new Set(Array.isArray(tags) ? tags : [])];
+        const postsWithSlug = posts.filter((p) => !!p.slug?.current);
 
         const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
@@ -93,18 +112,20 @@ ${uniqueTags.map(tag => `<url>
 </url>`).join('\n')}
 
 <!-- Blog Posts -->
-${posts.map(post => {
+${postsWithSlug.map(post => {
     const lastmod = toLastmod(post._updatedAt ?? post._createdAt);
     const isRecent = new Date(post._createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     
-    // Escape XML entities
-    const escapeXml = (str) => {
-        if (!str) return '';
-        return str.replace(/&/g, '&amp;')
-                  .replace(/</g, '&lt;')
-                  .replace(/>/g, '&gt;')
-                  .replace(/"/g, '&quot;')
-                  .replace(/'/g, '&apos;');
+    // Escape XML entities and backtick (so template literal isn't broken by content)
+    const escapeXml = (str: string | undefined) => {
+        if (str == null || str === '') return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;')
+            .replace(/`/g, '&#96;');
     };
     
     return `<url>
@@ -124,11 +145,8 @@ ${posts.map(post => {
         return new Response(sitemap);
     } catch (error) {
         console.error('Sitemap generation error:', error);
-        return new Response("Internal Server Error", {
-            status: 500,
-            headers: {
-                'Content-Type': 'text/plain'
-            }
+        return new Response(staticSitemapXml(lastmodDate), {
+            headers: { 'Content-Type': 'application/xml' }
         });
     }
 }
