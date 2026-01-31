@@ -24,6 +24,12 @@ export async function GET({ setHeaders })  {
         }
 
         const now = new Date().toISOString();
+        const lastmodDate = now.split('T')[0]; // YYYY-MM-DD for static pages
+        const toLastmod = (value: string | undefined): string => {
+            if (!value) return lastmodDate;
+            const d = new Date(value);
+            return isNaN(d.getTime()) ? lastmodDate : d.toISOString().split('T')[0];
+        };
         const uniqueTags = [...new Set(tags)];
 
         const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -33,7 +39,7 @@ export async function GET({ setHeaders })  {
 <!-- Homepage -->
 <url>
     <loc>${site}</loc>
-    <lastmod>${now.split('T')[0]}</lastmod>
+    <lastmod>${lastmodDate}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
 </url>
@@ -41,31 +47,31 @@ export async function GET({ setHeaders })  {
 <!-- Static Pages -->
 <url>
     <loc>${site}/about</loc>
-    <lastmod>${now.split('T')[0]}</lastmod>
+    <lastmod>${lastmodDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
 </url>
 <url>
     <loc>${site}/contact</loc>
-    <lastmod>${now.split('T')[0]}</lastmod>
+    <lastmod>${lastmodDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
 </url>
 <url>
     <loc>${site}/privacy</loc>
-    <lastmod>${now.split('T')[0]}</lastmod>
+    <lastmod>${lastmodDate}</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
 </url>
 <url>
     <loc>${site}/terms</loc>
-    <lastmod>${now.split('T')[0]}</lastmod>
+    <lastmod>${lastmodDate}</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
 </url>
 <url>
     <loc>${site}/disclaimer</loc>
-    <lastmod>${now.split('T')[0]}</lastmod>
+    <lastmod>${lastmodDate}</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
 </url>
@@ -73,7 +79,7 @@ export async function GET({ setHeaders })  {
 <!-- Tags Index -->
 <url>
     <loc>${site}/tags</loc>
-    <lastmod>${now.split('T')[0]}</lastmod>
+    <lastmod>${lastmodDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
 </url>
@@ -81,14 +87,14 @@ export async function GET({ setHeaders })  {
 <!-- Individual Tag Pages -->
 ${uniqueTags.map(tag => `<url>
     <loc>${site}/tags/${encodeURIComponent(tag)}</loc>
-    <lastmod>${now.split('T')[0]}</lastmod>
+    <lastmod>${lastmodDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
 </url>`).join('\n')}
 
 <!-- Blog Posts -->
 ${posts.map(post => {
-    const lastmod = (post._updatedAt || post._createdAt).split('T')[0];
+    const lastmod = toLastmod(post._updatedAt ?? post._createdAt);
     const isRecent = new Date(post._createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     
     // Escape XML entities
