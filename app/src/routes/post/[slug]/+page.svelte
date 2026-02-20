@@ -2,12 +2,19 @@
 	import { PortableText } from '@portabletext/svelte';
 	import { formatDate, calculateReadingTime } from '$lib/utils/index';
 	import { urlFor, getResponsiveImageSrcset } from '$lib/utils/image';
+	import PortableTextLink from '$lib/components/PortableTextLink.svelte';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import { Clock, Copy, Check } from 'svelte-radix';
 
 	import RelatedPosts from '../../../components/RelatedPosts.svelte';
 	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
+
+	const portableTextComponents = {
+		marks: {
+			link: PortableTextLink
+		}
+	};
 
 	interface Props {
 		data: PageData;
@@ -327,7 +334,7 @@
 		{/if}
 
 		<div class="post__content prose prose-lg max-w-none">
-			<PortableText value={data.body} components={{}} />
+			<PortableText value={data.body || []} components={portableTextComponents} />
 		</div>
 	</div>
 </section>
