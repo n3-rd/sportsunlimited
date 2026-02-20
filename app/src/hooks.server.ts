@@ -15,8 +15,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 			'public, max-age=31536000, immutable'
 		);
 	}
-	// Don't cache home page HTML - always fetch fresh
-	if (pathname === '/') {
+	// Don't cache home page or post pages - always fetch fresh so editor updates show immediately
+	if (pathname === '/' || pathname.startsWith('/post/')) {
 		response.headers.set(
 			'Cache-Control',
 			'no-store, no-cache, must-revalidate, proxy-revalidate'

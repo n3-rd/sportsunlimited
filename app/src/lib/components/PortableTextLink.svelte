@@ -9,7 +9,7 @@
 		{href}
 		target="_blank"
 		rel="noopener noreferrer"
-		class="text-red-600 hover:text-red-700 underline underline-offset-2 font-medium"
+		class="text-red-600 hover:text-red-700 underline underline-offset-2 font-medium normal-case"
 	>
 		{@render children()}
 	</a>

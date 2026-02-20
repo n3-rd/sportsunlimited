@@ -333,7 +333,7 @@
 			<div class="post__cover--none"></div>
 		{/if}
 
-		<div class="post__content prose prose-lg max-w-none">
+		<div class="post__content prose prose-lg max-w-none normal-case">
 			<PortableText value={data.body || []} components={portableTextComponents} />
 		</div>
 	</div>
@@ -434,6 +434,7 @@
 .post .post__content a {
 	color: var(--blue-600);
 	text-decoration: none;
+	text-transform: none !important;
 }
 
 /* Reading Progress Bar */
