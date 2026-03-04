@@ -33,6 +33,7 @@
 				<a href="/tags" class="nav-link hover:text-gray-300 transition-colors font-medium">Categories</a>
 				<a href="/npfl/standings" class="nav-link hover:text-gray-300 transition-colors font-medium">NPFL Table</a>
 				<a href="/npfl/fixtures" class="nav-link hover:text-gray-300 transition-colors font-medium">NPFL Fixtures</a>
+				<a href="/advertising" class="nav-link hover:text-gray-300 transition-colors font-medium">Advertising</a>
 				<a href="/about" class="nav-link hover:text-gray-300 transition-colors font-medium">About</a>
 				<a href="/contact" class="nav-link hover:text-gray-300 transition-colors font-medium">Contact</a>
 			</nav>
@@ -68,6 +69,11 @@
 							<DropdownMenu.Item class="mobile-menu-item">
 								<a href="/npfl/fixtures" class="flex items-center gap-3 w-full py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-900 font-medium">
 									NPFL Fixtures
+								</a>
+							</DropdownMenu.Item>
+							<DropdownMenu.Item class="mobile-menu-item">
+								<a href="/advertising" class="flex items-center gap-3 w-full py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-900 font-medium">
+									Advertising
 								</a>
 							</DropdownMenu.Item>
 							<DropdownMenu.Item class="mobile-menu-item">

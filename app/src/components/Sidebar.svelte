@@ -97,6 +97,13 @@
     <section class="ad-section">
         <img src="/book.jpg" alt="Eyes on the Nigerian League book" class="w-full rounded-lg shadow-sm">
     </section>
+
+    <!-- Ad Rates Rate Card -->
+    <section class="ad-rates-section bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <a href="/advertising" class="block">
+            <img src="/sidebar/adrates.png" alt="Sports Unlimited Online Rate Card - Advertising rates in NGN and USD" class="w-full rounded-lg shadow-sm hover:opacity-95 transition-opacity" />
+        </a>
+    </section>
 </div>
 
 <style>

@@ -2,6 +2,7 @@
 	const mainLinks = [
 		{ name: 'Home', url: '/' },
 		{ name: 'Categories', url: '/tags' },
+		{ name: 'Advertising', url: '/advertising' },
 		{ name: 'About', url: '/about' },
 		{ name: 'Contact', url: '/contact' }
 	];
