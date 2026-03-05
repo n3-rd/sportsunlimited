@@ -15,10 +15,6 @@ export async function GET({ setHeaders }) {
 		<loc>${site}/sitemap.xml</loc>
 		<lastmod>${now}</lastmod>
 	</sitemap>
-	<sitemap>
-		<loc>${site}/rss.xml</loc>
-		<lastmod>${now}</lastmod>
-	</sitemap>
 </sitemapindex>`;
 
 	return new Response(sitemapIndex);
