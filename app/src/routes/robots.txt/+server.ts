@@ -4,7 +4,6 @@ Allow: /
 
 # Sitemaps
 Sitemap: https://www.sportsunlimited.ng/sitemap.xml
-Sitemap: https://www.sportsunlimited.ng/rss.xml
 
 # Disallow admin paths (if any)
 Disallow: /admin/
@@ -17,10 +16,7 @@ Allow: /about
 Allow: /contact
 Allow: /privacy
 Allow: /terms
-Allow: /disclaimer
-
-# Crawl-delay for respectful crawling
-Crawl-delay: 1`;
+Allow: /disclaimer`;
 
 	return new Response(robots, {
 		headers: {
