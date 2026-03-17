@@ -7,12 +7,14 @@ const site = 'https://www.sportsunlimited.ng';
 function staticSitemapXml(lastmodDate: string): string {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>${site}</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+<url><loc>${site}/</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
 <url><loc>${site}/about</loc><lastmod>${lastmodDate}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 <url><loc>${site}/contact</loc><lastmod>${lastmodDate}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 <url><loc>${site}/privacy</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 <url><loc>${site}/terms</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 <url><loc>${site}/disclaimer</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<url><loc>${site}/npfl/fixtures</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+<url><loc>${site}/npfl/standings</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
 <url><loc>${site}/tags</loc><lastmod>${lastmodDate}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>`;
 }
@@ -57,7 +59,7 @@ export async function GET({ setHeaders })  {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <!-- Homepage -->
 <url>
-    <loc>${site}</loc>
+    <loc>${site}/</loc>
     <lastmod>${lastmodDate}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -95,6 +97,20 @@ export async function GET({ setHeaders })  {
     <priority>0.3</priority>
 </url>
 
+<!-- NPFL Pages -->
+<url>
+    <loc>${site}/npfl/fixtures</loc>
+    <lastmod>${lastmodDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+</url>
+<url>
+    <loc>${site}/npfl/standings</loc>
+    <lastmod>${lastmodDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+</url>
+
 <!-- Tags Index -->
 <url>
     <loc>${site}/tags</loc>
@@ -105,7 +121,7 @@ export async function GET({ setHeaders })  {
 
 <!-- Individual Tag Pages -->
 ${uniqueTags.map(tag => `<url>
-    <loc>${site}/tags/${encodeURIComponent(tag)}</loc>
+    <loc>${site}/tags/${tag.toLowerCase().replace(/\s+/g, '-')}</loc>
     <lastmod>${lastmodDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

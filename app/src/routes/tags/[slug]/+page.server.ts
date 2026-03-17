@@ -1,14 +1,20 @@
-import { getTaggedPosts } from '$lib/utils/sanity.server';
+import { getTaggedPosts, getTags } from '$lib/utils/sanity.server';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {
-    const capitalizeFirstLetter = (string: string) => {
-        const words = string.split('-');
-        return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    }
     const { slug } = params;
-    const tag = capitalizeFirstLetter(slug);
+    
+    // Get all tags to find the original one that matches this slug
+    const allTags = await getTags();
+    
+    const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
+    
+    // Find the tag that matches the slug
+    const tag = allTags.find(t => slugify(t) === slug) || 
+                slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    
     const posts = await getTaggedPosts(tag);
+    
     return { 
         posts,
         tag,

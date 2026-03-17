@@ -83,7 +83,7 @@
             <h3 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">Popular Categories</h3>
             <div class="flex flex-wrap gap-2">
                 {#each popularTags as tag}
-                    <a href={`/tags/${tag}`} class="tag-link">
+                    <a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="tag-link">
                         <Button variant="outline" size="sm" class="text-xs">
                             {tag}
                         </Button>

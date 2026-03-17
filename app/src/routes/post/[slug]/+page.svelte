@@ -270,7 +270,7 @@
 					<span class="separator">•</span>
 					<div class="post__tags flex flex-wrap gap-2">
 						{#each data.tags as tag}
-							<a href={`/tags/${tag}`} class="post__tag inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-xs font-medium transition-colors">
+							<a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="post__tag inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-xs font-medium transition-colors">
 								{tag}
 							</a>
 						{/each}

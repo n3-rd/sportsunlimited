@@ -62,7 +62,7 @@ export async function GET({ setHeaders }) {
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/">
 	<channel>
 		<title>${escapeXml(siteName)}</title>
-		<link>${site}</link>
+		<link>${site}/</link>
 		<description>${escapeXml(siteDescription)}</description>
 		<language>en-NG</language>
 		<lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
@@ -72,7 +72,7 @@ export async function GET({ setHeaders }) {
 		<image>
 			<url>https://i.postimg.cc/CLVXPt7j/SU.png</url>
 			<title>${escapeXml(siteName)}</title>
-			<link>${site}</link>
+			<link>${site}/</link>
 		</image>
 		${latestPosts.map(post => {
 			const pubDate = new Date(post._createdAt).toUTCString();
