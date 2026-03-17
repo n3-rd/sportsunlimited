@@ -307,7 +307,7 @@
 			</div>
 		</header>
 
-		<!-- Ad Unit - After Header -->
+		<!-- Ad Unit - After Header
 		<div class="ad-container my-8 flex justify-center">
 			<img
 				src="/patent-ad.png"
@@ -315,7 +315,7 @@
 				loading="eager"
 				class="w-full max-w-3xl h-auto rounded-md shadow-sm"
 			/>
-		</div>
+		</div> -->
 
 		{#if data.mainImage}
 			<img
