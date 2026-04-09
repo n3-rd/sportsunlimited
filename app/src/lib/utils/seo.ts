@@ -222,15 +222,27 @@ export function escapeHtml(text: string): string {
  * Generate breadcrumb structured data
  */
 export function generateBreadcrumbStructuredData(items: Array<{ name: string; url: string }>): string {
+	const baseUrl = 'https://www.sportsunlimited.ng';
 	const structuredData = {
 		'@context': 'https://schema.org',
 		'@type': 'BreadcrumbList',
-		itemListElement: items.map((item, index) => ({
-			'@type': 'ListItem',
-			position: index + 1,
-			name: item.name,
-			item: item.url
-		}))
+		itemListElement: items.map((item, index) => {
+			let absoluteUrl = item.url;
+			// Prepend base URL if it's a relative path
+			if (absoluteUrl.startsWith('/')) {
+				absoluteUrl = `${baseUrl}${absoluteUrl === '/' ? '' : absoluteUrl}`;
+			} else if (!absoluteUrl.startsWith('http')) {
+				// Fallback for cases where it doesn't start with / but also isn't absolute
+				absoluteUrl = `${baseUrl}/${absoluteUrl}`;
+			}
+
+			return {
+				'@type': 'ListItem',
+				position: index + 1,
+				name: item.name,
+				item: absoluteUrl
+			};
+		})
 	};
 
 	return `<script type="application/ld+json">${JSON.stringify(structuredData, null, 2)}</script>`;

@@ -202,33 +202,6 @@
 	}
 	</script>`}
 	
-	<!-- Breadcrumb Structured Data -->
-	{@html `<script type="application/ld+json">
-	{
-		"@context": "https://schema.org",
-		"@type": "BreadcrumbList",
-		"itemListElement": [
-			{
-				"@type": "ListItem",
-				"position": 1,
-				"name": "Home",
-				"item": "https://www.sportsunlimited.ng/"
-			},
-			{
-				"@type": "ListItem",
-				"position": 2,
-				"name": "Articles",
-				"item": "https://www.sportsunlimited.ng/"
-			},
-			{
-				"@type": "ListItem",
-				"position": 3,
-				"name": "${data.title.replace(/"/g, '\\"')}",
-				"item": "https://www.sportsunlimited.ng/post/${data.slug.current}"
-			}
-		]
-	}
-	</script>`}
 </svelte:head>
 
 <!-- Reading Progress Bar -->
