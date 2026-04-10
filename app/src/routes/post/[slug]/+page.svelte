@@ -9,6 +9,11 @@
 
 	import RelatedPosts from '../../../components/RelatedPosts.svelte';
 	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
+	import SEO from '../../../components/SEO.svelte';
+	import { 
+		generateArticleStructuredData, 
+		generateBreadcrumbStructuredData 
+	} from '$lib/utils/seo';
 
 	const portableTextComponents = {
 		marks: {
@@ -114,95 +119,41 @@
 			icon: '/mail.svg',
 		}
 	];
+
+	const seoData = {
+		title: `${data.title} | Sports Unlimited`,
+		description: data.excerpt || data.title,
+		type: 'article' as const,
+		image: data.mainImage ? urlFor(data.mainImage).width(1200).height(630).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png',
+		keywords: metaKeywords,
+		article: {
+			publishedTime: data._createdAt,
+			modifiedTime: data._updatedAt || data._createdAt,
+			author: 'Sports Unlimited',
+			section: 'Sports',
+			tags: data.tags
+		}
+	};
+
+	const articleSchema = generateArticleStructuredData({
+		title: data.title,
+		description: data.excerpt || data.title,
+		url: articleUrl,
+		image: seoData.image,
+		publishedTime: data._createdAt,
+		modifiedTime: data._updatedAt || data._createdAt,
+		keywords: metaKeywords
+	});
+
+	const breadcrumbSchema = generateBreadcrumbStructuredData([
+		{ name: 'Home', url: '/' },
+		{ name: 'Sports', url: '/' },
+		{ name: data.title, url: articleUrl }
+	]);
+
+	const schemas = [articleSchema, breadcrumbSchema];
 </script>
-<svelte:head>
-	<title>{data.title} | Sports Unlimited</title>
-	<meta name="description" content={data.excerpt || data.title} />
-	
-	<!-- Open Graph / Facebook -->
-	<meta property="og:type" content="article" />
-	<meta property="og:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
-	<meta property="og:title" content={data.title} />
-	<meta property="og:description" content={data.excerpt || data.title} />
-	<meta property="og:image" content={data.mainImage ? urlFor(data.mainImage).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png'} />
-	<meta property="og:image:width" content="1200" />
-	<meta property="og:image:height" content="630" />
-	<meta property="og:image:alt" content={data.title} />
-	<meta property="og:site_name" content="Sports Unlimited" />
-	<meta property="og:locale" content="en_NG" />
-	<meta property="article:author" content="Sports Unlimited" />
-	<meta property="article:published_time" content={data._createdAt} />
-	<meta property="article:modified_time" content={data._updatedAt || data._createdAt} />
-	<meta property="article:section" content="Sports" />
-	{#if data.tags}
-		{#each data.tags as tag}
-			<meta property="article:tag" content={tag} />
-		{/each}
-	{/if}
-	
-	<!-- Twitter -->
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:url" content={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
-	<meta name="twitter:title" content={data.title} />
-	<meta name="twitter:description" content={data.excerpt || data.title} />
-	<meta name="twitter:image" content={data.mainImage ? urlFor(data.mainImage).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png'} />
-	<meta name="twitter:image:alt" content={data.title} />
-	
-	<!-- Additional SEO meta tags -->
-	<meta name="keywords" content={metaKeywords} />
-	<meta name="author" content="Sports Unlimited" />
-	<meta name="publisher" content="Sports Unlimited" />
-	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-	<meta name="googlebot" content="index, follow" />
-	<meta name="language" content="English" />
-	<meta name="geo.region" content="NG" />
-	<meta name="geo.country" content="Nigeria" />
-	
-	<!-- Canonical URL -->
-	<link rel="canonical" href={`https://www.sportsunlimited.ng/post/${data.slug.current}`} />
-	
-	<!-- Structured Data for Article -->
-	{@html `<script type="application/ld+json">
-	{
-		"@context": "https://schema.org",
-		"@type": "NewsArticle",
-		"headline": "${data.title.replace(/"/g, '\\"')}",
-		"description": "${(data.excerpt || data.title).replace(/"/g, '\\"')}",
-		"image": {
-			"@type": "ImageObject",
-			"url": "${data.mainImage ? urlFor(data.mainImage).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png'}",
-			"width": 1200,
-			"height": 630
-		},
-		"author": {
-			"@type": "Organization",
-			"name": "Sports Unlimited",
-			"url": "https://www.sportsunlimited.ng"
-		},
-		"publisher": {
-			"@type": "Organization",
-			"name": "Sports Unlimited",
-			"logo": {
-				"@type": "ImageObject",
-				"url": "https://i.postimg.cc/CLVXPt7j/SU.png",
-				"width": 600,
-				"height": 60
-			}
-		},
-		"datePublished": "${data._createdAt}",
-		"dateModified": "${data._updatedAt || data._createdAt}",
-		"mainEntityOfPage": {
-			"@type": "WebPage",
-			"@id": "https://www.sportsunlimited.ng/post/${data.slug.current}"
-		},
-		"articleSection": "Sports",
-		"keywords": "${(data.keywords?.length ? data.keywords : data.tags)?.join(', ') || 'Nigerian sports news'}",
-		"url": "https://www.sportsunlimited.ng/post/${data.slug.current}",
-		"wordCount": "${data.body ? JSON.stringify(data.body).split(' ').length : 0}"
-	}
-	</script>`}
-	
-</svelte:head>
+<SEO {...seoData} schemaorg={schemas} />
 
 <!-- Reading Progress Bar -->
 <div class="reading-progress-bar fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">

@@ -1,32 +1,24 @@
 <script>
+	import SEO from '../components/SEO.svelte';
+	import { generateBreadcrumbStructuredData } from '$lib/utils/seo';
+
 	let blogName = 'Sports Unlimited';
 	let authorName = 'Michael Jemegah';
+
+	const seoData = {
+		title: 'About Sports Unlimited | Nigerian Sports News Website',
+		description: "Learn about Sports Unlimited, Nigeria's premier sports news website covering NPFL, Football, Basketball, Athletics and more. Meet our team and mission.",
+		keywords: 'about sports unlimited, Nigerian sports news, sports blogger, Michael Jemegah, NPFL coverage',
+	};
+
+	const breadcrumbSchema = generateBreadcrumbStructuredData([
+		{ name: 'Home', url: '/' },
+		{ name: 'About', url: '/about' }
+	]);
 </script>
 
-<svelte:head>
-	<title>About Sports Unlimited | Nigerian Sports News Website</title>
-	<meta name="description" content="Learn about Sports Unlimited, Nigeria's premier sports news website covering NPFL, Football, Basketball, Athletics and more. Meet our team and mission." />
-	
-	<!-- Open Graph / Facebook -->
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://www.sportsunlimited.ng/about" />
-	<meta property="og:title" content="About Sports Unlimited | Nigerian Sports News Website" />
-	<meta property="og:description" content="Learn about Sports Unlimited, Nigeria's premier sports news website covering NPFL, Football, Basketball, Athletics and more. Meet our team and mission." />
-	<meta property="og:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
-	<meta property="og:site_name" content="Sports Unlimited" />
-	
-	<!-- Twitter -->
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:url" content="https://www.sportsunlimited.ng/about" />
-	<meta name="twitter:title" content="About Sports Unlimited" />
-	<meta name="twitter:description" content="Learn about Sports Unlimited, Nigeria's premier sports news website covering NPFL, Football, Basketball, Athletics and more." />
-	<meta name="twitter:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
-	
-	<!-- Additional SEO -->
-	<meta name="keywords" content="about sports unlimited, Nigerian sports news, sports blogger, Michael Jemegah, NPFL coverage" />
-	<meta name="robots" content="index, follow" />
-	<link rel="canonical" href="https://www.sportsunlimited.ng/about" />
-</svelte:head>
+<SEO {...seoData} schemaorg={[breadcrumbSchema]} />
+
 
 <main class="pt-8">
 	<h1 class="text-5xl font-bold pb-6">About {blogName}</h1>

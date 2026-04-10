@@ -1,6 +1,8 @@
 <script lang="ts">
 	import PostCard from '../../../components/PostCard.svelte';
 	import Button from "$lib/components/ui/button/button.svelte";
+	import SEO from '../../../components/SEO.svelte';
+	import { generateCollectionPageStructuredData, generateBreadcrumbStructuredData } from '$lib/utils/seo';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -13,32 +15,31 @@
 	function loadMore() {
 		displayCount += 12; // Load 12 more posts each time
 	}
+
+	const seoData = {
+		title: `${tagName} News & Updates | Sports Unlimited - Nigerian Sports`,
+		description: `Read the latest ${tagName} news, updates, and stories on Sports Unlimited. Comprehensive coverage of ${tagName} in Nigerian sports including match reports, analysis, interviews and more.`,
+		keywords: `${tagName}, ${tagName} news, Nigerian sports, sports unlimited, ${tagName} updates, ${tagName} articles`,
+	};
+
+	const collectionSchema = generateCollectionPageStructuredData({
+		name: seoData.title,
+		description: seoData.description,
+		url: `https://www.sportsunlimited.ng/tags/${data.slug}`,
+		posts: posts.slice(0, 10)
+	});
+
+	const breadcrumbSchema = generateBreadcrumbStructuredData([
+		{ name: 'Home', url: '/' },
+		{ name: 'Categories', url: '/tags' },
+		{ name: tagName, url: `/tags/${data.slug}` }
+	]);
+
+	const schemas = [collectionSchema, breadcrumbSchema];
 </script>
 
-<svelte:head>
-	<title>{tagName} News & Updates | Sports Unlimited - Nigerian Sports</title>
-	<meta name="description" content="Read the latest {tagName} news, updates, and stories on Sports Unlimited. Comprehensive coverage of {tagName} in Nigerian sports including match reports, analysis, interviews and more." />
-	
-	<!-- Open Graph / Facebook -->
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://www.sportsunlimited.ng/tags/{data.slug}" />
-	<meta property="og:title" content="{tagName} News | Sports Unlimited" />
-	<meta property="og:description" content="Read the latest {tagName} news and updates on Sports Unlimited. Find all {tagName} related sports stories, analysis and coverage." />
-	<meta property="og:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
-	<meta property="og:site_name" content="Sports Unlimited" />
-	
-	<!-- Twitter -->
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:url" content="https://www.sportsunlimited.ng/tags/{data.slug}" />
-	<meta name="twitter:title" content="{tagName} News" />
-	<meta name="twitter:description" content="Read the latest {tagName} news and updates on Sports Unlimited." />
-	<meta name="twitter:image" content="https://i.postimg.cc/CLVXPt7j/SU.png" />
-	
-	<!-- Additional SEO -->
-	<meta name="keywords" content="{tagName}, {tagName} news, Nigerian sports, sports unlimited, {tagName} updates, {tagName} articles" />
-	<meta name="robots" content="index, follow" />
-	<link rel="canonical" href="https://www.sportsunlimited.ng/tags/{data.slug}" />
-</svelte:head>
+<SEO {...seoData} schemaorg={schemas} />
+
 
 <main class="tag-page max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
 	{#if posts.length === 0}
