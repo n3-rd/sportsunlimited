@@ -15,32 +15,26 @@ export const handle: Handle = async ({ event, resolve }) => {
 			'public, max-age=31536000, immutable'
 		);
 	}
-	// Don't cache home page or post pages - always fetch fresh so editor updates show immediately
+	// Improved caching strategy for better performance
+	// Home page and post pages: cache for 1 minute on CDN, but check frequently
 	if (pathname === '/' || pathname.startsWith('/post/')) {
 		response.headers.set(
 			'Cache-Control',
-			'no-store, no-cache, must-revalidate, proxy-revalidate'
+			'public, max-age=10, s-maxage=60, stale-while-revalidate=3600'
 		);
 	}
 	// Cache other HTML pages for 1 hour
 	else if (pathname.endsWith('.html') || !pathname.includes('.')) {
 		response.headers.set(
 			'Cache-Control',
-			'public, max-age=3600, must-revalidate'
+			'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400'
 		);
 	}
-	// Cache API endpoints and data for 5 minutes, but not SvelteKit data requests
-	else if (pathname.startsWith('/api/') || pathname.endsWith('.xml') || (pathname.endsWith('.json') && !pathname.includes('__data.json'))) {
-		response.headers.set(
-			'Cache-Control',
-			'public, max-age=300, must-revalidate'
-		);
-	}
-	// For SvelteKit data requests, ensure freshness
+	// For SvelteKit data requests, allow short caching
 	else if (pathname.includes('__data.json')) {
 		response.headers.set(
 			'Cache-Control',
-			'no-store, no-cache, must-revalidate, proxy-revalidate'
+			'public, max-age=10, s-maxage=60, stale-while-revalidate=3600'
 		);
 	}
 

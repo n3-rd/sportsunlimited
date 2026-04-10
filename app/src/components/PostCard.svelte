@@ -9,9 +9,11 @@
 	interface Props {
 		post: any;
 		size?: 'small' | 'medium' | 'large';
+		loading?: 'lazy' | 'eager';
+		fetchpriority?: 'high' | 'low' | 'auto';
 	}
 
-	let { post, size = 'medium' }: Props = $props();
+	let { post, size = 'medium', loading = 'lazy', fetchpriority = 'low' }: Props = $props();
 
 	const sizeClasses = {
 		small: 'h-48',
@@ -31,8 +33,8 @@
 				sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 				alt={post.title}
 				class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-				loading="lazy"
-				fetchpriority="low"
+				{loading}
+				{fetchpriority}
 			/>
 			<div class="absolute top-4 left-4">
 				{#if post.tags && post.tags[0]}

@@ -162,47 +162,26 @@
 		}
 		</script>`}
 	{/if}
-
-	<!-- desktop in-feed ads -->
-	<script
-		async
-		src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810788597906222"
-		crossorigin="anonymous"
-	></script>
-	<ins
-		class="adsbygoogle"
-		style="display:block"
-		data-ad-format="fluid"
-		data-ad-layout-key="+30+qn-3c-6z+rp"
-		data-ad-client="ca-pub-3810788597906222"
-		data-ad-slot="7096496582"
-	></ins>
-	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({});
-	</script>
-
-	<!-- mobile in-feed ads -->
-	<script
-		async
-		src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810788597906222"
-		crossorigin="anonymous"
-	></script>
-	<ins
-		class="adsbygoogle"
-		style="display:block"
-		data-ad-format="fluid"
-		data-ad-layout-key="-6t+ed+2i-1n-4w"
-		data-ad-client="ca-pub-3810788597906222"
-		data-ad-slot="9074248071"
-	></ins>
-	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({});
-	</script>
 </svelte:head>
 
 <main class="homepage-wrapper" itemscope itemtype="https://schema.org/CollectionPage">
 	<!-- Main H1 for SEO -->
 	<h1 class="sr-only">Sports Unlimited - Latest Nigerian Sports News</h1>
+
+	<!-- Ad placement - Top of page -->
+	<div class="ad-container my-4 flex justify-center overflow-hidden min-h-[90px]">
+		<ins
+			class="adsbygoogle"
+			style="display:block"
+			data-ad-format="fluid"
+			data-ad-layout-key="+30+qn-3c-6z+rp"
+			data-ad-client="ca-pub-3810788597906222"
+			data-ad-slot="7096496582"
+		></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</div>
 
 	<!-- Category Navigation - Sticky Top -->
 	{#if data.tags && data.tags.length > 0}

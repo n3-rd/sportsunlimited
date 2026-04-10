@@ -138,7 +138,7 @@ async function fetchPocketBase<T>(endpoint: string, options?: RequestInit): Prom
 	}
 }
 
-export async function getPosts(limit = 60): Promise<Post[]> {
+export async function getPosts(limit = 24): Promise<Post[]> {
 	const data = await fetchPocketBase<PocketBaseListResponse>(
 		`/api/collections/${COLLECTION_NAME}/records?page=1&perPage=${limit}&sort=-created&filter=(status="Published" || status="")`
 	);
@@ -163,7 +163,7 @@ export async function getRelatedPosts(
 ): Promise<Post[]> {
 	// For related posts, we only need a few latest ones to filter, or we search
 	// Using a smaller set for better performance
-	const allPosts = await getPosts(100);
+	const allPosts = await getPosts(50);
 	const filtered = allPosts.filter(post => post.slug.current !== currentSlug);
 
 	// Simple keyword matching
@@ -203,9 +203,9 @@ export async function getTrendingPosts(limit = 5): Promise<Post[]> {
 }
 
 export async function getTags(): Promise<string[]> {
-	// Fetch only what's necessary for tags (only published posts)
+	// Fetch only tags from published posts, limiting to 100 for performance
 	const data = await fetchPocketBase<PocketBaseListResponse>(
-		`/api/collections/${COLLECTION_NAME}/records?perPage=200&filter=(status="Published" || status="")`
+		`/api/collections/${COLLECTION_NAME}/records?perPage=100&filter=(status="Published" || status="")&fields=tags`
 	);
 
 	if (!data?.items || !Array.isArray(data.items)) return [];
@@ -218,7 +218,7 @@ export async function getTags(): Promise<string[]> {
 	});
 
 	const uniqueTags = [...new Set(allTags)];
-	return uniqueTags;
+	return uniqueTags.slice(0, 15);
 }
 
 export async function getTaggedPosts(tag: string, limit = 100): Promise<Post[]> {

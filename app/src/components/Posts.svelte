@@ -51,8 +51,13 @@
                 <p class="text-gray-600 text-lg">Top stories and breaking news</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {#each featuredGrid as post}
-                    <PostCard post={post} size="medium" />
+                {#each featuredGrid as post, index}
+                    <PostCard 
+                        post={post} 
+                        size="medium" 
+                        loading={index < 3 ? "eager" : "lazy"} 
+                        fetchpriority={index < 3 ? "high" : "low"} 
+                    />
                 {/each}
             </div>
         </section>

@@ -3,27 +3,29 @@
 ## Implemented Optimizations
 
 ### 1. Image Optimization
-- ✅ WebP format support (automatic via Sanity CDN)
-- ✅ Responsive image srcsets for all images
+- ✅ Responsive image srcsets with PocketBase thumbnail support (automatic resizing)
+- ✅ WebP/optimized format via PocketBase `?thumb` parameter
 - ✅ Proper `sizes` attributes for responsive loading
-- ✅ Lazy loading for below-the-fold images
-- ✅ `fetchpriority` attributes for critical images
+- ✅ Eager loading for above-the-fold images (`hero` and first `featured` posts)
+- ✅ `fetchpriority="high"` for critical LCP images
 
 ### 2. Caching
-- ✅ Browser caching headers via `hooks.server.ts`
+- ✅ Smart caching via `hooks.server.ts`
   - Static assets: 1 year cache
-  - HTML pages: 1 hour cache
+  - Home and Post pages: 10s browser, 1m CDN, 1h stale-while-revalidate
   - API/XML: 5 minutes cache
-- ✅ CDN-ready (works with Vercel Edge Network)
+- ✅ CDN-ready with `s-maxage` for Vercel Edge Network
 
-### 3. SEO Fixes
-- ✅ Single H1 tag per page
-- ✅ Proper heading hierarchy (H1 → H2 → H3)
+### 3. Data Loading
+- ✅ Reduced initial data payload (24 posts max for home page)
+- ✅ Optimized tag fetching (field filtering and limit)
+- ✅ Parallel fetching for category sections
 
-### 4. Resource Hints
-- ✅ DNS prefetch for external domains
-- ✅ Preconnect for critical resources
-- ✅ Deferred non-critical JavaScript
+### 4. Critical Path
+- ✅ Preloaded critical Google Fonts
+- ✅ Non-blocking font CSS loading
+- ✅ Removed redundant AdSense scripts
+- ✅ Resource hints (DNS prefetch and preconnect) optimized for PocketBase
 
 ## Additional Recommendations
 

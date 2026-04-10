@@ -32,10 +32,10 @@ export async function GET({ setHeaders })  {
         return isNaN(d.getTime()) ? lastmodDate : d.toISOString().split('T')[0];
     };
 
-    let posts: Awaited<ReturnType<typeof getPosts>> = null;
+    let posts: Awaited<ReturnType<typeof getPosts>> = [];
     let tags: Awaited<ReturnType<typeof getTags>> = [];
     try {
-        [posts, tags] = await Promise.all([getPosts(), getTags()]);
+        [posts, tags] = await Promise.all([getPosts(1000), getTags()]);
     } catch (error) {
         console.error('Sitemap generation error:', error);
         return new Response(staticSitemapXml(lastmodDate), {
