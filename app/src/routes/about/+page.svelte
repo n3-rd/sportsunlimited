@@ -1,5 +1,5 @@
 <script>
-	import SEO from '../components/SEO.svelte';
+	import SEO from '../../components/SEO.svelte';
 	import { generateBreadcrumbStructuredData } from '$lib/utils/seo';
 
 	let blogName = 'Sports Unlimited';

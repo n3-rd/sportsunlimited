@@ -31,14 +31,14 @@
 <Header />
 <div class="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 	<div class="flex flex-col gap-8 py-8 md:flex-row">
-		<main class="w-full md:w-3/4" role="main">
+		<main class="w-full md:w-3/4">
 			{#key pathname}
 				<div in:fade={{ duration: 300, delay: 400 }} out:fade={{ duration: 300 }}>
 					{@render children?.()}
 				</div>
 			{/key}
 		</main>
-		<aside class="h-full w-full md:w-1/4" role="complementary" aria-label="Sidebar">
+		<aside class="h-full w-full md:w-1/4" aria-label="Sidebar">
 			<Sidebar
 				trendingPosts={data?.featuredPosts}
 				tags={data?.tags}

@@ -4,7 +4,7 @@
   import * as Card from "$lib/components/ui/card";
 	import Input from "$lib/components/ui/input/input.svelte";
 	import Textarea from "$lib/components/ui/textarea/textarea.svelte";
-	import SEO from '../components/SEO.svelte';
+	import SEO from '../../components/SEO.svelte';
 	import { generateBreadcrumbStructuredData } from '$lib/utils/seo';
 
     let email = 'sportsunlimitedng@gmail.com'
