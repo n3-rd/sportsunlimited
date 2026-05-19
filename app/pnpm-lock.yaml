@@ -16,7 +16,7 @@ importers:
         version: 1.0.2
       '@sveltejs/adapter-vercel':
         specifier: 5.1.0
-        version: 5.1.0(@sveltejs/kit@2.36.3(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19))
+        version: 5.1.0(@sveltejs/kit@2.60.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(typescript@5.9.2)(vite@5.4.19))
       '@vercel/analytics':
         specifier: 1.2.2
         version: 1.2.2
@@ -77,10 +77,10 @@ importers:
         version: 3.30.1
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
-        version: 3.3.1(@sveltejs/kit@2.36.3(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19))
+        version: 3.3.1(@sveltejs/kit@2.60.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(typescript@5.9.2)(vite@5.4.19))
       '@sveltejs/kit':
-        specifier: ^2.5.27
-        version: 2.36.3(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19)
+        specifier: 2.60.1
+        version: 2.60.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(typescript@5.9.2)(vite@5.4.19)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
         version: 4.0.4(svelte@5.38.5)(vite@5.4.19)
@@ -681,17 +681,20 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^2.4.0
 
-  '@sveltejs/kit@2.36.3':
-    resolution: {integrity: sha512-MVzwZz1GFznEQbL3f0i2v9AIc3lZH01izQj6XfIrthmZAwOzyXJCgXbLRss8vk//HfYsE4w6Tz+ukbf3rScPNQ==}
+  '@sveltejs/kit@2.60.1':
+    resolution: {integrity: sha512-mQjlkNo+rJvpln7V2IGY2j99BqhcFbS4UN0AQNKNYfhBAFZTuCDAdW3a1sgf330mvtNvsBXn3HpAhcmvdJTcIQ==}
     engines: {node: '>=18.13'}
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
-      '@sveltejs/vite-plugin-svelte': ^3.0.0 || ^4.0.0-next.1 || ^5.0.0 || ^6.0.0-next.0
+      '@sveltejs/vite-plugin-svelte': ^3.0.0 || ^4.0.0-next.1 || ^5.0.0 || ^6.0.0-next.0 || ^7.0.0
       svelte: ^4.0.0 || ^5.0.0-next.0
-      vite: ^5.0.3 || ^6.0.0 || ^7.0.0-beta.0
+      typescript: ^5.3.3 || ^6.0.0
+      vite: ^5.0.3 || ^6.0.0 || ^7.0.0-beta.0 || ^8.0.0
     peerDependenciesMeta:
       '@opentelemetry/api':
+        optional: true
+      typescript:
         optional: true
 
   '@sveltejs/vite-plugin-svelte-inspector@3.0.1':
@@ -1080,8 +1083,8 @@ packages:
     resolution: {integrity: sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==}
     engines: {node: '>=8'}
 
-  devalue@5.3.2:
-    resolution: {integrity: sha512-UDsjUbpQn9kvm68slnrs+mfxwFkIflOhkanmyabZ8zOYk8SMEIbJ3TK+88g70hSIeytu4y18f0z/hYHMTrXIWw==}
+  devalue@5.8.1:
+    resolution: {integrity: sha512-4CXDYRBGqN+57wVJkuXBYmpAVUSg3L6JAQa/DFqm238G73E1wuyc/JhGQJzN7vUf/CMphYau2zXbfWzDR5aTEw==}
 
   didyoumean@1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
@@ -1526,10 +1529,6 @@ packages:
   magic-string@0.30.18:
     resolution: {integrity: sha512-yi8swmWbO17qHhwIBNeeZxTceJMeBvWJaId6dyvTSOwTipqeHhMhOrz6513r1sOKnpvQ7zkhlG8tPrpilwTxHQ==}
 
-  magic-string@0.30.7:
-    resolution: {integrity: sha512-8vBuFF/I/+OSLRmdf2wwFCJCz+nSn0m6DPvGH1fS/KiQoSaR+sETbov0eIk9KhEKy8CYqIkIAnbohxT/4H0kuA==}
-    engines: {node: '>=12'}
-
   make-dir@3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
@@ -1959,8 +1958,8 @@ packages:
   set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
 
-  set-cookie-parser@2.6.0:
-    resolution: {integrity: sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==}
+  set-cookie-parser@3.1.0:
+    resolution: {integrity: sha512-kjnC1DXBHcxaOaOXBHBeRtltsDG2nUiUni+jP92M9gYdW12rsmx92UsfpH7o5tDRs7I1ZZPSQJQGv3UaRfCiuw==}
 
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
@@ -2638,21 +2637,21 @@ snapshots:
     dependencies:
       acorn: 8.15.0
 
-  '@sveltejs/adapter-auto@3.3.1(@sveltejs/kit@2.36.3(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19))':
+  '@sveltejs/adapter-auto@3.3.1(@sveltejs/kit@2.60.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(typescript@5.9.2)(vite@5.4.19))':
     dependencies:
-      '@sveltejs/kit': 2.36.3(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19)
+      '@sveltejs/kit': 2.60.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(typescript@5.9.2)(vite@5.4.19)
       import-meta-resolve: 4.1.0
 
-  '@sveltejs/adapter-vercel@5.1.0(@sveltejs/kit@2.36.3(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19))':
+  '@sveltejs/adapter-vercel@5.1.0(@sveltejs/kit@2.60.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(typescript@5.9.2)(vite@5.4.19))':
     dependencies:
-      '@sveltejs/kit': 2.36.3(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19)
+      '@sveltejs/kit': 2.60.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(typescript@5.9.2)(vite@5.4.19)
       '@vercel/nft': 0.26.4
       esbuild: 0.19.12
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  '@sveltejs/kit@2.36.3(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19)':
+  '@sveltejs/kit@2.60.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(typescript@5.9.2)(vite@5.4.19)':
     dependencies:
       '@standard-schema/spec': 1.0.0
       '@sveltejs/acorn-typescript': 1.0.5(acorn@8.15.0)
@@ -2660,16 +2659,17 @@ snapshots:
       '@types/cookie': 0.6.0
       acorn: 8.15.0
       cookie: 0.6.0
-      devalue: 5.3.2
+      devalue: 5.8.1
       esm-env: 1.2.2
       kleur: 4.1.5
-      magic-string: 0.30.7
+      magic-string: 0.30.18
       mrmime: 2.0.0
-      sade: 1.8.1
-      set-cookie-parser: 2.6.0
+      set-cookie-parser: 3.1.0
       sirv: 3.0.1
       svelte: 5.38.5
       vite: 5.4.19
+    optionalDependencies:
+      typescript: 5.9.2
 
   '@sveltejs/vite-plugin-svelte-inspector@3.0.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.38.5)(vite@5.4.19))(svelte@5.38.5)(vite@5.4.19)':
     dependencies:
@@ -3064,7 +3064,7 @@ snapshots:
 
   detect-libc@2.0.2: {}
 
-  devalue@5.3.2: {}
+  devalue@5.8.1: {}
 
   didyoumean@1.2.2: {}
 
@@ -3564,10 +3564,6 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  magic-string@0.30.7:
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
-
   make-dir@3.1.0:
     dependencies:
       semver: 6.3.1
@@ -3914,7 +3910,7 @@ snapshots:
 
   set-blocking@2.0.0: {}
 
-  set-cookie-parser@2.6.0: {}
+  set-cookie-parser@3.1.0: {}
 
   shebang-command@2.0.0:
     dependencies:
