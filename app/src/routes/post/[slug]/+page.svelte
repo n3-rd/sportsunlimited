@@ -10,6 +10,7 @@
 	import RelatedPosts from '../../../components/RelatedPosts.svelte';
 	import Breadcrumbs from '../../../components/Breadcrumbs.svelte';
 	import SEO from '../../../components/SEO.svelte';
+	import BannerAd from '../../../components/BannerAd.svelte';
 	import { 
 		generateArticleStructuredData, 
 		generateBreadcrumbStructuredData 
@@ -231,15 +232,10 @@
 			</div>
 		</header>
 
-		<!-- Ad Unit - After Header
+		<!-- Ad Unit - After Header -->
 		<div class="ad-container my-8 flex justify-center">
-			<img
-				src="/patent-ad.png"
-				alt="Sponsored advert"
-				loading="eager"
-				class="w-full max-w-3xl h-auto rounded-md shadow-sm"
-			/>
-		</div> -->
+			<BannerAd variant="landscape" />
+		</div>
 
 		{#if data.mainImage}
 			<img
@@ -259,6 +255,11 @@
 
 		<div class="post__content prose prose-lg max-w-none normal-case">
 			<PortableText value={data.body || []} components={portableTextComponents} />
+		</div>
+
+		<!-- Ad Unit - After Content -->
+		<div class="ad-container my-8 pt-4 flex justify-center border-t border-gray-100">
+			<BannerAd variant="landscape" />
 		</div>
 	</div>
 </section>

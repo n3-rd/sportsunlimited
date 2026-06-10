@@ -5,6 +5,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import NPFLTable from './NPFLTable.svelte';
 	import NPFLFixtures from './NPFLFixtures.svelte';
+	import BannerAd from './BannerAd.svelte';
 	dayjs.extend(relativeTime);
 
 	interface Props {
@@ -53,6 +54,11 @@
 					</a>
 				{/each}
 			</div>
+		</section>
+
+		<!-- Strategic Banner Ad placement -->
+		<section class="ad-section flex justify-center">
+			<BannerAd variant="sidebar" />
 		</section>
 	{/if}
 
@@ -105,6 +111,11 @@
 			</div>
 		</section>
 	{/if}
+
+	<!-- Strategic Banner Ad placement 2 -->
+	<section class="ad-section flex justify-center">
+		<BannerAd variant="sidebar" />
+	</section>
 
 	<!-- Ad/Book Section -->
 	<section class="ad-section">

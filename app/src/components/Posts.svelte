@@ -5,6 +5,7 @@
     import CompactPostCard from "./CompactPostCard.svelte";
     import CategorySection from "./CategorySection.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
+    import BannerAd from "./BannerAd.svelte";
  
     interface Props {
         posts: any[];
@@ -61,6 +62,11 @@
                 {/each}
             </div>
         </section>
+
+        <!-- Banner Ad between Featured and Latest -->
+        <div class="my-8 flex justify-center w-full">
+            <BannerAd variant="landscape" />
+        </div>
     {/if}
 
     <!-- Main Content Grid - 12 posts -->
@@ -76,6 +82,11 @@
                 {/each}
             </div>
         </section>
+
+        <!-- Banner Ad after Latest News -->
+        <div class="my-8 flex justify-center w-full">
+            <BannerAd variant="landscape" />
+        </div>
     {/if}
 
     <!-- Category Sections -->
