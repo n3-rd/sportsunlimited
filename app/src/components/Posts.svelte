@@ -65,7 +65,7 @@
 
         <!-- Banner Ad between Featured and Latest -->
         <div class="my-8 flex justify-center w-full">
-            <BannerAd variant="landscape" />
+            <BannerAd variant="landscape" isAlternative={true} />
         </div>
     {/if}
 
@@ -85,7 +85,7 @@
 
         <!-- Banner Ad after Latest News -->
         <div class="my-8 flex justify-center w-full">
-            <BannerAd variant="landscape" />
+            <BannerAd variant="landscape" isAlternative={false} />
         </div>
     {/if}
 

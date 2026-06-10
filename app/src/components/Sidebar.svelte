@@ -114,7 +114,7 @@
 
 	<!-- Strategic Banner Ad placement 2 -->
 	<section class="ad-section flex justify-center">
-		<BannerAd variant="sidebar" />
+		<BannerAd variant="sidebar" isAlternative={true} />
 	</section>
 
 	<!-- Ad/Book Section -->

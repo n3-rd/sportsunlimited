@@ -1,12 +1,22 @@
 <script lang="ts">
 	interface Props {
 		variant?: 'landscape' | 'sidebar';
+		isAlternative?: boolean;
 		class?: string;
 	}
 
-	let { variant = 'landscape', class: className = '' }: Props = $props();
+	let { variant = 'landscape', isAlternative = false, class: className = '' }: Props = $props();
 
 	const adUrl = 'https://www.ilotbet.com/worldcup2026/?c=WCunlimitedbanner';
+
+	// Determine image paths
+	const mobileImg = isAlternative 
+		? '/ads/ILOT-WIN-A-HOUSE-FOOTBALL-IN-NIG-320X100-I.jpg' 
+		: '/ads/ILOT-WIN-A-HOUSE-FOOTBALL-IN-NIG-320X100.jpg';
+		
+	const desktopImg = isAlternative 
+		? '/ads/ILOT-WIN-A-HOUSE-SPORT%20IN%20NIG-728X90-I.jpg' 
+		: '/ads/ILOT-WIN-A-HOUSE-SPORT%20IN%20NIG728X90.jpg';
 </script>
 
 <div class="banner-ad-wrapper flex justify-center w-full {className}">
@@ -23,7 +33,7 @@
 
 		{#if variant === 'sidebar'}
 			<img
-				src="/ads/ILOT-WIN-A-HOUSE-FOOTBALL-IN-NIG-320X100.jpg"
+				src={mobileImg}
 				alt="iLOT Bet World Cup 2026 Promo"
 				class="w-full max-w-[320px] h-auto object-cover"
 				loading="lazy"
@@ -33,11 +43,11 @@
 				<!-- Desktop / Tablet: 728x90 -->
 				<source
 					media="(min-width: 768px)"
-					srcset="/ads/ILOT-WIN-A-HOUSE-SPORT IN NIG728X90.jpg"
+					srcset={desktopImg}
 				/>
 				<!-- Mobile: 320x100 -->
 				<img
-					src="/ads/ILOT-WIN-A-HOUSE-FOOTBALL-IN-NIG-320X100.jpg"
+					src={mobileImg}
 					alt="iLOT Bet World Cup 2026 Promo"
 					class="w-full max-w-[728px] md:max-w-full h-auto object-cover mx-auto"
 					loading="lazy"

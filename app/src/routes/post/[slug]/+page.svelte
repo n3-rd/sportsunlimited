@@ -259,7 +259,7 @@
 
 		<!-- Ad Unit - After Content -->
 		<div class="ad-container my-8 pt-4 flex justify-center border-t border-gray-100">
-			<BannerAd variant="landscape" />
+			<BannerAd variant="landscape" isAlternative={true} />
 		</div>
 	</div>
 </section>
