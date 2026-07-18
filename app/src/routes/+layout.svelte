@@ -6,6 +6,7 @@
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	import Sidebar from '../components/Sidebar.svelte';
+	import { page } from '$app/stores';
 	import { fade } from 'svelte/transition';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import Spinner from '../components/Spinner.svelte';
@@ -28,26 +29,30 @@
 		<Spinner />
 	</div>
 {/if}
-<Header />
-<div class="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
-	<div class="flex flex-col gap-8 py-8 md:flex-row">
-		<main class="w-full md:w-3/4">
-			{#key pathname}
-				<div in:fade={{ duration: 300, delay: 400 }} out:fade={{ duration: 300 }}>
-					{@render children?.()}
-				</div>
-			{/key}
-		</main>
-		<aside class="h-full w-full md:w-1/4" aria-label="Sidebar">
-			<Sidebar
-				trendingPosts={data?.featuredPosts}
-				tags={data?.tags}
-				npflTable={data?.npflTable}
-				npflFixtures={data?.npflFixtures}
-			/>
-		</aside>
+{#if $page.url.pathname.startsWith('/admin')}
+	{@render children?.()}
+{:else}
+	<Header />
+	<div class="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
+		<div class="flex flex-col gap-8 py-8 md:flex-row">
+			<main class="w-full md:w-3/4">
+				{#key pathname}
+					<div in:fade={{ duration: 300, delay: 400 }} out:fade={{ duration: 300 }}>
+						{@render children?.()}
+					</div>
+				{/key}
+			</main>
+			<aside class="h-full w-full md:w-1/4" aria-label="Sidebar">
+				<Sidebar
+					trendingPosts={data?.featuredPosts}
+					tags={data?.tags}
+					npflTable={data?.npflTable}
+					npflFixtures={data?.npflFixtures}
+				/>
+			</aside>
+		</div>
 	</div>
-</div>
-<footer class="mt-auto">
-	<Footer></Footer>
-</footer>
+	<footer class="mt-auto">
+		<Footer></Footer>
+	</footer>
+{/if}

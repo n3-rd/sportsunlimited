@@ -1,12 +1,24 @@
 <script lang="ts">
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
+	import { page } from '$app/stores';
 	import { Clock } from 'svelte-radix';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import NPFLTable from './NPFLTable.svelte';
 	import NPFLFixtures from './NPFLFixtures.svelte';
 	import BannerAd from './BannerAd.svelte';
 	dayjs.extend(relativeTime);
+
+	let adsConfig = $derived($page.data.adsConfig || {
+		bookAdImg: "/book.jpg",
+		bookAdUrl: "",
+		sidebarAd1Img: "/sidebar/ad1.png",
+		sidebarAd1Url: "/ads/ad-1",
+		sidebarAd2Img: "/sidebar/ad2.png",
+		sidebarAd2Url: "/ads/ad-2",
+		rateCardImg: "/sidebar/adrates.png",
+		rateCardUrl: "/advertising"
+	});
 
 	interface Props {
 		trendingPosts?: any[];
@@ -119,11 +131,21 @@
 
 	<!-- Ad/Book Section -->
 	<section class="ad-section">
-		<img
-			src="/book.jpg"
-			alt="Eyes on the Nigerian League book"
-			class="w-full rounded-lg shadow-sm"
-		/>
+		{#if adsConfig.bookAdUrl}
+			<a href={adsConfig.bookAdUrl}>
+				<img
+					src={adsConfig.bookAdImg}
+					alt="Book Ad"
+					class="w-full rounded-lg shadow-sm"
+				/>
+			</a>
+		{:else}
+			<img
+				src={adsConfig.bookAdImg}
+				alt="Book Ad"
+				class="w-full rounded-lg shadow-sm"
+			/>
+		{/if}
 	</section>
 
 	<!-- Featured Ad Section -->
@@ -134,10 +156,10 @@
 			<span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Featured</span>
 			<span class="h-2 w-2 animate-pulse rounded-full bg-red-500"></span>
 		</div>
-		<a href="/ads/ad-1" class="group relative block overflow-hidden">
+		<a href={adsConfig.sidebarAd1Url} class="group relative block overflow-hidden">
 			<img
-				src="/sidebar/ad1.png"
-				alt="Congratulations to the NNL"
+				src={adsConfig.sidebarAd1Img}
+				alt="Featured Ad 1"
 				class="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-110"
 			/>
 			<div
@@ -157,10 +179,10 @@
 			<span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Featured</span>
 			<span class="h-2 w-2 animate-pulse rounded-full bg-red-500"></span>
 		</div>
-		<a href="/ads/ad-2" class="group relative block overflow-hidden">
+		<a href={adsConfig.sidebarAd2Url} class="group relative block overflow-hidden">
 			<img
-				src="/sidebar/ad2.png"
-				alt="Prostar Sports Wears"
+				src={adsConfig.sidebarAd2Img}
+				alt="Featured Ad 2"
 				class="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-110"
 			/>
 			<div
@@ -177,10 +199,10 @@
 	<section
 		class="ad-rates-section overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm"
 	>
-		<a href="/advertising" class="block">
+		<a href={adsConfig.rateCardUrl} class="block">
 			<img
-				src="/sidebar/adrates.png"
-				alt="Sports Unlimited Online Rate Card - Advertising rates in NGN and USD"
+				src={adsConfig.rateCardImg}
+				alt="Advertising Rates"
 				class="w-full rounded-lg shadow-sm transition-opacity hover:opacity-95"
 			/>
 		</a>

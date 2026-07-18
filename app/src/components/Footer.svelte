@@ -1,4 +1,11 @@
 <script lang="ts">
+	import { page } from "$app/stores";
+	let settingsConfig = $derived($page.data.settingsConfig || {
+		siteName: "Sports Unlimited",
+		description: "Nigeria's premier destination for the latest sports news.",
+		footerText: "© 2026 Trustymike Communications. All rights reserved."
+	});
+
 	const mainLinks = [
 		{ name: 'Home', url: '/' },
 		{ name: 'Categories', url: '/tags' },
@@ -27,13 +34,13 @@
 			<div class="flex items-center gap-3 mb-3">
 				<img 
 					src="/android-chrome-512x512.png" 
-					alt="Sports Unlimited Logo" 
+					alt="{settingsConfig.siteName} Logo" 
 					class="w-12 h-10 object-contain"
 				/>
-				<h3 class="text-2xl font-bold">Sports Unlimited</h3>
+				<h3 class="text-2xl font-bold">{settingsConfig.siteName}</h3>
 			</div>
 			<p class="text-gray-400 text-sm mb-4">
-				Nigeria's premier destination for the latest sports news, interviews, and analysis covering NPFL, Football, Basketball, Athletics, and more.
+				{settingsConfig.description}
 			</p>
 		</div>
 
@@ -74,7 +81,7 @@
 		<div class="footer-bottom border-t border-gray-800 pt-8">
 			<div class="flex flex-col md:flex-row justify-between items-center gap-4">
 				<p class="text-gray-400 text-sm text-center md:text-left">
-					© {new Date().getFullYear()} Trustymike Communications. All rights reserved.
+					{settingsConfig.footerText}
 				</p>
 				<p class="text-gray-500 text-xs text-center md:text-right">
 					Covering Nigerian Sports Since {new Date().getFullYear() - 5}

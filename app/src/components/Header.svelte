@@ -1,7 +1,13 @@
-<script>
+<script lang="ts">
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import { HamburgerMenu } from "svelte-radix";
 	import SearchDialog from "./SearchDialog.svelte";
+	import { page } from "$app/stores";
+	
+	let settingsConfig = $derived($page.data.settingsConfig || {
+		siteName: "Sports Unlimited",
+		tagline: "Nigeria's Premier Sports News"
+	});
 </script>
 
 <div class="navigation w-full sticky top-0 z-50 bg-black shadow-lg">
@@ -14,12 +20,11 @@
 				class="w-12 h-10 object-contain"
 			/>
 			<div class="flex flex-col">
-				<a href="/" class="hover:text-gray-300 transition-colors" aria-label="Sports Unlimited Home">
-				
-					Sports Unlimited
+				<a href="/" class="hover:text-gray-300 transition-colors" aria-label="{settingsConfig.siteName} Home">
+					{settingsConfig.siteName}
 				</a>
 				<p class="brand-tagline hidden md:block text-xs text-gray-400 mt-0.5">
-					Nigeria's Premier Sports News
+					{settingsConfig.tagline}
 				</p>
 				</div>
 			</div>

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+
 	interface Props {
 		variant?: 'landscape' | 'sidebar';
 		isAlternative?: boolean;
@@ -7,16 +9,19 @@
 
 	let { variant = 'landscape', isAlternative = false, class: className = '' }: Props = $props();
 
-	const adUrl = 'https://www.ilotbet.com/worldcup2026/?c=WCunlimitedbanner';
+	let adsConfig = $derived($page.data.adsConfig || {
+		mobileImg: "/ads/ILOT-WIN-A-HOUSE-FOOTBALL-IN-NIG-320X100.jpg",
+		desktopImg: "/ads/ILOT-WIN-A-HOUSE-SPORT%20IN%20NIG728X90.jpg",
+		mobileImgAlt: "/ads/ILOT-WIN-A-HOUSE-FOOTBALL-IN-NIG-320X100-I.jpg",
+		desktopImgAlt: "/ads/ILOT-WIN-A-HOUSE-SPORT%20IN%20NIG-728X90-I.jpg",
+		adUrl: "https://www.ilotbet.com/worldcup2026/?c=WCunlimitedbanner"
+	});
+
+	let adUrl = $derived(adsConfig.adUrl);
 
 	// Determine image paths
-	const mobileImg = isAlternative 
-		? '/ads/ILOT-WIN-A-HOUSE-FOOTBALL-IN-NIG-320X100-I.jpg' 
-		: '/ads/ILOT-WIN-A-HOUSE-FOOTBALL-IN-NIG-320X100.jpg';
-		
-	const desktopImg = isAlternative 
-		? '/ads/ILOT-WIN-A-HOUSE-SPORT%20IN%20NIG-728X90-I.jpg' 
-		: '/ads/ILOT-WIN-A-HOUSE-SPORT%20IN%20NIG728X90.jpg';
+	let mobileImg = $derived(isAlternative ? adsConfig.mobileImgAlt : adsConfig.mobileImg);
+	let desktopImg = $derived(isAlternative ? adsConfig.desktopImgAlt : adsConfig.desktopImg);
 </script>
 
 <div class="banner-ad-wrapper flex justify-center w-full {className}">
