@@ -1,9 +1,12 @@
 import { DB_URL } from '$env/static/private';
 
-export async function load({ fetch }) {
+export async function load({ fetch, url }) {
+	const page = url.searchParams.get('page') || '1';
+	const perPage = '20';
+
 	try {
 		// Fetch directly from PocketBase for the admin
-		const res = await fetch(`${DB_URL}/api/collections/posts/records?sort=-created&perPage=100`);
+		const res = await fetch(`${DB_URL}/api/collections/posts/records?sort=-created&page=${page}&perPage=${perPage}`);
 		const data = await res.json();
 		
 		const posts = (data.items || []).map((post: any) => {
@@ -13,9 +16,17 @@ export async function load({ fetch }) {
 			return post;
 		});
 
-		return { posts };
+		return { 
+			posts,
+			pagination: {
+				page: data.page || 1,
+				perPage: data.perPage || 20,
+				totalItems: data.totalItems || 0,
+				totalPages: data.totalPages || 1
+			}
+		};
 	} catch (e) {
 		console.error(e);
-		return { posts: [] };
+		return { posts: [], pagination: { page: 1, perPage: 20, totalItems: 0, totalPages: 1 } };
 	}
 }

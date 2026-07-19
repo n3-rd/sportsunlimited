@@ -13,7 +13,18 @@ export async function GET() {
 		twitterUrl: "https://twitter.com",
 		instagramUrl: "https://instagram.com",
 		youtubeUrl: "https://youtube.com",
-		footerText: "© 2026 Trustymike Communications. All rights reserved."
+		footerText: "© 2026 Trustymike Communications. All rights reserved.",
+		availableTags: [
+			"Football",
+			"Athletics",
+			"Basketball",
+			"Nigeria League",
+			"Lifestyle",
+			"Oddities",
+			"Other Sports",
+			"Interview",
+			"Feature"
+		]
 	};
 
 	try {

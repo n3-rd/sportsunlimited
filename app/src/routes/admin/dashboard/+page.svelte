@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { FileText, Image as ImageIcon, Settings } from 'lucide-svelte';
+	import { FileText, Image as ImageIcon, Settings, Tags } from 'lucide-svelte';
 	import dayjs from 'dayjs';
 
 	let { data } = $props();
@@ -15,7 +15,7 @@
 	</div>
 
 	<!-- Stats Grid -->
-	<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 		<div class="bg-[#1f1f1f] border border-[#333333] rounded-lg p-6 flex items-center justify-between">
 			<div>
 				<p class="text-[#9ca3af] text-sm font-medium uppercase tracking-wider mb-1">Total Posts</p>
@@ -43,6 +43,16 @@
 			</div>
 			<div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
 				<Settings class="w-6 h-6" />
+			</div>
+		</a>
+
+		<a href="/admin/tags" class="bg-[#1f1f1f] border border-[#333333] rounded-lg p-6 flex items-center justify-between hover:bg-[#2a2a2a] transition-colors group">
+			<div>
+				<p class="text-[#9ca3af] text-sm font-medium uppercase tracking-wider mb-1">Tags</p>
+				<p class="text-xl font-bold text-white mt-1">Categories</p>
+			</div>
+			<div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 group-hover:scale-110 transition-transform">
+				<Tags class="w-6 h-6" />
 			</div>
 		</a>
 	</div>

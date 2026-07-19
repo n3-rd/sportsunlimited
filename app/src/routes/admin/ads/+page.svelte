@@ -33,6 +33,30 @@
 		}
 	});
 
+	async function handleFileUpload(e: Event, key: keyof typeof adsConfig) {
+		const file = (e.target as HTMLInputElement).files?.[0];
+		if (!file) return;
+
+		loading = true;
+		const formData = new FormData();
+		formData.append('file', file);
+
+		try {
+			const res = await fetch('/api/admin/upload', {
+				method: 'POST',
+				body: formData
+			});
+			if (res.ok) {
+				const { url } = await res.json();
+				adsConfig[key] = url as string;
+			}
+		} catch (err) {
+			console.error('Upload failed', err);
+		} finally {
+			loading = false;
+		}
+	}
+
 	async function saveAds() {
 		loading = true;
 		saved = false;
@@ -84,12 +108,18 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 			<div>
 				<label class="block text-sm font-semibold text-white mb-2">Mobile Image (320x100)</label>
-				<input type="text" bind:value={adsConfig.mobileImg} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white" />
+				<div class="flex flex-col gap-2 mb-2">
+					<input type="file" accept="image/*" onchange={(e) => handleFileUpload(e, 'mobileImg')} class="w-full text-sm text-[#9ca3af] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#333333] file:text-white hover:file:bg-[#2a2a2a]" />
+					<input type="text" bind:value={adsConfig.mobileImg} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white text-xs" placeholder="Or enter URL directly" />
+				</div>
 				{#if adsConfig.mobileImg}<img src={adsConfig.mobileImg} class="mt-2 rounded h-20 object-contain bg-[#141414] border border-[#333333]" />{/if}
 			</div>
 			<div>
 				<label class="block text-sm font-semibold text-white mb-2">Desktop Image (728x90)</label>
-				<input type="text" bind:value={adsConfig.desktopImg} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white" />
+				<div class="flex flex-col gap-2 mb-2">
+					<input type="file" accept="image/*" onchange={(e) => handleFileUpload(e, 'desktopImg')} class="w-full text-sm text-[#9ca3af] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#333333] file:text-white hover:file:bg-[#2a2a2a]" />
+					<input type="text" bind:value={adsConfig.desktopImg} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white text-xs" placeholder="Or enter URL directly" />
+				</div>
 				{#if adsConfig.desktopImg}<img src={adsConfig.desktopImg} class="mt-2 rounded h-20 object-contain bg-[#141414] border border-[#333333]" />{/if}
 			</div>
 		</div>
@@ -100,12 +130,18 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 			<div>
 				<label class="block text-sm font-semibold text-white mb-2">Mobile Image (320x100)</label>
-				<input type="text" bind:value={adsConfig.mobileImgAlt} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white" />
+				<div class="flex flex-col gap-2 mb-2">
+					<input type="file" accept="image/*" onchange={(e) => handleFileUpload(e, 'mobileImgAlt')} class="w-full text-sm text-[#9ca3af] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#333333] file:text-white hover:file:bg-[#2a2a2a]" />
+					<input type="text" bind:value={adsConfig.mobileImgAlt} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white text-xs" placeholder="Or enter URL directly" />
+				</div>
 				{#if adsConfig.mobileImgAlt}<img src={adsConfig.mobileImgAlt} class="mt-2 rounded h-20 object-contain bg-[#141414] border border-[#333333]" />{/if}
 			</div>
 			<div>
 				<label class="block text-sm font-semibold text-white mb-2">Desktop Image (728x90)</label>
-				<input type="text" bind:value={adsConfig.desktopImgAlt} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white" />
+				<div class="flex flex-col gap-2 mb-2">
+					<input type="file" accept="image/*" onchange={(e) => handleFileUpload(e, 'desktopImgAlt')} class="w-full text-sm text-[#9ca3af] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#333333] file:text-white hover:file:bg-[#2a2a2a]" />
+					<input type="text" bind:value={adsConfig.desktopImgAlt} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white text-xs" placeholder="Or enter URL directly" />
+				</div>
 				{#if adsConfig.desktopImgAlt}<img src={adsConfig.desktopImgAlt} class="mt-2 rounded h-20 object-contain bg-[#141414] border border-[#333333]" />{/if}
 			</div>
 		</div>
@@ -117,8 +153,11 @@
 			<div class="space-y-4">
 				<h3 class="font-medium text-white border-b border-[#333333] pb-2">Book Ad</h3>
 				<div>
-					<label class="block text-sm font-semibold text-white mb-2">Image URL</label>
-					<input type="text" bind:value={adsConfig.bookAdImg} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white" />
+					<label class="block text-sm font-semibold text-white mb-2">Image</label>
+					<div class="flex flex-col gap-2 mb-2">
+						<input type="file" accept="image/*" onchange={(e) => handleFileUpload(e, 'bookAdImg')} class="w-full text-sm text-[#9ca3af] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#333333] file:text-white hover:file:bg-[#2a2a2a]" />
+						<input type="text" bind:value={adsConfig.bookAdImg} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white text-xs" placeholder="Or enter URL directly" />
+					</div>
 					{#if adsConfig.bookAdImg}<img src={adsConfig.bookAdImg} class="mt-2 rounded h-24 object-contain bg-[#141414] border border-[#333333]" />{/if}
 				</div>
 				<div>
@@ -131,8 +170,11 @@
 			<div class="space-y-4">
 				<h3 class="font-medium text-white border-b border-[#333333] pb-2">Rate Card</h3>
 				<div>
-					<label class="block text-sm font-semibold text-white mb-2">Image URL</label>
-					<input type="text" bind:value={adsConfig.rateCardImg} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white" />
+					<label class="block text-sm font-semibold text-white mb-2">Image</label>
+					<div class="flex flex-col gap-2 mb-2">
+						<input type="file" accept="image/*" onchange={(e) => handleFileUpload(e, 'rateCardImg')} class="w-full text-sm text-[#9ca3af] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#333333] file:text-white hover:file:bg-[#2a2a2a]" />
+						<input type="text" bind:value={adsConfig.rateCardImg} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white text-xs" placeholder="Or enter URL directly" />
+					</div>
 					{#if adsConfig.rateCardImg}<img src={adsConfig.rateCardImg} class="mt-2 rounded h-24 object-contain bg-[#141414] border border-[#333333]" />{/if}
 				</div>
 				<div>
@@ -145,8 +187,11 @@
 			<div class="space-y-4">
 				<h3 class="font-medium text-white border-b border-[#333333] pb-2">Featured Ad 1</h3>
 				<div>
-					<label class="block text-sm font-semibold text-white mb-2">Image URL</label>
-					<input type="text" bind:value={adsConfig.sidebarAd1Img} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white" />
+					<label class="block text-sm font-semibold text-white mb-2">Image</label>
+					<div class="flex flex-col gap-2 mb-2">
+						<input type="file" accept="image/*" onchange={(e) => handleFileUpload(e, 'sidebarAd1Img')} class="w-full text-sm text-[#9ca3af] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#333333] file:text-white hover:file:bg-[#2a2a2a]" />
+						<input type="text" bind:value={adsConfig.sidebarAd1Img} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white text-xs" placeholder="Or enter URL directly" />
+					</div>
 					{#if adsConfig.sidebarAd1Img}<img src={adsConfig.sidebarAd1Img} class="mt-2 rounded h-24 object-contain bg-[#141414] border border-[#333333]" />{/if}
 				</div>
 				<div>
@@ -159,8 +204,11 @@
 			<div class="space-y-4">
 				<h3 class="font-medium text-white border-b border-[#333333] pb-2">Featured Ad 2</h3>
 				<div>
-					<label class="block text-sm font-semibold text-white mb-2">Image URL</label>
-					<input type="text" bind:value={adsConfig.sidebarAd2Img} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white" />
+					<label class="block text-sm font-semibold text-white mb-2">Image</label>
+					<div class="flex flex-col gap-2 mb-2">
+						<input type="file" accept="image/*" onchange={(e) => handleFileUpload(e, 'sidebarAd2Img')} class="w-full text-sm text-[#9ca3af] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#333333] file:text-white hover:file:bg-[#2a2a2a]" />
+						<input type="text" bind:value={adsConfig.sidebarAd2Img} class="w-full px-4 py-2 bg-[#0a0a0a] border border-[#333333] rounded-md text-white text-xs" placeholder="Or enter URL directly" />
+					</div>
 					{#if adsConfig.sidebarAd2Img}<img src={adsConfig.sidebarAd2Img} class="mt-2 rounded h-24 object-contain bg-[#141414] border border-[#333333]" />{/if}
 				</div>
 				<div>

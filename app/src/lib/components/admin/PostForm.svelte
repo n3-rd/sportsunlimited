@@ -110,10 +110,26 @@
 	
 	let saveStatus = $derived(getSaveStatus());
 
-	const availableTags = [
-		'Football', 'Athletics', 'Basketball', 'Nigeria League', 
-		'Lifestyle', 'Oddities', 'Other Sports', 'Interview', 'Feature'
-	];
+	let availableTags = $state<string[]>([]);
+
+	$effect(() => {
+		async function fetchTags() {
+			try {
+				const res = await fetch('/api/admin/settings');
+				if (res.ok) {
+					const data = await res.json();
+					if (data.availableTags) {
+						availableTags = data.availableTags;
+					}
+				}
+			} catch (e) {
+				console.error('Failed to fetch tags', e);
+			}
+		}
+		if (availableTags.length === 0) {
+			fetchTags();
+		}
+	});
 
 	function generateSlug() {
 		slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
@@ -301,6 +317,11 @@
 				<div class="flex items-center gap-2 text-xs text-[#9ca3af]"><span class="w-2 h-2 rounded-full {saveStatus.color}"></span><span>{saveStatus.text}</span></div>
 				
 				<div class="flex items-center gap-3">
+				{#if slug}
+					<a href="/post/{slug}?preview=true" target="_blank" class="inline-flex justify-center items-center gap-2 px-4 py-3 border border-[#333333] rounded-lg text-sm font-semibold text-[#9ca3af] hover:text-white bg-[#1f1f1f] hover:bg-[#2a2a2a] transition-colors">
+						<Eye class="h-4 w-4" /><span class="hidden sm:inline">Preview</span>
+					</a>
+				{/if}
 				{#if status === 'Published'}
 					<button type="button" onclick={handleUnpublish} disabled={loading} class="inline-flex justify-center items-center gap-2 px-6 py-3 border border-[#333333] rounded-lg text-sm font-semibold text-white bg-[#1f1f1f] hover:bg-[#2a2a2a] disabled:opacity-50">
 						{#if loading}<RefreshCw class="h-4 w-4 animate-spin" /><span>Unpublishing...</span>{:else}<EyeOff class="h-4 w-4" /><span>Unpublish</span>{/if}

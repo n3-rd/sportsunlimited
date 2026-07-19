@@ -4,13 +4,26 @@
 
 	let { data } = $props();
 	let posts = $state(data.posts || []);
+	let pagination = $state(data.pagination || { page: 1, totalPages: 1 });
 	let searchQuery = $state('');
+
+	$effect(() => {
+		posts = data.posts || [];
+		pagination = data.pagination || { page: 1, totalPages: 1 };
+	});
 
 	let filteredPosts = $derived(
 		posts.filter((post: any) => 
 			post.title.toLowerCase().includes(searchQuery.toLowerCase())
 		)
 	);
+
+	function getPaginationWindow(current: number, total: number) {
+		if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+		if (current <= 4) return [1, 2, 3, 4, 5, '...', total];
+		if (current >= total - 3) return [1, '...', total - 4, total - 3, total - 2, total - 1, total];
+		return [1, '...', current - 1, current, current + 1, '...', total];
+	}
 
 	async function deletePost(id: string) {
 		if (confirm('Are you sure you want to delete this post?')) {
@@ -88,4 +101,54 @@
 			</tbody>
 		</table>
 	</div>
+
+	<!-- Pagination Controls -->
+	{#if pagination.totalPages > 1}
+		<div class="flex items-center justify-between bg-[#1f1f1f] border border-[#333333] px-4 py-3 sm:px-6 rounded-lg">
+			<!-- Mobile Pagination -->
+			<div class="flex flex-1 justify-between sm:hidden items-center gap-2">
+				<a href="?page={Math.max(1, pagination.page - 1)}" class="relative inline-flex items-center px-4 py-2 border border-[#333333] text-sm font-medium rounded-md text-[#9ca3af] bg-[#141414] hover:bg-[#2a2a2a] {pagination.page === 1 ? 'pointer-events-none opacity-50' : ''}">
+					Prev
+				</a>
+				<div class="text-sm text-[#9ca3af]">
+					Page {pagination.page} / {pagination.totalPages}
+				</div>
+				<a href="?page={Math.min(pagination.totalPages, pagination.page + 1)}" class="relative inline-flex items-center px-4 py-2 border border-[#333333] text-sm font-medium rounded-md text-[#9ca3af] bg-[#141414] hover:bg-[#2a2a2a] {pagination.page === pagination.totalPages ? 'pointer-events-none opacity-50' : ''}">
+					Next
+				</a>
+			</div>
+			
+			<!-- Desktop Pagination -->
+			<div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between overflow-x-auto">
+				<div>
+					<p class="text-sm text-[#9ca3af]">
+						Showing <span class="font-medium text-white">{((pagination.page - 1) * pagination.perPage) + 1}</span> to <span class="font-medium text-white">{Math.min(pagination.page * pagination.perPage, pagination.totalItems)}</span> of <span class="font-medium text-white">{pagination.totalItems}</span> results
+					</p>
+				</div>
+				<div>
+					<nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+						<a href="?page={Math.max(1, pagination.page - 1)}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-[#333333] bg-[#141414] text-sm font-medium text-[#9ca3af] hover:bg-[#2a2a2a] {pagination.page === 1 ? 'pointer-events-none opacity-50' : ''}">
+							<span class="sr-only">Previous</span>
+							&larr; Prev
+						</a>
+						{#each getPaginationWindow(pagination.page, pagination.totalPages) as p}
+							{#if p === '...'}
+								<span class="relative inline-flex items-center px-4 py-2 border border-[#333333] bg-[#141414] text-sm font-medium text-[#9ca3af]">
+									...
+								</span>
+							{:else}
+								<a href="?page={p}" aria-current={pagination.page === p ? 'page' : undefined} class="relative inline-flex items-center px-4 py-2 border border-[#333333] text-sm font-medium {pagination.page === p ? 'z-10 bg-[#3b82f6]/10 border-[#3b82f6] text-[#3b82f6]' : 'bg-[#141414] text-[#9ca3af] hover:bg-[#2a2a2a]'}">
+									{p}
+								</a>
+							{/if}
+						{/each}
+						<a href="?page={Math.min(pagination.totalPages, pagination.page + 1)}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-[#333333] bg-[#141414] text-sm font-medium text-[#9ca3af] hover:bg-[#2a2a2a] {pagination.page === pagination.totalPages ? 'pointer-events-none opacity-50' : ''}">
+							<span class="sr-only">Next</span>
+							Next &rarr;
+						</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>
