@@ -3,6 +3,8 @@
 	import { formatDate, calculateReadingTime } from '$lib/utils/index';
 	import { urlFor, getResponsiveImageSrcset } from '$lib/utils/image';
 	import PortableTextLink from '$lib/components/PortableTextLink.svelte';
+	import PortableTextImage from '$lib/components/PortableTextImage.svelte';
+	import PortableTextVideo from '$lib/components/PortableTextVideo.svelte';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import { Clock, Copy, Check } from 'svelte-radix';
@@ -17,6 +19,10 @@
 	} from '$lib/utils/seo';
 
 	const portableTextComponents = {
+		types: {
+			image: PortableTextImage,
+			video: PortableTextVideo
+		},
 		marks: {
 			link: PortableTextLink
 		}
