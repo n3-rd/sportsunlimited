@@ -65,8 +65,8 @@
 	<h1 class="sr-only">Sports Unlimited - Latest Nigerian Sports News</h1>
 
 	<!-- Ad placement - Top of page -->
-	<div class="ad-container my-6 flex justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-		<img src="/ad-banner.jpeg" alt="Advertisement" class="w-full h-auto object-contain" />
+	<div class="ad-container my-6 flex justify-center">
+		<BannerAd variant="landscape" />
 	</div>
 
 	<!-- Category Navigation - Sticky Top -->

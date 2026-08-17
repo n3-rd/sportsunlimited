@@ -42,6 +42,11 @@
         <section class="hero-section mb-12">
             <HomepageHero posts={heroPosts} />
         </section>
+        
+        <!-- Static Banner Ad -->
+        <div class="mb-12 w-full flex justify-center">
+            <img src="/ad-banner.jpeg" alt="Advertisement" class="w-full h-auto rounded-lg shadow-sm" />
+        </div>
     {/if}
 
     <!-- Featured Grid - 6 posts in 3 columns -->
