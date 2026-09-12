@@ -138,7 +138,7 @@ async function fetchPocketBase<T>(endpoint: string, options?: RequestInit): Prom
 	}
 }
 
-export async function getPosts(limit = 24): Promise<Post[]> {
+export async function getPosts(limit = 48): Promise<Post[]> {
 	const data = await fetchPocketBase<PocketBaseListResponse>(
 		`/api/collections/${COLLECTION_NAME}/records?page=1&perPage=${limit}&sort=-created&filter=(status="Published" || status="")`
 	);

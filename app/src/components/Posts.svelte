@@ -20,11 +20,11 @@
     const heroPosts = featuredPosts.length > 0 
         ? featuredPosts.slice(0, 5) 
         : posts.slice(0, 5);
-    // Include carousel posts in featured grid (first 5) + next 6 posts
-    const featuredGrid = [...heroPosts, ...posts.slice(5, 11)].slice(0, 6); // Carousel posts + next posts, max 6
-    const mainGrid = posts.slice(11, 23); // Next 12 posts for main grid
-    const compactList = posts.slice(23, 35); // Next 12 for compact list
-    const remainingPosts = posts.slice(35); // Rest of posts
+    // Include carousel posts in featured grid (first 5) + next 1 post to make 6
+    const featuredGrid = [...heroPosts, ...posts.slice(5, 11)].slice(0, 6);
+    const mainGrid = posts.slice(6, 18); // Next 12 posts for main grid (Latest News)
+    const compactList = posts.slice(18, 30); // Next 12 for compact list (More Stories)
+    const remainingPosts = posts.slice(30); // Rest of posts
 
     // Get category names from categoryPosts
     const categories = Object.keys(categoryPosts || {});
