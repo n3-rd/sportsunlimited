@@ -57,6 +57,8 @@
 	<meta property="og:image:alt" content={imageAlt} />
 	<meta property="og:site_name" content={siteName} />
 	<meta property="og:locale" content={locale} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content={twitterCard} />
