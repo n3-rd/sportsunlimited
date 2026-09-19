@@ -42,7 +42,6 @@
 		<!-- COLUMN 1: Front Page Leads & League Matchups -->
 		<div class="md:pr-6 space-y-8 py-6 md:py-0">
 			{#each col1 as post, index}
-				{@const stats = getEngagement(post.title)}
 				<article class="group relative flex flex-col justify-between pb-6 {index !== col1.length - 1 ? 'border-b border-black/10' : ''}">
 					{#if index === 1 && getImg(post)}
 						<!-- Photo card in column 1 -->
@@ -96,7 +95,6 @@
 		<!-- COLUMN 2: Center Feature & Tactical Deep Dives (Dominant Column) -->
 		<div class="md:px-6 space-y-8 py-6 md:py-0">
 			{#each col2 as post, index}
-				{@const stats = getEngagement(post.title)}
 				<article class="group relative flex flex-col justify-between pb-6 {index !== col2.length - 1 ? 'border-b border-black/10' : ''}">
 					<!-- Center lead gets full graphic treatment with sticker badge -->
 					{#if index === 0}
@@ -167,7 +165,6 @@
 		<!-- COLUMN 3: Culture, Locker Room Wire & Trending Sports Personalities -->
 		<div class="md:pl-6 space-y-8 py-6 md:py-0">
 			{#each col3 as post, index}
-				{@const stats = getEngagement(post.title)}
 				<article class="group relative flex flex-col justify-between pb-6 {index !== col3.length - 1 ? 'border-b border-black/10' : ''}">
 					{#if (index === 0 || index === 2) && getImg(post)}
 						<div class="mb-4 overflow-hidden rounded-xl border border-black/10 aspect-[16/10] bg-zinc-100">
