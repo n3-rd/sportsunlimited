@@ -16,9 +16,9 @@
 	let { post, size = 'medium', loading = 'lazy', fetchpriority = 'low' }: Props = $props();
 
 	const sizeClasses = {
-		small: 'h-48',
-		medium: 'h-64',
-		large: 'h-80'
+		small: 'aspect-[16/9]',
+		medium: 'aspect-[4/3]',
+		large: 'aspect-[5/4]'
 	};
 
 	const readingTime = calculateReadingTime(post.body || []);
@@ -35,6 +35,7 @@
 				class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
 				{loading}
 				{fetchpriority}
+				decoding="async"
 			/>
 			<div class="absolute top-4 left-4">
 				{#if post.tags && post.tags[0]}

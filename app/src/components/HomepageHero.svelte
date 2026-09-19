@@ -41,6 +41,7 @@
 									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
 									loading={index === 0 ? "eager" : "lazy"}
 									fetchpriority={index === 0 ? "high" : "low"}
+									decoding="async"
 								/>
 								<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10"></div>
 								

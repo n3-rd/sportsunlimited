@@ -38,9 +38,9 @@
 		</ol>
 	</div>
 </nav>
-
-{@html structuredData}
-
+<svelte:head>
+	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}</script>`}
+</svelte:head>
 
 
 

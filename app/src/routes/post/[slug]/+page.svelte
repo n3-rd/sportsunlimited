@@ -65,7 +65,7 @@
 			if (!article) return;
 
 			const articleTop = article.getBoundingClientRect().top + window.scrollY;
-			const articleHeight = article.offsetHeight;
+			const articleHeight = (article as HTMLElement).offsetHeight;
 			const windowHeight = window.innerHeight;
 			const scrollPosition = window.scrollY;
 
@@ -117,19 +117,19 @@
 		},
 		{
 			name: 'X',
-			url: `https://x.com/intent/tweet?text=${encodeURIComponent(data.title)}&url=${articleUrl}`,
+			url: `https://x.com/intent/tweet?text=${encodeURIComponent(data.title || '')}&url=${articleUrl}`,
 			icon: '/x.svg',
 		},
 		{
 			name: 'Email',
-			url: `mailto:?subject=${encodeURIComponent(data.title)}&body=${encodeURIComponent(`Read this article: ${data.title} ${articleUrl}`)}`,
+			url: `mailto:?subject=${encodeURIComponent(data.title || '')}&body=${encodeURIComponent(`Read this article: ${data.title || ''} ${articleUrl}`)}`,
 			icon: '/mail.svg',
 		}
 	];
 
 	const seoData = {
-		title: `${data.title} | Sports Unlimited`,
-		description: data.excerpt || data.title,
+		title: `${data.title || ''} | Sports Unlimited`,
+		description: data.excerpt || data.title || '',
 		type: 'article' as const,
 		image: data.mainImage ? urlFor(data.mainImage).width(1200).height(630).url() : 'https://i.postimg.cc/CLVXPt7j/SU.png',
 		keywords: metaKeywords,
@@ -143,8 +143,8 @@
 	};
 
 	const articleSchema = generateArticleStructuredData({
-		title: data.title,
-		description: data.excerpt || data.title,
+		title: data.title || '',
+		description: data.excerpt || data.title || '',
 		url: articleUrl,
 		image: seoData.image,
 		publishedTime: data._createdAt,
@@ -155,7 +155,7 @@
 	const breadcrumbSchema = generateBreadcrumbStructuredData([
 		{ name: 'Home', url: '/' },
 		{ name: 'Sports', url: '/' },
-		{ name: data.title, url: articleUrl }
+		{ name: data.title || '', url: articleUrl }
 	]);
 
 	const schemas = [articleSchema, breadcrumbSchema];
@@ -175,7 +175,7 @@
 	items={[
 		{ name: 'Home', url: '/' },
 		{ name: 'Articles', url: '/' },
-		{ name: data.title, url: `/post/${data.slug.current}` }
+		{ name: data.title || '', url: `/post/${data.slug.current}` }
 	]} 
 />
 
@@ -246,7 +246,7 @@
 		{#if data.mainImage}
 			<img
 				class="post__cover
-				object-cover object-top w-full h-[30rem] mb-8 rounded-lg shadow-lg
+				object-cover object-top w-full aspect-[16/9] md:aspect-[21/9] mb-8 rounded-lg shadow-lg
 				"
 				src={urlFor(data.mainImage).width(1200).height(630).quality(90).url()}
 				srcset={getResponsiveImageSrcset(data.mainImage, 1200)}
@@ -254,13 +254,14 @@
 				alt="Cover image for {data.title}"
 				loading="eager"
 				fetchpriority="high"
+				decoding="async"
 			/>
 		{:else}
 			<div class="post__cover--none"></div>
 		{/if}
 
 		<div class="post__content prose prose-lg max-w-none normal-case">
-			<PortableText value={data.body || []} components={portableTextComponents} />
+			<PortableText value={data.body || []} components={portableTextComponents as any} />
 		</div>
 
 		<!-- Ad Unit - After Content -->

@@ -26,6 +26,7 @@
 				class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
 				loading="lazy"
 				fetchpriority="low"
+				decoding="async"
 			/>
 		</div>
 		
