@@ -1,19 +1,87 @@
 import * as cheerio from 'cheerio';
 
 export const NPFL_FIXTURES_URL = 'https://npfl.com.ng/fixtures-results/';
+export const NPFL_TABLE_URL = 'https://npfl.com.ng/npfl-table/';
 
 export type NPFLFixture = {
 	matchday: number;
 	kickoff: string;     // ISO
 	kickoff_ts: string;  // "YYYY-MM-DD HH:mm:ss"
 	home: string;
+	homeSlug: string;
+	homeLogo: string | null;
 	away: string;
+	awaySlug: string;
+	awayLogo: string | null;
 	status: 'scheduled' | 'finished';
 	homeScore: number | null;
 	awayScore: number | null;
 	venue: string | null;
 	rawTail: string;
 };
+
+export type StandingRow = {
+	pos: number;
+	club: string;
+	slug: string;
+	logo: string | null;
+	played: number;
+	win: number;
+	draw: number;
+	loss: number;
+	goalsFor: number;
+	goalsAgainst: number;
+	goalDiff: number;
+	points: number;
+};
+
+export function clubToSlug(name: string): string {
+	return name
+		.toLowerCase()
+		.replace(/\s*\(\s*3sc\s*\)\s*/i, '')
+		.replace(/\s+sports\s+club\s*/i, ' ')
+		.replace(/\b(fc|sc)\b/gi, '')
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
+}
+
+// Initial known official NPFL CDN logo paths (dynamically updated by live scrape)
+const KNOWN_LOGOS: Record<string, string> = {
+	'shooting-stars': 'https://npfl.com.ng/wp-content/uploads/2019/04/Shooting-Stars-Sports-Club-3SC.png',
+	'inter-lagos': 'https://npfl.com.ng/wp-content/uploads/2019/04/WhatsApp-Image-2026-08-04-at-3.12.49-PM-32x32.jpeg',
+	'kwara-united': 'https://npfl.com.ng/wp-content/uploads/2019/04/Kwara-United-FC.png',
+	'kano-pillars': 'https://npfl.com.ng/wp-content/uploads/2023/07/Kano-Pillars-FC.png',
+	'barau': 'https://npfl.com.ng/wp-content/uploads/2025/08/Barau-FC-logo-32x32.jpg',
+	'nasarawa-united': 'https://npfl.com.ng/wp-content/uploads/2024/08/Nasarawa-Utd-logo-25x32.jpg',
+	'bendel-insurance': 'https://npfl.com.ng/wp-content/uploads/2019/04/Bendel-Insurance-FC.png',
+	'warri-wolves': 'https://npfl.com.ng/wp-content/uploads/2025/08/Warri-Wolves-logo-32x32.jpg',
+	'rangers-international': 'https://npfl.com.ng/wp-content/uploads/2023/07/Rangers-logo-32x32.jpg',
+	'katsina-united': 'https://npfl.com.ng/wp-content/uploads/2023/07/Katsina-United-FC.png',
+	'niger-tornadoes': 'https://npfl.com.ng/wp-content/uploads/2023/07/Niger-Tornadoes-FC.png',
+	'enyimba': 'https://npfl.com.ng/wp-content/uploads/2020/10/Enyimba.png',
+	'ikorodu-city': 'https://npfl.com.ng/wp-content/uploads/2024/07/Ikorodu-City-logo-32x32.jpeg',
+	'ranchers-bees': 'https://npfl.com.ng/wp-content/uploads/2019/04/WhatsApp-Image-2026-08-04-at-3.12.49-PM-2-21x32.jpeg',
+	'doma-united': 'https://npfl.com.ng/wp-content/uploads/2019/04/Doma-United-FC.png',
+	'sporting-lagos': 'https://npfl.com.ng/wp-content/uploads/2023/07/Sporting-Lagos-FC.png',
+	'rivers-united': 'https://npfl.com.ng/wp-content/uploads/2020/10/RiversUnited-FC.png',
+	'plateau-united': 'https://npfl.com.ng/wp-content/uploads/2019/04/Plateau_United.png',
+	'abia-warriors': 'https://npfl.com.ng/wp-content/uploads/2019/04/Abia-Warriors-FC.png',
+	'kun-khalifat': 'https://npfl.com.ng/wp-content/uploads/2025/08/Ku-Khalifat-FC-logo-32x32.jpg',
+	'remo-stars': 'https://npfl.com.ng/wp-content/uploads/2019/04/Remo-Stars-FC.png',
+	'lobi-stars': 'https://npfl.com.ng/wp-content/uploads/2019/04/Lobi-Stars-FC.png',
+	'sunshine-stars': 'https://npfl.com.ng/wp-content/uploads/2019/04/Sunshine-Stars-FC.png',
+	'heartland': 'https://npfl.com.ng/wp-content/uploads/2019/04/Heartland-FC.png',
+	'akwa-united': 'https://npfl.com.ng/wp-content/uploads/2019/04/Akwa-United-FC.png',
+	'bayelsa-united': 'https://npfl.com.ng/wp-content/uploads/2023/07/Bayelsa-United-FC.png',
+	'el-kanemi-warriors': 'https://npfl.com.ng/wp-content/uploads/2019/04/El-Kanemi-Warriors-FC.png'
+};
+
+const dynamicLogoCache = new Map<string, string>(Object.entries(KNOWN_LOGOS));
+
+export function getClubLogo(nameOrSlug: string): string | null {
+	const slug = clubToSlug(nameOrSlug);
+	return dynamicLogoCache.get(slug) || dynamicLogoCache.get(nameOrSlug.toLowerCase()) || null;
+}
 
 function norm(s: string) {
 	return s.replace(/\s+/g, ' ').trim();
@@ -26,7 +94,6 @@ function parseWAT(ts: string) {
 
 export function parseNpflFixtures(html: string): NPFLFixture[] {
 	const $ = cheerio.load(html);
-
 	const fixtures: NPFLFixture[] = [];
 
 	$('table tr').each((_idx, tr) => {
@@ -39,11 +106,29 @@ export function parseNpflFixtures(html: string): NPFLFixture[] {
 
 		const kickoff_ts = tsMatch[0];
 
-		const matchText = norm($(tds[1]).text());
+		const matchCell = $(tds[1]);
+		const matchText = norm(matchCell.text());
 		if (!/ vs /i.test(matchText)) return;
 
 		const [home, away] = matchText.split(/\s+vs\s+/i).map((s) => s.trim());
 		if (!home || !away) return;
+
+		// Extract logos from match cell
+		const imgs = matchCell.find('img').map((_, img) => $(img).attr('src')).get();
+		const homeSlug = clubToSlug(home);
+		const awaySlug = clubToSlug(away);
+
+		const homeLogo = imgs[0] || getClubLogo(homeSlug);
+		const awayLogo = imgs[1] || getClubLogo(awaySlug);
+
+		if (homeLogo) {
+			dynamicLogoCache.set(homeSlug, homeLogo);
+			dynamicLogoCache.set(home.toLowerCase(), homeLogo);
+		}
+		if (awayLogo) {
+			dynamicLogoCache.set(awaySlug, awayLogo);
+			dynamicLogoCache.set(away.toLowerCase(), awayLogo);
+		}
 
 		const resultText = norm($(tds[2]).text());
 		const scoreMatch = resultText.match(/(\d+)\s*-\s*(\d+)/);
@@ -63,7 +148,11 @@ export function parseNpflFixtures(html: string): NPFLFixture[] {
 			kickoff_ts,
 			kickoff: parseWAT(kickoff_ts).toISOString(),
 			home,
+			homeSlug,
+			homeLogo,
 			away,
+			awaySlug,
+			awayLogo,
 			status,
 			homeScore,
 			awayScore,
@@ -73,6 +162,181 @@ export function parseNpflFixtures(html: string): NPFLFixture[] {
 	});
 
 	return fixtures;
+}
+
+const n = (s: string) => Number(String(s).replace(/[^\d-]/g, '').trim());
+const t = (s: string) => String(s).replace(/\s+/g, ' ').trim();
+
+export function parseNpflTable(html: string): StandingRow[] {
+	const $ = cheerio.load(html);
+	const table = $('table').filter((_idx, el) => t($(el).find('thead').text()).includes('Pos')).first();
+
+	if (!table.length) return [];
+
+	const rows: StandingRow[] = [];
+
+	table.find('tbody tr').each((_idx, tr) => {
+		const tds = $(tr).find('td');
+		if (tds.length < 10) return;
+
+		const club = t(tds.eq(1).text());
+		const slug = clubToSlug(club);
+		const logo = getClubLogo(slug) || getClubLogo(club);
+
+		const row: StandingRow = {
+			pos: n(t(tds.eq(0).text())),
+			club,
+			slug,
+			logo,
+			played: n(t(tds.eq(2).text())),
+			win: n(t(tds.eq(3).text())),
+			draw: n(t(tds.eq(4).text())),
+			loss: n(t(tds.eq(5).text())),
+			goalsFor: n(t(tds.eq(6).text())),
+			goalsAgainst: n(t(tds.eq(7).text())),
+			goalDiff: n(t(tds.eq(8).text())),
+			points: n(t(tds.eq(9).text()))
+		};
+
+		if (!Number.isFinite(row.pos) || !row.club) return;
+		rows.push(row);
+	});
+
+	return rows.sort((a, b) => a.pos - b.pos);
+}
+
+// In-memory caches with 5-minute TTL
+let fixturesCache: { at: number; data: NPFLFixture[] } | null = null;
+let tableCache: { at: number; data: StandingRow[] } | null = null;
+const CACHE_TTL = 5 * 60 * 1000;
+
+export async function fetchNpflFixtures(fetchFn: typeof fetch = fetch): Promise<NPFLFixture[]> {
+	if (fixturesCache && Date.now() - fixturesCache.at < CACHE_TTL) {
+		return fixturesCache.data;
+	}
+
+	try {
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), 10000);
+
+		const res = await fetchFn(NPFL_FIXTURES_URL, {
+			headers: {
+				'user-agent': 'sportsunlimited/1.0 (+https://sportsunlimited.ng)',
+				accept: 'text/html'
+			},
+			signal: controller.signal
+		});
+		clearTimeout(timeout);
+
+		if (res.ok) {
+			const html = await res.text();
+			const data = parseNpflFixtures(html);
+			if (data.length > 0) {
+				fixturesCache = { at: Date.now(), data };
+				return data;
+			}
+		}
+	} catch (err) {
+		console.error('[fetchNpflFixtures] Live fetch failed, using fallback/cached if present:', err);
+	}
+
+	return fixturesCache?.data || [];
+}
+
+export async function fetchNpflTable(fetchFn: typeof fetch = fetch): Promise<StandingRow[]> {
+	if (tableCache && Date.now() - tableCache.at < CACHE_TTL) {
+		return tableCache.data;
+	}
+
+	try {
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), 10000);
+
+		const res = await fetchFn(NPFL_TABLE_URL, {
+			headers: {
+				'user-agent': 'sportsunlimited/1.0 (+https://sportsunlimited.ng)',
+				accept: 'text/html'
+			},
+			signal: controller.signal
+		});
+		clearTimeout(timeout);
+
+		if (res.ok) {
+			const html = await res.text();
+			const data = parseNpflTable(html);
+			if (data.length > 0) {
+				tableCache = { at: Date.now(), data };
+				return data;
+			}
+		}
+	} catch (err) {
+		console.error('[fetchNpflTable] Live fetch failed, using fallback/cached if present:', err);
+	}
+
+	return tableCache?.data || [];
+}
+
+export async function fetchClubData(slug: string, fetchFn: typeof fetch = fetch) {
+	// Parallel fetch live table and live fixtures
+	const [table, fixtures] = await Promise.all([
+		fetchNpflTable(fetchFn),
+		fetchNpflFixtures(fetchFn)
+	]);
+
+	const normalizedSlug = clubToSlug(slug);
+
+	// Find standing row
+	const standing = table.find((row) => row.slug === normalizedSlug || clubToSlug(row.club) === normalizedSlug) || null;
+
+	// Find all club matches
+	const allMatches = fixtures.filter((f) => f.homeSlug === normalizedSlug || f.awaySlug === normalizedSlug);
+
+	// Sort finished matches by matchday / kickoff descending
+	const finishedMatches = allMatches
+		.filter((f) => f.status === 'finished')
+		.sort((a, b) => new Date(b.kickoff).getTime() - new Date(a.kickoff).getTime());
+
+	// Sort upcoming matches by kickoff ascending
+	const upcomingMatches = allMatches
+		.filter((f) => f.status === 'scheduled')
+		.sort((a, b) => new Date(a.kickoff).getTime() - new Date(b.kickoff).getTime());
+
+	// Calculate form from last 5 finished matches
+	const form = finishedMatches.slice(0, 5).map((m) => {
+		const isHome = m.homeSlug === normalizedSlug;
+		const teamScore = isHome ? m.homeScore! : m.awayScore!;
+		const oppScore = isHome ? m.awayScore! : m.homeScore!;
+		const result: 'W' | 'D' | 'L' = teamScore > oppScore ? 'W' : teamScore < oppScore ? 'L' : 'D';
+		return {
+			result,
+			matchday: m.matchday,
+			opponent: isHome ? m.away : m.home,
+			score: `${m.homeScore} - ${m.awayScore}`,
+			isHome
+		};
+	}).reverse(); // chronological order for form strip
+
+	// Extract home venue from fixtures
+	const homeMatchWithVenue = allMatches.find((m) => m.homeSlug === normalizedSlug && m.venue);
+	const stadium = homeMatchWithVenue?.venue || 'NPFL Home Ground';
+
+	// Determine club name
+	const clubName = standing?.club || allMatches[0]?.home || allMatches[0]?.away || slug.replace(/-/g, ' ').toUpperCase();
+
+	// Determine logo
+	const logo = standing?.logo || getClubLogo(normalizedSlug);
+
+	return {
+		slug: normalizedSlug,
+		clubName,
+		logo,
+		stadium,
+		standing,
+		form,
+		finishedMatches,
+		upcomingMatches,
+		totalMatches: allMatches.length
+	};
 }
 
 export function groupByMatchday(fixtures: NPFLFixture[]) {
@@ -93,11 +357,8 @@ export function groupByMatchday(fixtures: NPFLFixture[]) {
 }
 
 export function pickPreviousCompletedMatchday(fixtures: NPFLFixture[]) {
-	// Find highest matchday that has at least 1 finished game.
 	const finished = fixtures.filter((f) => f.status === 'finished');
 	if (finished.length === 0) return null;
-
-	// A matchday is "completed enough" if it has >=1 finished game; tweak if you want full completion.
 	return Math.max(...finished.map((f) => f.matchday));
 }
 
@@ -117,16 +378,15 @@ export function pickCurrentMatchday(fixtures: { matchday: number; kickoff: strin
 		}
 	}
 
-	const PRE_MS = 72 * 60 * 60 * 1000;  // 3 days before window
-	const POST_MS = 24 * 60 * 60 * 1000; // 1 day after window
+	const PRE_MS = 72 * 60 * 60 * 1000;
+	const POST_MS = 24 * 60 * 60 * 1000;
 
 	const candidates = [...byMd.entries()]
 		.filter(([, w]) => now >= new Date(w.min.getTime() - PRE_MS) && now <= new Date(w.max.getTime() + POST_MS))
-		.sort((a, b) => b[0] - a[0]); // prefer higher matchday if multiple overlap
+		.sort((a, b) => b[0] - a[0]);
 
 	if (candidates.length) return candidates[0][0];
 
-	// fallback: nearest upcoming kickoff
 	let best: { md: number; dt: Date } | null = null;
 	for (const [md, w] of byMd.entries()) {
 		const dt = w.min;
@@ -136,4 +396,3 @@ export function pickCurrentMatchday(fixtures: { matchday: number; kickoff: strin
 	}
 	return best?.md ?? null;
 }
-

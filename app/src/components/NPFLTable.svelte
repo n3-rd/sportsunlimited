@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { clubToSlug, getClubLogo } from '$lib/npfl';
+
 	interface StandingRow {
 		pos: number;
 		club: string;
+		slug?: string;
+		logo?: string | null;
 		played: number;
 		win: number;
 		draw: number;
@@ -45,12 +49,26 @@
 			</thead>
 			<tbody class="divide-y divide-zinc-100 font-mono text-xs">
 				{#each displayTable as row (row.pos)}
+					{@const slug = row.slug || clubToSlug(row.club)}
+					{@const logo = row.logo || getClubLogo(slug)}
 					<tr class="hover:bg-zinc-50 transition-colors duration-150 {row.pos <= 3 ? 'bg-emerald-500/[0.03]' : row.pos >= 18 ? 'bg-rose-500/[0.03]' : ''}">
 						<td class="{compact ? 'px-2.5 py-2.5' : 'px-4 py-3'} tabular-nums font-bold {row.pos <= 3 ? 'text-emerald-600' : row.pos >= 18 ? 'text-rose-600' : 'text-zinc-500'}">
 							{row.pos}
 						</td>
-						<td class="{compact ? 'px-2.5 py-2.5 text-xs font-sans font-semibold text-zinc-900' : 'px-4 py-3 text-sm font-sans font-semibold text-zinc-900'}">
-							{row.club}
+						<td class="{compact ? 'px-2.5 py-2.5' : 'px-4 py-3'}">
+							<a href={`/npfl/clubs/${slug}`} class="flex items-center gap-2.5 group">
+								{#if logo}
+									<img
+										src={logo}
+										alt={row.club}
+										class="w-5 h-5 object-contain flex-shrink-0"
+										loading="lazy"
+									/>
+								{/if}
+								<span class="{compact ? 'text-xs font-semibold' : 'text-sm font-semibold'} text-zinc-900 group-hover:text-rose-600 transition-colors">
+									{row.club}
+								</span>
+							</a>
 						</td>
 						{#if !compact}
 							<td class="px-3 py-3 tabular-nums text-center text-zinc-600">{row.played}</td>
@@ -78,4 +96,3 @@
 		width: 100%;
 	}
 </style>
-

@@ -15,6 +15,8 @@ function staticSitemapXml(lastmodDate: string): string {
 <url><loc>${site}/disclaimer</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 <url><loc>${site}/npfl/fixtures</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
 <url><loc>${site}/npfl/standings</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+<url><loc>${site}/npfl/clubs</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+<url><loc>${site}/npfl/matchday</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
 <url><loc>${site}/tags</loc><lastmod>${lastmodDate}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>`;
 }
@@ -106,6 +108,18 @@ export async function GET({ setHeaders })  {
 </url>
 <url>
     <loc>${site}/npfl/standings</loc>
+    <lastmod>${lastmodDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+</url>
+<url>
+    <loc>${site}/npfl/clubs</loc>
+    <lastmod>${lastmodDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+</url>
+<url>
+    <loc>${site}/npfl/matchday</loc>
     <lastmod>${lastmodDate}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>

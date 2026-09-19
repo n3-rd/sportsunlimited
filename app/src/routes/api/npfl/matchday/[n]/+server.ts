@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { NPFL_FIXTURES_URL, parseNpflFixtures } from '$lib/npfl';
+import { fetchNpflFixtures, NPFL_FIXTURES_URL } from '$lib/npfl';
 
 export async function GET({ params, fetch }) {
 	const n = Number(params.n);
@@ -8,26 +8,24 @@ export async function GET({ params, fetch }) {
 		return json({ ok: false, error: 'Invalid matchday' }, { status: 400 });
 	}
 
-	const res = await fetch(NPFL_FIXTURES_URL, {
-		headers: { 'user-agent': 'sportsunlimited/1.0 (+https://sportsunlimited.ng)', accept: 'text/html' }
-	});
+	try {
+		const allFixtures = await fetchNpflFixtures(fetch);
+		const fixtures = allFixtures.filter((f) => f.matchday === n);
 
-	if (!res.ok) return json({ ok: false, error: `NPFL fetch failed: ${res.status}` }, { status: 502 });
+		const finished = fixtures.filter((f) => f.status === 'finished');
+		const scheduled = fixtures.filter((f) => f.status === 'scheduled');
 
-	const html = await res.text();
-	const fixtures = parseNpflFixtures(html).filter((f) => f.matchday === n);
-
-	const finished = fixtures.filter((f) => f.status === 'finished');
-	const scheduled = fixtures.filter((f) => f.status === 'scheduled');
-
-	return json({
-		ok: true,
-		matchday: n,
-		count: fixtures.length,
-		finishedCount: finished.length,
-		scheduledCount: scheduled.length,
-		fixtures,
-		source: NPFL_FIXTURES_URL
-	});
+		return json({
+			ok: true,
+			matchday: n,
+			count: fixtures.length,
+			finishedCount: finished.length,
+			scheduledCount: scheduled.length,
+			fixtures,
+			source: NPFL_FIXTURES_URL
+		});
+	} catch (error: any) {
+		console.error(`[GET] /api/npfl/matchday/${n} error:`, error);
+		return json({ ok: false, error: error.message || 'Failed to fetch matchday' }, { status: 500 });
+	}
 }
-
