@@ -1,9 +1,9 @@
 import type { PortableTextBlock } from '@portabletext/types';
-import { DB_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import type { Post, PocketBasePost, PocketBaseListResponse } from '$lib/types';
 
 // Base URL for PocketBase
-const POCKETBASE_URL = DB_URL;
+const POCKETBASE_URL = env.DB_URL;
 const COLLECTION_NAME = 'posts';
 
 /**
