@@ -110,11 +110,16 @@ export async function GET({ fetch }) {
 		console.log('[GET] Received HTML, length:', html.length);
 	} catch (error) {
 		clearTimeout(timeoutId);
-		if (error instanceof Error && error.name === 'AbortError') {
-			console.error('[GET] NPFL fetch timed out after 8s');
-			return json({ ok: false, error: 'NPFL fetch timed out' }, { status: 504 });
+		if (error instanceof Error) {
+			if (error.name === 'AbortError') {
+				console.error('[GET] NPFL fetch timed out after 8s');
+				return json({ ok: false, error: 'NPFL fetch timed out' }, { status: 504 });
+			}
+			console.error('[GET] NPFL fetch error:', error.message, error.name);
+			return json({ ok: false, error: `NPFL fetch failed: ${error.message}` }, { status: 502 });
 		}
-		console.error('[GET] NPFL fetch error:', error);
+		
+		console.error('[GET] NPFL fetch unknown error');
 		return json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 

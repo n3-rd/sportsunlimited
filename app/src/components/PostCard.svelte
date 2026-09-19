@@ -25,7 +25,7 @@
 </script>
 
 <a href={`/post/${post.slug.current}`} class="post-card group block h-full">
-	<article class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 h-full flex flex-col border border-gray-100 group-hover:border-red-200">
+	<article class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 h-full flex flex-col border border-zinc-100/80 group-hover:border-rose-200/60">
 		<div class="relative {sizeClasses[size]} overflow-hidden">
 			<img 
 				src={urlFor(post.mainImage.asset).width(800).height(600).quality(85).url()} 
@@ -39,7 +39,7 @@
 			/>
 			<div class="absolute top-4 left-4">
 				{#if post.tags && post.tags[0]}
-					<span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+					<span class="bg-rose-600/95 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
 						{post.tags[0]}
 					</span>
 				{/if}
@@ -47,20 +47,20 @@
 		</div>
 		
 		<div class="p-5 flex-1 flex flex-col">
-			<h3 class="text-lg md:text-xl font-bold text-gray-900 mb-3 group-hover:text-red-600 transition-colors line-clamp-2 leading-tight">
+			<h3 class="text-lg md:text-xl font-bold text-zinc-900 mb-3 group-hover:text-rose-600 transition-colors line-clamp-2 leading-tight">
 				{post.title}
 			</h3>
 			
 			{#if post.excerpt && size !== 'small'}
-				<p class="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">
+				<p class="text-sm text-zinc-600 mb-4 line-clamp-2 flex-1 leading-relaxed">
 					{post.excerpt}
 				</p>
 			{/if}
 			
-			<div class="flex items-center gap-2 text-xs text-gray-500 mt-auto">
+			<div class="flex items-center gap-2 text-xs text-zinc-500 mt-auto font-medium">
 				<Clock size="14" />
 				<span>{dayjs(post._createdAt).fromNow()}</span>
-				<span class="text-gray-400">•</span>
+				<span class="text-zinc-300">•</span>
 				<span>{readingTime} min read</span>
 			</div>
 		</div>

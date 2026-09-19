@@ -43,13 +43,13 @@
 									fetchpriority={index === 0 ? "high" : "low"}
 									decoding="async"
 								/>
-								<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10"></div>
+								<div class="absolute inset-0 bg-gradient-to-t from-zinc-950/95 via-zinc-950/50 to-transparent"></div>
 								
 								<div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
 									<div class="max-w-4xl">
 										<div class="flex items-center gap-3 mb-4 flex-wrap">
 											{#if post.tags && post.tags[0]}
-												<span class="bg-red-600 px-3 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg">
+												<span class="bg-rose-600/95 backdrop-blur-sm px-3 py-1.5 rounded-full font-bold text-[10px] uppercase tracking-wider shadow-md">
 													{post.tags[0]}
 												</span>
 											{/if}
@@ -59,12 +59,12 @@
 											</div>
 										</div>
 										
-										<h2 class="text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3 group-hover:text-red-500 transition-colors duration-300 drop-shadow-lg">
+										<h2 class="text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-3 group-hover:text-rose-400 transition-colors duration-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
 											{post.title}
 										</h2>
 										
 										{#if post.excerpt}
-											<p class="text-sm md:text-base lg:text-lg text-gray-100 leading-relaxed line-clamp-2 max-w-3xl drop-shadow">
+											<p class="text-sm md:text-base lg:text-lg text-zinc-200 leading-relaxed line-clamp-2 max-w-3xl drop-shadow-md">
 												{post.excerpt}
 											</p>
 										{/if}

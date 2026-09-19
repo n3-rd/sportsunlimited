@@ -19,7 +19,7 @@
 	];
 </script>
 
-<footer class="footer bg-black text-white mt-auto">
+<footer class="footer bg-zinc-950 text-white mt-auto">
 	<div class="footer-container container max-w-6xl mx-auto px-4 py-12">
 		<div class="footer-content grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 		<!-- Brand Section -->
@@ -71,7 +71,7 @@
 		</div>
 
 		<!-- Copyright -->
-		<div class="footer-bottom border-t border-gray-800 pt-8">
+		<div class="footer-bottom border-t border-zinc-800/50 pt-8">
 			<div class="flex flex-col md:flex-row justify-between items-center gap-4">
 				<p class="text-gray-400 text-sm text-center md:text-left">
 					© {new Date().getFullYear()} Trustymike Communications. All rights reserved.
