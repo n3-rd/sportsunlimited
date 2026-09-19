@@ -56,6 +56,8 @@ const config = {
 			},
 			fontFamily: {
 				sans: ["'Plus Jakarta Sans'", ...fontFamily.sans],
+				display: ["'Syne'", "'Plus Jakarta Sans'", ...fontFamily.sans],
+				serif: ["'Newsreader'", "Georgia", ...fontFamily.serif],
 				mono: ["'IBM Plex Mono'", ...fontFamily.mono]
 			},
 			transitionTimingFunction: {

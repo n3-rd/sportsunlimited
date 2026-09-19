@@ -147,6 +147,34 @@ export async function getPosts(limit = 48): Promise<Post[]> {
 	return data.items.map(transformPost);
 }
 
+export async function getPostsForEditions(total = 1000): Promise<Post[]> {
+	const perPage = 500;
+	const pagesToFetch = Math.max(1, Math.ceil(total / perPage));
+
+	const promises = [];
+	for (let page = 1; page <= pagesToFetch; page++) {
+		const currentLimit = Math.min(perPage, total - (page - 1) * perPage);
+		promises.push(
+			fetchPocketBase<PocketBaseListResponse>(
+				`/api/collections/${COLLECTION_NAME}/records?page=${page}&perPage=${currentLimit}&sort=-created&filter=(status="Published" || status="")`
+			).catch(err => {
+				console.error(`[PocketBase] Error fetching page ${page} for editions:`, err);
+				return { items: [] } as unknown as PocketBaseListResponse;
+			})
+		);
+	}
+
+	const results = await Promise.all(promises);
+	const allItems: PocketBasePost[] = [];
+	results.forEach(res => {
+		if (res?.items && Array.isArray(res.items)) {
+			allItems.push(...res.items);
+		}
+	});
+
+	return allItems.map(transformPost);
+}
+
 export async function getFeaturedPosts(limit = 5): Promise<Post[]> {
 	const data = await fetchPocketBase<PocketBaseListResponse>(
 		`/api/collections/${COLLECTION_NAME}/records?page=1&perPage=${limit}&sort=-created&filter=(status="Published" || status="")`
