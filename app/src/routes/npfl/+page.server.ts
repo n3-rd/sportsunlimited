@@ -1,19 +1,27 @@
-import { fetchNpflTable, fetchNpflFixtures } from '$lib/npfl';
+import { fetchNpflTable, fetchNpflFixtures, pickCurrentMatchday } from '$lib/npfl';
 import { getPosts } from '$lib/utils/sanity.server';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
-	const [tableResult, fixturesResult, allPosts] = await Promise.all([
-		fetchNpflTable().catch((err) => {
+export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
+	setHeaders({
+		'cache-control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400'
+	});
+
+	const [tableRows, allFixtures, allPosts] = await Promise.all([
+		fetchNpflTable(fetch).catch((err) => {
 			console.error('NPFL Hub table error:', err);
-			return { table: [] };
+			return [];
 		}),
-		fetchNpflFixtures().catch((err) => {
+		fetchNpflFixtures(fetch).catch((err) => {
 			console.error('NPFL Hub fixtures error:', err);
-			return { fixtures: [], currentMatchday: null };
+			return [];
 		}),
 		getPosts(24).catch(() => [])
 	]);
+
+	const table = Array.isArray(tableRows) ? tableRows : [];
+	const fixtures = Array.isArray(allFixtures) ? allFixtures : [];
+	const currentMatchday = pickCurrentMatchday(fixtures);
 
 	// Filter articles relevant to NPFL / Nigerian football
 	const npflArticles = allPosts.filter((p) => {
@@ -29,16 +37,23 @@ export const load: PageServerLoad = async () => {
 
 	const articles = npflArticles.length > 0 ? npflArticles : allPosts.slice(0, 6);
 
-	const upcoming = (fixturesResult.fixtures || []).filter((f) => f.status === 'scheduled');
-	const finished = (fixturesResult.fixtures || []).filter((f) => f.status === 'finished');
+	// Prioritize current matchday fixtures, otherwise upcoming scheduled
+	const mdFixtures = currentMatchday
+		? fixtures.filter((f) => f.matchday === currentMatchday)
+		: [];
+
+	const upcoming = fixtures.filter((f) => f.status === 'scheduled');
+	const displayFixtures = mdFixtures.length > 0
+		? mdFixtures
+		: (upcoming.length > 0 ? upcoming.slice(0, 6) : fixtures.slice(0, 6));
 
 	return {
-		table: tableResult.table || [],
-		topTable: (tableResult.table || []).slice(0, 6),
-		fixtures: fixturesResult.fixtures || [],
-		upcomingFixtures: upcoming.length > 0 ? upcoming.slice(0, 4) : (fixturesResult.fixtures || []).slice(0, 4),
-		finishedFixtures: finished.slice(0, 4),
-		currentMatchday: fixturesResult.currentMatchday,
+		table,
+		topTable: table.slice(0, 6),
+		fixtures: displayFixtures,
+		allFixturesCount: fixtures.length,
+		currentMatchday,
 		articles
 	};
 };
+

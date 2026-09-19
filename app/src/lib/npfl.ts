@@ -212,9 +212,49 @@ let fixturesCache: { at: number; data: NPFLFixture[] } | null = null;
 let tableCache: { at: number; data: StandingRow[] } | null = null;
 const CACHE_TTL = 5 * 60 * 1000;
 
+function getFastApiUrl(): string | null {
+	if (typeof process !== 'undefined' && process.env.NPFL_API_URL) {
+		return process.env.NPFL_API_URL.replace(/\/+$/, '');
+	}
+	return null;
+}
+
 export async function fetchNpflFixtures(fetchFn: typeof fetch = fetch): Promise<NPFLFixture[]> {
 	if (fixturesCache && Date.now() - fixturesCache.at < CACHE_TTL) {
 		return fixturesCache.data;
+	}
+
+	// Try external Python FastAPI if configured
+	const fastApiUrl = getFastApiUrl();
+	if (fastApiUrl) {
+		try {
+			const res = await fetchFn(`${fastApiUrl}/api/fixtures`);
+			if (res.ok) {
+				const json = await res.json();
+				if (json.ok && Array.isArray(json.fixtures) && json.fixtures.length > 0) {
+					const mapped: NPFLFixture[] = json.fixtures.map((f: any) => ({
+						matchday: f.matchday,
+						kickoff: f.kickoff,
+						kickoff_ts: f.kickoff_ts,
+						home: f.home,
+						homeSlug: f.home_slug || f.homeSlug,
+						homeLogo: f.home_logo || f.homeLogo,
+						away: f.away,
+						awaySlug: f.away_slug || f.awaySlug,
+						awayLogo: f.away_logo || f.awayLogo,
+						status: f.status,
+						homeScore: f.home_score ?? f.homeScore,
+						awayScore: f.away_score ?? f.awayScore,
+						venue: f.venue,
+						rawTail: f.score_display || `${f.home_score} - ${f.away_score}`
+					}));
+					fixturesCache = { at: Date.now(), data: mapped };
+					return mapped;
+				}
+			}
+		} catch (err) {
+			console.log('[fetchNpflFixtures] FastAPI unavailable, falling back to direct scraper');
+		}
 	}
 
 	try {
@@ -248,6 +288,37 @@ export async function fetchNpflFixtures(fetchFn: typeof fetch = fetch): Promise<
 export async function fetchNpflTable(fetchFn: typeof fetch = fetch): Promise<StandingRow[]> {
 	if (tableCache && Date.now() - tableCache.at < CACHE_TTL) {
 		return tableCache.data;
+	}
+
+	// Try external Python FastAPI if configured
+	const fastApiUrl = getFastApiUrl();
+	if (fastApiUrl) {
+		try {
+			const res = await fetchFn(`${fastApiUrl}/api/table`);
+			if (res.ok) {
+				const json = await res.json();
+				if (json.ok && Array.isArray(json.table) && json.table.length > 0) {
+					const mapped: StandingRow[] = json.table.map((r: any) => ({
+						pos: r.pos,
+						club: r.club,
+						slug: r.slug,
+						logo: r.logo,
+						played: r.played,
+						win: r.win,
+						draw: r.draw,
+						loss: r.loss,
+						goalsFor: r.goals_for ?? r.goalsFor,
+						goalsAgainst: r.goals_against ?? r.goalsAgainst,
+						goalDiff: r.goal_diff ?? r.goalDiff,
+						points: r.points
+					}));
+					tableCache = { at: Date.now(), data: mapped };
+					return mapped;
+				}
+			}
+		} catch (err) {
+			console.log('[fetchNpflTable] FastAPI unavailable, falling back to direct scraper');
+		}
 	}
 
 	try {

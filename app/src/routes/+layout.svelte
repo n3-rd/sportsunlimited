@@ -10,6 +10,7 @@
 	import { fade } from 'svelte/transition';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import Spinner from '../components/Spinner.svelte';
+	import { page } from '$app/stores';
 	let { data, children } = $props();
 
 	let isLoading = $state(false);
@@ -19,7 +20,7 @@
 
 	// Inject the Analytics functionality
 	inject();
-	let pathname = $derived(data.pathname);
+	let pathname = $derived($page.url.pathname);
 	let isNpflMode = $derived(pathname?.startsWith('/npfl'));
 </script>
 
@@ -32,23 +33,35 @@
 {/if}
 <Header />
 <div class="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8 {isNpflMode ? 'pb-20 md:pb-0' : ''}">
-	<div class="flex flex-col gap-8 py-8 md:flex-row">
-		<main class="w-full md:w-3/4">
+	{#if isNpflMode}
+		<!-- Dedicated Full-Width Sports Layout for NPFL Pages -->
+		<main class="w-full py-6 md:py-8">
 			{#key pathname}
-				<div in:fade={{ duration: 300, delay: 400 }} out:fade={{ duration: 300 }}>
+				<div in:fade={{ duration: 250 }} out:fade={{ duration: 150 }}>
 					{@render children?.()}
 				</div>
 			{/key}
 		</main>
-		<aside class="h-full w-full md:w-1/4" aria-label="Sidebar">
-			<Sidebar
-				trendingPosts={data?.featuredPosts}
-				tags={data?.tags}
-				npflTable={data?.npflTable}
-				npflFixtures={data?.npflFixtures}
-			/>
-		</aside>
-	</div>
+	{:else}
+		<!-- Editorial Blog Layout with Sidebar -->
+		<div class="flex flex-col gap-8 py-8 md:flex-row">
+			<main class="w-full md:w-3/4">
+				{#key pathname}
+					<div in:fade={{ duration: 300, delay: 400 }} out:fade={{ duration: 300 }}>
+						{@render children?.()}
+					</div>
+				{/key}
+			</main>
+			<aside class="h-full w-full md:w-1/4" aria-label="Sidebar">
+				<Sidebar
+					trendingPosts={data?.featuredPosts}
+					tags={data?.tags}
+					npflTable={data?.npflTable}
+					npflFixtures={data?.npflFixtures}
+				/>
+			</aside>
+		</div>
+	{/if}
 </div>
 <footer class="mt-auto {isNpflMode ? 'pb-16 md:pb-0' : ''}">
 	<Footer></Footer>

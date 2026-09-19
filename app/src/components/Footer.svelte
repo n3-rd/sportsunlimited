@@ -17,25 +17,51 @@
 		{ name: 'Sitemap', url: '/sitemap.xml' },
 		{ name: 'RSS Feed', url: '/rss.xml' }
 	];
+
+	const npflLinks = [
+		{ name: 'NPFL Hub', url: '/npfl' },
+		{ name: 'Standings & Table', url: '/npfl/standings' },
+		{ name: 'Fixtures & Scores', url: '/npfl/fixtures' },
+		{ name: 'Matchday Center', url: '/npfl/matchday' },
+		{ name: 'NPFL Club Directory', url: '/npfl/clubs' },
+		{ name: 'Enyimba FC', url: '/npfl/clubs/enyimba' },
+		{ name: 'Remo Stars FC', url: '/npfl/clubs/remo-stars' },
+		{ name: 'Shooting Stars (3SC)', url: '/npfl/clubs/shooting-stars' },
+		{ name: 'Rangers International', url: '/npfl/clubs/rangers-international' }
+	];
 </script>
 
 <footer class="footer bg-zinc-950 text-white mt-auto">
-	<div class="footer-container container max-w-6xl mx-auto px-4 py-12">
-		<div class="footer-content grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-		<!-- Brand Section -->
-		<div class="footer-brand">
-			<div class="flex items-center gap-3 mb-3">
-				<img 
-					src="/android-chrome-512x512.png" 
-					alt="Sports Unlimited Logo" 
-					class="w-12 h-10 object-contain"
-				/>
-				<h3 class="text-2xl font-bold">Sports Unlimited</h3>
+	<div class="footer-container container max-w-7xl mx-auto px-4 py-12">
+		<div class="footer-content grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+			<!-- Brand Section -->
+			<div class="footer-brand">
+				<div class="flex items-center gap-3 mb-3">
+					<img 
+						src="/android-chrome-512x512.png" 
+						alt="Sports Unlimited Logo" 
+						class="w-12 h-10 object-contain"
+					/>
+					<h3 class="text-2xl font-bold">Sports Unlimited</h3>
+				</div>
+				<p class="text-gray-400 text-sm mb-4">
+					Nigeria's premier destination for the latest sports news, interviews, and analysis covering NPFL, Football, Basketball, Athletics, and more.
+				</p>
 			</div>
-			<p class="text-gray-400 text-sm mb-4">
-				Nigeria's premier destination for the latest sports news, interviews, and analysis covering NPFL, Football, Basketball, Athletics, and more.
-			</p>
-		</div>
+
+			<!-- NPFL Football Hub Links -->
+			<div class="footer-npfl">
+				<h4 class="text-lg font-semibold mb-4 text-rose-500 flex items-center gap-2">
+					<span>NPFL Coverage</span>
+				</h4>
+				<nav class="flex flex-col gap-2">
+					{#each npflLinks as link}
+						<a href={link.url} class="footer-link text-gray-400 hover:text-rose-400 transition-colors text-sm">
+							{link.name}
+						</a>
+					{/each}
+				</nav>
+			</div>
 
 			<!-- Navigation Links -->
 			<div class="footer-links">

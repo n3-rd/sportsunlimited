@@ -21,6 +21,27 @@
 		npflTable = [],
 		npflFixtures = []
 	}: Props = $props();
+
+	// Deduplicate any potential duplicate matches or clubs
+	let uniqueFixtures = $derived.by(() => {
+		const seen = new Set<string>();
+		return npflFixtures.filter((f) => {
+			const key = `${f.matchday || 0}-${f.home || ''}-${f.away || ''}-${f.kickoff || ''}`;
+			if (seen.has(key)) return false;
+			seen.add(key);
+			return true;
+		});
+	});
+
+	let uniqueTable = $derived.by(() => {
+		const seen = new Set<string>();
+		return npflTable.filter((r) => {
+			const key = r.slug || r.club || String(r.pos);
+			if (seen.has(key)) return false;
+			seen.add(key);
+			return true;
+		});
+	});
 </script>
 
 <div class="sticky top-24 flex h-full w-full flex-col gap-6">
@@ -65,7 +86,7 @@
 	{/if}
 
 	<!-- NPFL Top 5 Table -->
-	{#if npflTable && npflTable.length > 0}
+	{#if uniqueTable && uniqueTable.length > 0}
 		<section class="npfl-table-section rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-sm">
 			<div class="mb-3 flex items-center justify-between border-b border-zinc-100 pb-2">
 				<h3 class="text-base font-black tracking-tight text-zinc-950">NPFL Top 5</h3>
@@ -76,12 +97,12 @@
 					Full Table ↗
 				</a>
 			</div>
-			<NPFLTable table={npflTable} limit={5} compact={true} />
+			<NPFLTable table={uniqueTable} limit={5} compact={true} />
 		</section>
 	{/if}
 
 	<!-- NPFL Upcoming Fixtures -->
-	{#if npflFixtures && npflFixtures.length > 0}
+	{#if uniqueFixtures && uniqueFixtures.length > 0}
 		<section class="npfl-fixtures-section rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-sm">
 			<div class="mb-3 flex items-center justify-between border-b border-zinc-100 pb-2">
 				<h3 class="text-base font-black tracking-tight text-zinc-950">Upcoming Fixtures</h3>
@@ -92,7 +113,7 @@
 					All Fixtures ↗
 				</a>
 			</div>
-			<NPFLFixtures fixtures={npflFixtures} limit={3} compact={true} />
+			<NPFLFixtures fixtures={uniqueFixtures} limit={3} compact={true} />
 		</section>
 	{/if}
 
