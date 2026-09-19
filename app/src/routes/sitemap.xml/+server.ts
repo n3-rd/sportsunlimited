@@ -1,4 +1,5 @@
 import { getPosts, getTags } from "$lib/utils/sanity.server";
+import { KNOWN_CLUB_SLUGS } from "$lib/npfl";
 
 export const prerender = false;
 
@@ -13,6 +14,7 @@ function staticSitemapXml(lastmodDate: string): string {
 <url><loc>${site}/privacy</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 <url><loc>${site}/terms</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 <url><loc>${site}/disclaimer</loc><lastmod>${lastmodDate}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<url><loc>${site}/npfl</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.95</priority></url>
 <url><loc>${site}/npfl/fixtures</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
 <url><loc>${site}/npfl/standings</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
 <url><loc>${site}/npfl/clubs</loc><lastmod>${lastmodDate}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
@@ -101,6 +103,12 @@ export async function GET({ setHeaders })  {
 
 <!-- NPFL Pages -->
 <url>
+    <loc>${site}/npfl</loc>
+    <lastmod>${lastmodDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+</url>
+<url>
     <loc>${site}/npfl/fixtures</loc>
     <lastmod>${lastmodDate}</lastmod>
     <changefreq>daily</changefreq>
@@ -124,6 +132,22 @@ export async function GET({ setHeaders })  {
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
 </url>
+
+<!-- Individual NPFL Clubs -->
+${KNOWN_CLUB_SLUGS.map(slug => `<url>
+    <loc>${site}/npfl/clubs/${slug}</loc>
+    <lastmod>${lastmodDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+</url>`).join('\n')}
+
+<!-- NPFL Matchdays -->
+${Array.from({ length: 38 }, (_, i) => i + 1).map(n => `<url>
+    <loc>${site}/npfl/matchday/${n}</loc>
+    <lastmod>${lastmodDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+</url>`).join('\n')}
 
 <!-- Tags Index -->
 <url>

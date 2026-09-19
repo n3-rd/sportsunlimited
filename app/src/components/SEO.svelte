@@ -101,7 +101,7 @@
 	<meta name="geo.country" content="Nigeria" />
 	<meta name="application-name" content="Sports Unlimited" />
 	<meta name="apple-mobile-web-app-title" content="Sports Unlimited" />
-	<meta name="theme-color" content="#ef4444" />
+	<meta name="theme-color" content="#09090b" />
 
 	<!-- Structured Data -->
 	{#if schemaorg}

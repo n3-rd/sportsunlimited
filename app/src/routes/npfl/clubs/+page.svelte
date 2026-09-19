@@ -8,12 +8,35 @@
 	}
 
 	let { data }: Props = $props();
+
+	const clubsListSchema = {
+		'@context': 'https://schema.org',
+		'@type': 'ItemList',
+		name: 'Nigeria Premier Football League Clubs Directory',
+		itemListElement: (data.clubs || []).map((club: any, index: number) => ({
+			'@type': 'ListItem',
+			position: index + 1,
+			item: {
+				'@type': 'SportsTeam',
+				name: club.clubName,
+				sport: 'Soccer',
+				url: `https://www.sportsunlimited.ng/npfl/clubs/${club.slug}`,
+				logo: club.logo || 'https://i.postimg.cc/CLVXPt7j/SU.png',
+				...(club.stadium ? {
+					location: {
+						'@type': 'StadiumOrArena',
+						name: club.stadium
+					}
+				} : {})
+			}
+		}))
+	};
 </script>
 
 <SEO
-	title="NPFL Clubs & Teams | Sports Unlimited"
+	title="NPFL Clubs & Teams - Complete Directory | Sports Unlimited"
 	description="Complete directory of Nigeria Premier Football League (NPFL) clubs, team profiles, standings, stadiums, and fixtures."
-	canonical="https://www.sportsunlimited.ng/npfl/clubs"
+	schemaorg={clubsListSchema}
 />
 
 <main class="npfl-clubs-page max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">

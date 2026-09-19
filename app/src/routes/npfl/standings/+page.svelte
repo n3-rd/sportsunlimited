@@ -1,5 +1,6 @@
 <script lang="ts">
 	import NPFLTable from '../../../components/NPFLTable.svelte';
+	import SEO from '../../../components/SEO.svelte';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -7,18 +8,25 @@
 	}
 
 	let { data }: Props = $props();
+
+	const tableSchema = {
+		'@context': 'https://schema.org',
+		'@type': 'ItemList',
+		name: 'Nigeria Premier Football League Standings',
+		itemListElement: (data.table || []).map((row: any) => ({
+			'@type': 'ListItem',
+			position: row.pos,
+			name: row.club,
+			description: `${row.club} - Position ${row.pos}, ${row.points} points, ${row.played} matches played, Goal Difference ${row.goalDiff}`
+		}))
+	};
 </script>
 
-<svelte:head>
-	<title>NPFL Standings - Nigeria Premier Football League Table | Sports Unlimited</title>
-	<meta
-		name="description"
-		content="View the latest NPFL standings and league table. See current positions, points, wins, draws, losses, and goal differences for all teams in the Nigeria Premier Football League."
-	/>
-	<meta property="og:title" content="NPFL Standings - Nigeria Premier Football League Table" />
-	<meta property="og:description" content="View the latest NPFL standings and league table." />
-	<link rel="canonical" href="https://www.sportsunlimited.ng/npfl/standings" />
-</svelte:head>
+<SEO
+	title="NPFL Standings - Nigeria Premier Football League Table | Sports Unlimited"
+	description="View the latest NPFL standings and league table. See current positions, points, wins, draws, losses, and goal differences for all teams in the Nigeria Premier Football League."
+	schemaorg={tableSchema}
+/>
 
 <main class="npfl-standings-page max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
 	<div class="mb-8 pb-6 border-b border-zinc-200/80 flex flex-col md:flex-row md:items-end justify-between gap-4">

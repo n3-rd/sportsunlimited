@@ -26,12 +26,33 @@
 			minute: '2-digit'
 		});
 	}
+
+	const clubSchema = {
+		'@context': 'https://schema.org',
+		'@type': 'SportsTeam',
+		name: clubData.clubName,
+		sport: 'Soccer',
+		logo: clubData.logo || 'https://i.postimg.cc/CLVXPt7j/SU.png',
+		url: `https://www.sportsunlimited.ng/npfl/clubs/${clubData.slug}`,
+		memberOf: {
+			'@type': 'SportsOrganization',
+			name: 'Nigeria Premier Football League',
+			url: 'https://npfl.com.ng'
+		},
+		...(clubData.stadium ? {
+			location: {
+				'@type': 'StadiumOrArena',
+				name: clubData.stadium
+			}
+		} : {})
+	};
 </script>
 
 <SEO
 	title={`${clubData.clubName} - NPFL Club Profile, Fixtures & News | Sports Unlimited`}
 	description={`Follow ${clubData.clubName} in the Nigeria Premier Football League. Standings, upcoming fixtures, match results, home stadium, and latest news.`}
-	canonical={`https://www.sportsunlimited.ng/npfl/clubs/${clubData.slug}`}
+	image={clubData.logo || 'https://i.postimg.cc/CLVXPt7j/SU.png'}
+	schemaorg={clubSchema}
 />
 
 <main class="club-profile-page max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">

@@ -6,6 +6,7 @@
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	import Sidebar from '../components/Sidebar.svelte';
+	import MobileBottomNav from '../components/MobileBottomNav.svelte';
 	import { fade } from 'svelte/transition';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import Spinner from '../components/Spinner.svelte';
@@ -19,6 +20,7 @@
 	// Inject the Analytics functionality
 	inject();
 	let pathname = $derived(data.pathname);
+	let isNpflMode = $derived(pathname?.startsWith('/npfl'));
 </script>
 
 {#if isLoading}
@@ -29,7 +31,7 @@
 	</div>
 {/if}
 <Header />
-<div class="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
+<div class="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8 {isNpflMode ? 'pb-20 md:pb-0' : ''}">
 	<div class="flex flex-col gap-8 py-8 md:flex-row">
 		<main class="w-full md:w-3/4">
 			{#key pathname}
@@ -48,6 +50,9 @@
 		</aside>
 	</div>
 </div>
-<footer class="mt-auto">
+<footer class="mt-auto {isNpflMode ? 'pb-16 md:pb-0' : ''}">
 	<Footer></Footer>
 </footer>
+{#if isNpflMode}
+	<MobileBottomNav />
+{/if}

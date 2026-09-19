@@ -1,5 +1,6 @@
 <script lang="ts">
 	import NPFLFixtures from '../../../components/NPFLFixtures.svelte';
+	import SEO from '../../../components/SEO.svelte';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -7,18 +8,39 @@
 	}
 
 	let { data }: Props = $props();
+
+	const fixturesSchema = {
+		'@context': 'https://schema.org',
+		'@type': 'SportsEventSeries',
+		name: 'Nigeria Premier Football League Fixtures',
+		sport: 'Soccer',
+		organizer: {
+			'@type': 'SportsOrganization',
+			name: 'Nigeria Premier Football League',
+			url: 'https://npfl.com.ng'
+		},
+		subEvent: (data.fixtures || []).slice(0, 20).map((f: any) => ({
+			'@type': 'SportsEvent',
+			name: `${f.home} vs ${f.away}`,
+			startDate: f.kickoff_ts || f.kickoff,
+			sport: 'Soccer',
+			location: {
+				'@type': 'Place',
+				name: f.venue || 'NPFL Venue'
+			},
+			competitor: [
+				{ '@type': 'SportsTeam', name: f.home },
+				{ '@type': 'SportsTeam', name: f.away }
+			]
+		}))
+	};
 </script>
 
-<svelte:head>
-	<title>NPFL Fixtures - Upcoming Matches | Sports Unlimited</title>
-	<meta
-		name="description"
-		content="View upcoming NPFL fixtures and match schedules. Get the latest Nigeria Premier Football League match dates, times, and venues."
-	/>
-	<meta property="og:title" content="NPFL Fixtures - Upcoming Matches" />
-	<meta property="og:description" content="View upcoming NPFL fixtures and match schedules." />
-	<link rel="canonical" href="https://www.sportsunlimited.ng/npfl/fixtures" />
-</svelte:head>
+<SEO
+	title="NPFL Fixtures - Upcoming Matches & Results | Sports Unlimited"
+	description="View upcoming NPFL fixtures, match schedules, live scores, kick-off dates, times, and venues for the Nigeria Premier Football League."
+	schemaorg={fixturesSchema}
+/>
 
 <main class="npfl-fixtures-page max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
 	<div class="mb-8 pb-6 border-b border-zinc-200/80 flex flex-col md:flex-row md:items-end justify-between gap-4">

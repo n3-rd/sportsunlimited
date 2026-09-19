@@ -76,6 +76,8 @@ const KNOWN_LOGOS: Record<string, string> = {
 	'el-kanemi-warriors': 'https://npfl.com.ng/wp-content/uploads/2019/04/El-Kanemi-Warriors-FC.png'
 };
 
+export const KNOWN_CLUB_SLUGS = Object.keys(KNOWN_LOGOS);
+
 const dynamicLogoCache = new Map<string, string>(Object.entries(KNOWN_LOGOS));
 
 export function getClubLogo(nameOrSlug: string): string | null {

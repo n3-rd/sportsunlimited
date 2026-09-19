@@ -32,12 +32,38 @@
 			minute: '2-digit'
 		});
 	}
+
+	const matchdaySchema = {
+		'@context': 'https://schema.org',
+		'@type': 'SportsEventSeries',
+		name: `NPFL Matchday ${matchday}`,
+		sport: 'Soccer',
+		organizer: {
+			'@type': 'SportsOrganization',
+			name: 'Nigeria Premier Football League',
+			url: 'https://npfl.com.ng'
+		},
+		subEvent: fixtures.map((f: any) => ({
+			'@type': 'SportsEvent',
+			name: `${f.home} vs ${f.away}`,
+			startDate: f.kickoff_ts || f.kickoff,
+			sport: 'Soccer',
+			location: {
+				'@type': 'Place',
+				name: f.venue || 'NPFL Venue'
+			},
+			competitor: [
+				{ '@type': 'SportsTeam', name: f.home },
+				{ '@type': 'SportsTeam', name: f.away }
+			]
+		}))
+	};
 </script>
 
 <SEO
 	title={`NPFL Matchday ${matchday} Fixtures, Scores & Results | Sports Unlimited`}
 	description={`Full fixture list, live scores, results, venues, and team statistics for Nigeria Premier Football League Matchday ${matchday}.`}
-	canonical={`https://www.sportsunlimited.ng/npfl/matchday/${matchday}`}
+	schemaorg={matchdaySchema}
 />
 
 <main class="matchday-page max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
