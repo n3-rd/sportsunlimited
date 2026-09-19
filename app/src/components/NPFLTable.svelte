@@ -25,43 +25,47 @@
 </script>
 
 <div class="npfl-table-wrapper">
-	<div class="overflow-x-auto">
-		<table class="w-full border-collapse bg-white rounded-lg shadow-sm overflow-hidden">
-			<thead class="bg-gray-900 text-white">
+	<div class="overflow-x-auto rounded-xl border border-zinc-200/80 shadow-sm bg-white">
+		<table class="w-full border-collapse">
+			<thead class="bg-zinc-950 text-zinc-300 font-mono text-[11px] uppercase tracking-wider">
 				<tr>
-					<th class={compact ? 'px-2 py-2 text-left text-sm font-semibold' : 'px-4 py-3 text-left text-sm font-semibold'}>Pos</th>
-					<th class={compact ? 'px-2 py-2 text-left text-sm font-semibold' : 'px-4 py-3 text-left text-sm font-semibold'}>Club</th>
+					<th class={compact ? 'px-2.5 py-2.5 text-left font-semibold' : 'px-4 py-3 text-left font-semibold'}>#</th>
+					<th class={compact ? 'px-2.5 py-2.5 text-left font-semibold' : 'px-4 py-3 text-left font-semibold'}>Club</th>
 					{#if !compact}
-						<th class="px-4 py-3 text-center text-sm font-semibold">P</th>
-						<th class="px-4 py-3 text-center text-sm font-semibold">W</th>
-						<th class="px-4 py-3 text-center text-sm font-semibold">D</th>
-						<th class="px-4 py-3 text-center text-sm font-semibold">L</th>
-						<th class="px-4 py-3 text-center text-sm font-semibold">F</th>
-						<th class="px-4 py-3 text-center text-sm font-semibold">A</th>
-						<th class="px-4 py-3 text-center text-sm font-semibold">GD</th>
+						<th class="px-3 py-3 text-center font-semibold">P</th>
+						<th class="px-3 py-3 text-center font-semibold">W</th>
+						<th class="px-3 py-3 text-center font-semibold">D</th>
+						<th class="px-3 py-3 text-center font-semibold">L</th>
+						<th class="px-3 py-3 text-center font-semibold">F</th>
+						<th class="px-3 py-3 text-center font-semibold">A</th>
+						<th class="px-3 py-3 text-center font-semibold">GD</th>
 					{/if}
-					<th class={compact ? 'px-2 py-2 text-center text-sm font-bold' : 'px-4 py-3 text-center text-sm font-bold'}>Pts</th>
+					<th class={compact ? 'px-2.5 py-2.5 text-center font-bold text-white' : 'px-4 py-3 text-center font-bold text-white'}>Pts</th>
 				</tr>
 			</thead>
-			<tbody class="divide-y divide-gray-200">
+			<tbody class="divide-y divide-zinc-100 font-mono text-xs">
 				{#each displayTable as row (row.pos)}
-					<tr class="hover:bg-gray-50 transition-colors {row.pos <= 3 ? 'bg-green-50' : row.pos >= 18 ? 'bg-red-50' : ''}">
-						<td class="{compact ? 'px-2 py-2' : 'px-4 py-3'} text-sm font-semibold {row.pos <= 3 ? 'text-green-700' : row.pos >= 18 ? 'text-red-700' : 'text-gray-700'}">
+					<tr class="hover:bg-zinc-50 transition-colors duration-150 {row.pos <= 3 ? 'bg-emerald-500/[0.03]' : row.pos >= 18 ? 'bg-rose-500/[0.03]' : ''}">
+						<td class="{compact ? 'px-2.5 py-2.5' : 'px-4 py-3'} tabular-nums font-bold {row.pos <= 3 ? 'text-emerald-600' : row.pos >= 18 ? 'text-rose-600' : 'text-zinc-500'}">
 							{row.pos}
 						</td>
-						<td class={compact ? 'px-2 py-2 text-xs font-medium text-gray-900' : 'px-4 py-3 text-sm font-medium text-gray-900'}>{row.club}</td>
+						<td class="{compact ? 'px-2.5 py-2.5 text-xs font-sans font-semibold text-zinc-900' : 'px-4 py-3 text-sm font-sans font-semibold text-zinc-900'}">
+							{row.club}
+						</td>
 						{#if !compact}
-							<td class="px-4 py-3 text-sm text-center text-gray-600">{row.played}</td>
-							<td class="px-4 py-3 text-sm text-center text-gray-600">{row.win}</td>
-							<td class="px-4 py-3 text-sm text-center text-gray-600">{row.draw}</td>
-							<td class="px-4 py-3 text-sm text-center text-gray-600">{row.loss}</td>
-							<td class="px-4 py-3 text-sm text-center text-gray-600">{row.goalsFor}</td>
-							<td class="px-4 py-3 text-sm text-center text-gray-600">{row.goalsAgainst}</td>
-							<td class="px-4 py-3 text-sm text-center font-medium {row.goalDiff > 0 ? 'text-green-600' : row.goalDiff < 0 ? 'text-red-600' : 'text-gray-600'}">
+							<td class="px-3 py-3 tabular-nums text-center text-zinc-600">{row.played}</td>
+							<td class="px-3 py-3 tabular-nums text-center text-zinc-600">{row.win}</td>
+							<td class="px-3 py-3 tabular-nums text-center text-zinc-600">{row.draw}</td>
+							<td class="px-3 py-3 tabular-nums text-center text-zinc-600">{row.loss}</td>
+							<td class="px-3 py-3 tabular-nums text-center text-zinc-600">{row.goalsFor}</td>
+							<td class="px-3 py-3 tabular-nums text-center text-zinc-600">{row.goalsAgainst}</td>
+							<td class="px-3 py-3 tabular-nums text-center font-semibold {row.goalDiff > 0 ? 'text-emerald-600' : row.goalDiff < 0 ? 'text-rose-600' : 'text-zinc-500'}">
 								{row.goalDiff > 0 ? '+' : ''}{row.goalDiff}
 							</td>
 						{/if}
-						<td class={compact ? 'px-2 py-2 text-sm text-center font-bold text-gray-900' : 'px-4 py-3 text-sm text-center font-bold text-gray-900'}>{row.points}</td>
+						<td class="{compact ? 'px-2.5 py-2.5 text-center font-bold text-zinc-950 tabular-nums' : 'px-4 py-3 text-center font-bold text-zinc-950 tabular-nums'}">
+							{row.points}
+						</td>
 					</tr>
 				{/each}
 			</tbody>

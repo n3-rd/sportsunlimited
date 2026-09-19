@@ -72,7 +72,7 @@
 	<!-- Category Navigation - Sticky Top -->
 	{#if data.tags && data.tags.length > 0}
 		<nav
-			class="category-nav top-16 z-40 -mx-4 mb-12 border-b border-gray-200 bg-white/95 px-4 py-5 shadow-sm backdrop-blur-sm md:-mx-6 md:px-6 lg:-mx-8 lg:px-8"
+			class="category-nav top-16 z-40 -mx-4 mb-10 border-b border-zinc-200/80 bg-[#fafafa]/80 px-4 py-3.5 backdrop-blur-md md:-mx-6 md:px-6 lg:-mx-8 lg:px-8 transition-all"
 			aria-label="Category navigation"
 		>
 			<div class="mx-auto max-w-7xl">

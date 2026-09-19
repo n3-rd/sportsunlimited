@@ -163,9 +163,9 @@
 <SEO {...seoData} schemaorg={schemas} />
 
 <!-- Reading Progress Bar -->
-<div class="reading-progress-bar fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+<div class="reading-progress-bar fixed top-0 left-0 w-full h-1 bg-zinc-200/60 z-50">
 	<div 
-		class="reading-progress h-full bg-red-600 transition-all duration-150"
+		class="reading-progress h-full bg-rose-600 transition-all duration-150"
 		style="width: {readingProgress}%"
 	></div>
 </div>
@@ -180,28 +180,28 @@
 />
 
 <!-- Article Content -->
-<section class="post py-7">
+<section class="post py-6">
 	<div class="post__container max-w-4xl mx-auto">
-		<header class="post-header mb-6">
-			<h1 class="post__title text-4xl md:text-5xl font-bold mb-4 text-gray-900 leading-tight">{data.title}</h1>
+		<header class="post-header mb-8">
+			<h1 class="post__title text-3xl sm:text-4xl md:text-5xl font-black mb-4 text-zinc-950 tracking-tight leading-[1.15]">{data.title}</h1>
 			{#if data.excerpt}
-				<p class="post__excerpt text-xl text-gray-600 mb-4 leading-relaxed">{data.excerpt}</p>
+				<p class="post__excerpt text-lg md:text-xl text-zinc-600 mb-6 font-normal leading-relaxed">{data.excerpt}</p>
 			{/if}
 
-			<div class="post-meta flex flex-wrap items-center gap-4 mb-4 text-sm text-gray-500">
+			<div class="post-meta flex flex-wrap items-center gap-4 mb-4 text-xs font-mono text-zinc-500">
 				<span class="post__date">
 					{formatDate(data._createdAt)}
 				</span>
-				<span class="separator">•</span>
+				<span class="separator text-zinc-300">•</span>
 				<div class="reading-time flex items-center gap-1.5">
-					<Clock size="16" />
+					<Clock size="14" />
 					<span>{readingTime} min read</span>
 				</div>
 				{#if data.tags && data.tags.length > 0}
-					<span class="separator">•</span>
-					<div class="post__tags flex flex-wrap gap-2">
+					<span class="separator text-zinc-300">•</span>
+					<div class="post__tags flex flex-wrap gap-1.5">
 						{#each data.tags as tag}
-							<a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="post__tag inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-xs font-medium transition-colors">
+							<a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="post__tag inline-block bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-full px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-wider font-semibold transition-colors">
 								{tag}
 							</a>
 						{/each}
@@ -209,28 +209,28 @@
 				{/if}
 			</div>
 
-			<div class="share py-4 border-t border-b border-gray-200 my-6">
-				<div class="flex flex-col md:flex-row md:items-center gap-4">
-					<div class="share-label font-semibold text-gray-900">
-						Share this article:
+			<div class="share py-3.5 border-t border-b border-zinc-200/80 my-6">
+				<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+					<div class="share-label font-mono text-xs uppercase tracking-wider text-zinc-600">
+						Share article:
 					</div>
-					<div class="share-buttons flex gap-3 items-center">
+					<div class="share-buttons flex gap-2.5 items-center">
 						{#each socialInfo as { name, url, icon }}
-							<a href={url} target="_blank" rel="noopener noreferrer" class="share-button inline-block hover:opacity-80 transition-opacity" aria-label={`Share on ${name}`}>
-								<img src={icon} alt={name} class="h-8 w-8" />
+							<a href={url} target="_blank" rel="noopener noreferrer" class="share-button inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-colors" aria-label={`Share on ${name}`}>
+								<img src={icon} alt={name} class="h-4 w-4" />
 							</a>
 						{/each}
 						<button
 							onclick={copyLink}
-							class="copy-link-button flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium text-gray-700"
+							class="copy-link-button flex items-center gap-1.5 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 rounded-full transition-colors text-xs font-mono font-medium text-zinc-700"
 							aria-label="Copy link"
 						>
 							{#if linkCopied}
-								<Check size="16" class="text-green-600" />
-								<span class="text-green-600">Copied!</span>
+								<Check size="14" class="text-emerald-600" />
+								<span class="text-emerald-600">Copied!</span>
 							{:else}
-								<Copy size="16" />
-								<span>Copy link</span>
+								<Copy size="14" />
+								<span>Copy</span>
 							{/if}
 						</button>
 					</div>
@@ -244,23 +244,25 @@
 		</div>
 
 		{#if data.mainImage}
-			<img
-				class="post__cover
-				object-cover object-top w-full aspect-[16/9] md:aspect-[21/9] mb-8 rounded-lg shadow-lg
-				"
-				src={urlFor(data.mainImage).width(1200).height(630).quality(90).url()}
-				srcset={getResponsiveImageSrcset(data.mainImage, 1200)}
-				sizes="(max-width: 768px) 100vw, 1200px"
-				alt="Cover image for {data.title}"
-				loading="eager"
-				fetchpriority="high"
-				decoding="async"
-			/>
+			<div class="p-1.5 md:p-2 rounded-3xl bg-zinc-900/5 ring-1 ring-zinc-900/10 mb-8 shadow-sm">
+				<div class="overflow-hidden rounded-[1.25rem] bg-zinc-950">
+					<img
+						class="post__cover object-cover object-top w-full aspect-[16/9] md:aspect-[21/9]"
+						src={urlFor(data.mainImage).width(1200).height(630).quality(90).url()}
+						srcset={getResponsiveImageSrcset(data.mainImage, 1200)}
+						sizes="(max-width: 768px) 100vw, 1200px"
+						alt="Cover image for {data.title}"
+						loading="eager"
+						fetchpriority="high"
+						decoding="async"
+					/>
+				</div>
+			</div>
 		{:else}
 			<div class="post__cover--none"></div>
 		{/if}
 
-		<div class="post__content prose prose-lg max-w-none normal-case">
+		<div class="post__content prose prose-zinc prose-lg max-w-none normal-case">
 			<PortableText value={data.body || []} components={portableTextComponents as any} />
 		</div>
 

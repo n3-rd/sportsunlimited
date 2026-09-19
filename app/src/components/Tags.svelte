@@ -9,19 +9,31 @@
 </script>
 
 {#if tags?.length}
-<nav class="post__tags flex flex-row flex-wrap items-center gap-2 md:gap-3" aria-label="Category tags">
-    {#each tags as tag}
-        <a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="tag-link group">
-            <span class="inline-block px-4 py-2 rounded-full bg-gray-100 hover:bg-red-600 text-gray-700 hover:text-white font-semibold text-sm transition-all duration-200 border border-gray-200 hover:border-red-600">
-                {tag}
-            </span>
-        </a>
-    {/each}
+<nav class="post__tags flex flex-row items-center gap-2 overflow-x-auto py-1 no-scrollbar" aria-label="Category tags">
+	<a href="/" class="tag-link group flex-shrink-0">
+		<span class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-zinc-900 text-white font-mono text-xs uppercase tracking-wider transition-all duration-300 shadow-sm">
+			All
+		</span>
+	</a>
+	{#each tags as tag}
+		<a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="tag-link group flex-shrink-0">
+			<span class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white hover:bg-zinc-100 border border-zinc-200 hover:border-zinc-400 text-zinc-700 hover:text-zinc-950 font-mono text-xs uppercase tracking-wider transition-all duration-300 shadow-sm hover:-translate-y-0.5 active:scale-95">
+				{tag}
+			</span>
+		</a>
+	{/each}
 </nav>
 {/if}
 
 <style>
-    .tag-link {
-        text-decoration: none;
-    }
+	.tag-link {
+		text-decoration: none;
+	}
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
 </style>

@@ -55,7 +55,12 @@ const config = {
 				sm: "calc(var(--radius) - 4px)"
 			},
 			fontFamily: {
-				sans: ["'Plus Jakarta Sans'", ...fontFamily.sans]
+				sans: ["'Plus Jakarta Sans'", ...fontFamily.sans],
+				mono: ["'IBM Plex Mono'", ...fontFamily.mono]
+			},
+			transitionTimingFunction: {
+				spring: "cubic-bezier(0.16, 1, 0.3, 1)",
+				smooth: "cubic-bezier(0.25, 1, 0.5, 1)"
 			}
 		}
 	},

@@ -16,14 +16,14 @@
 </script>
 
 <a href={`/post/${post.slug.current}`} class="compact-post-card group block">
-	<article class="flex gap-4 p-4 rounded-xl hover:bg-zinc-50 hover:-translate-y-0.5 transition-all duration-300 border border-transparent hover:border-zinc-200/60 hover:shadow-[0_4px_20px_rgb(0,0,0,0.04)]">
-		<div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-xl overflow-hidden shadow-sm">
+	<article class="p-2.5 rounded-2xl bg-white hover:bg-zinc-50/80 border border-zinc-200/70 hover:border-zinc-300/90 shadow-sm hover:shadow-[0_8px_24px_-6px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] flex gap-4 items-center">
+		<div class="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-zinc-100 shadow-sm">
 			<img 
 				src={urlFor(post.mainImage.asset).width(300).height(300).quality(80).url()} 
 				srcset={getResponsiveImageSrcset(post.mainImage.asset, 300)}
-				sizes="(max-width: 768px) 96px, 128px"
+				sizes="(max-width: 768px) 80px, 96px"
 				alt={post.title}
-				class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+				class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
 				loading="lazy"
 				fetchpriority="low"
 				decoding="async"
@@ -31,17 +31,19 @@
 		</div>
 		
 		<div class="flex-1 min-w-0 flex flex-col justify-center">
-			<h3 class="text-base md:text-lg font-bold text-zinc-900 mb-2 group-hover:text-rose-600 transition-colors line-clamp-2 leading-tight">
+			<h3 class="text-sm sm:text-base font-bold tracking-tight text-zinc-950 mb-1.5 group-hover:text-rose-600 transition-colors duration-300 line-clamp-2 leading-snug">
 				{post.title}
 			</h3>
-			<div class="flex items-center gap-2 text-xs text-zinc-500 font-medium">
-				<Clock size="12" />
-				<span>{dayjs(post._createdAt).fromNow()}</span>
+			<div class="flex items-center gap-2 text-[11px] font-mono text-zinc-500 flex-wrap">
+				<div class="flex items-center gap-1">
+					<Clock size="11" />
+					<span>{dayjs(post._createdAt).fromNow()}</span>
+				</div>
 				<span class="text-zinc-300">•</span>
-				<span>{readingTime} min</span>
+				<span>{readingTime}m</span>
 				{#if post.tags && post.tags[0]}
 					<span class="text-zinc-300">•</span>
-					<span class="text-rose-600 font-bold text-[10px] uppercase tracking-wider">{post.tags[0]}</span>
+					<span class="bg-zinc-100 text-zinc-700 px-1.5 py-0.5 rounded text-[9.5px] uppercase font-mono tracking-wider font-medium">{post.tags[0]}</span>
 				{/if}
 			</div>
 		</div>

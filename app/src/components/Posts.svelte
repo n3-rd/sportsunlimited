@@ -51,10 +51,9 @@
 
     <!-- Featured Grid - 6 posts in 3 columns -->
     {#if featuredGrid.length > 0}
-        <section class="featured-grid mb-12">
-            <div class="section-header mb-6">
-                <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-2">Featured Stories</h2>
-                <p class="text-gray-600 text-lg">Top stories and breaking news</p>
+        <section class="featured-grid mb-14">
+            <div class="section-header mb-8 pb-3 border-b border-zinc-200/80">
+                <h2 class="text-2xl md:text-3xl font-black tracking-tight text-zinc-950">Featured Stories</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {#each featuredGrid as post, index}
@@ -76,14 +75,13 @@
 
     <!-- Main Content Grid - 12 posts -->
     {#if mainGrid.length > 0}
-        <section class="main-grid mb-12">
-            <div class="section-header mb-6">
-                <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-2">Latest News</h2>
-                <p class="text-gray-600 text-lg">Stay updated with the latest from Nigerian sports</p>
+        <section class="main-grid mb-14">
+            <div class="section-header mb-8 pb-3 border-b border-zinc-200/80">
+                <h2 class="text-2xl md:text-3xl font-black tracking-tight text-zinc-950">Latest Dispatches</h2>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {#each mainGrid as post}
-                    <PostCard post={post} size="small" />
+                    <PostCard post={post} size="medium" />
                 {/each}
             </div>
         </section>
@@ -101,11 +99,11 @@
 
     <!-- Compact List Section -->
     {#if compactList.length > 0}
-        <section class="compact-list mb-12">
-            <div class="section-header mb-6">
-                <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-2">More Stories</h2>
+        <section class="compact-list mb-14">
+            <div class="section-header mb-6 pb-3 border-b border-zinc-200/80">
+                <h2 class="text-2xl md:text-3xl font-black tracking-tight text-zinc-950">More Stories</h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {#each compactList as post}
                     <CompactPostCard post={post} />
                 {/each}
@@ -115,16 +113,16 @@
 
     <!-- Remaining Posts Grid -->
     {#if remainingPosts.length > 0}
-        <section class="remaining-posts mb-12">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        <section class="remaining-posts mb-14">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {#each remainingPosts.slice(0, displayCount) as post}
-                    <PostCard post={post} size="small" />
+                    <PostCard post={post} size="medium" />
                 {/each}
             </div>
             {#if remainingPosts.length > displayCount}
                 <div class="flex justify-center">
-                    <Button onclick={loadMore} class="px-10 py-4 text-base font-bold bg-gray-900 hover:bg-gray-800 text-white rounded-lg">
-                        Load More Articles
+                    <Button onclick={loadMore} class="px-8 py-3 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white font-mono text-xs uppercase tracking-widest border border-zinc-800 hover:border-zinc-700 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:scale-95">
+                        Load More Articles 
                     </Button>
                 </div>
             {/if}
@@ -141,21 +139,5 @@
     .homepage-content {
         display: flex;
         flex-direction: column;
-    }
-
-    .section-header {
-        border-bottom: 3px solid #ef4444;
-        padding-bottom: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .featured-grid .section-header,
-    .main-grid .section-header,
-    .category-section .section-header {
-        border-bottom: 3px solid #ef4444;
-    }
-
-    .compact-list .section-header {
-        border-bottom: 2px solid #e5e7eb;
     }
 </style>
