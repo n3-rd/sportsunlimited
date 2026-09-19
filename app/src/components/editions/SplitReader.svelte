@@ -107,7 +107,7 @@
 					{/if}
 
 					<!-- Follow & Share Row (Inspo 2 styling) -->
-					<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 my-6 border-y border-white/10 text-[11px] font-mono uppercase tracking-wider">
+					<div class="grid grid-cols-3 gap-4 py-4 my-6 border-y border-white/10 text-[11px] font-mono uppercase tracking-wider">
 						<div>
 							<span class="text-zinc-500 block text-[10px] mb-1">SECTION</span>
 							<span class="font-bold text-white px-2 py-0.5 rounded border border-white/20 inline-block">
@@ -124,11 +124,6 @@
 							>
 								{shareCopied ? 'COPIED!' : 'SHARE ↗'}
 							</button>
-						</div>
-
-						<div>
-							<span class="text-zinc-500 block text-[10px] mb-1">WRITTEN BY</span>
-							<span class="text-zinc-300 font-semibold truncate block">SPORTS UNLIMITED</span>
 						</div>
 
 						<div>

@@ -9,7 +9,6 @@
 		selectedCategory: string;
 		categories: string[];
 		onSelectEdition: (editionId: string) => void;
-		onSelectTheme: (themeId: string) => void;
 		onSelectCategory: (category: string) => void;
 		onOpenArchives: () => void;
 	}
@@ -21,17 +20,13 @@
 		selectedCategory,
 		categories,
 		onSelectEdition,
-		onSelectTheme,
 		onSelectCategory,
 		onOpenArchives
 	}: Props = $props();
 
-	let isThemeMenuOpen = $state(false);
 	let isEditionMenuOpen = $state(false);
 
 	const activeTheme = $derived(EDITION_THEMES[selectedThemeId] || edition.theme);
-
-	const themeOptions = Object.values(EDITION_THEMES);
 </script>
 
 <header class="editions-masthead border-b border-black/10 bg-inherit transition-colors duration-300">
@@ -99,56 +94,6 @@
 										<div class="text-[10px] font-mono text-zinc-500 mt-0.5">{item.dateRange}</div>
 									</div>
 									<span class="text-[11px] font-mono text-zinc-400">{item.totalPosts} stories</span>
-								</button>
-							{/each}
-						</div>
-					</div>
-				{/if}
-			</div>
-
-			<!-- Dynamic Palette Switcher -->
-			<div class="relative">
-				<button
-					type="button"
-					onclick={() => {
-						isThemeMenuOpen = !isThemeMenuOpen;
-						isEditionMenuOpen = false;
-					}}
-					class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-black/15 bg-white/70 hover:bg-white text-zinc-800 text-[11px] font-mono tracking-tight font-medium transition-all shadow-sm"
-					title="Switch dynamic editorial colorway"
-				>
-					<span class="w-2.5 h-2.5 rounded-full ring-1 ring-black/20" style="background-color: {activeTheme.accent}"></span>
-					<span class="hidden sm:inline">Colorway:</span>
-					<span class="font-bold">{activeTheme.name}</span>
-					<svg class="w-3.5 h-3.5 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-					</svg>
-				</button>
-
-				{#if isThemeMenuOpen}
-					<div
-						class="absolute right-0 mt-2 w-60 bg-white rounded-xl shadow-xl border border-zinc-200 p-2 z-50 animate-in fade-in slide-in-from-top-1"
-					>
-						<div class="px-2 py-1 text-[10px] font-mono uppercase text-zinc-400 tracking-wider">Dynamic Colorways</div>
-						<div class="space-y-1 mt-1">
-							{#each themeOptions as opt}
-								<button
-									type="button"
-									onclick={() => {
-										onSelectTheme(opt.id);
-										isThemeMenuOpen = false;
-									}}
-									class="w-full text-left px-2.5 py-2 rounded-lg flex items-center justify-between text-xs hover:bg-zinc-100 transition-colors {opt.id === activeTheme.id ? 'bg-zinc-100 font-bold' : ''}"
-								>
-									<div class="flex items-center gap-2.5">
-										<span class="w-3.5 h-3.5 rounded-full ring-1 ring-black/10" style="background-color: {opt.accent}"></span>
-										<span class="font-sans text-zinc-900">{opt.name}</span>
-									</div>
-									{#if opt.id === activeTheme.id}
-										<svg class="w-4 h-4 text-zinc-900" fill="currentColor" viewBox="0 0 20 20">
-											<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-										</svg>
-									{/if}
 								</button>
 							{/each}
 						</div>

@@ -90,12 +90,8 @@
 
 			<!-- Author Line & Meta Row -->
 			<div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/15 text-xs font-mono text-zinc-300">
-				<div class="flex items-center gap-3">
-					<span class="text-white font-medium uppercase tracking-wider">
-						WRITTEN BY SPORTS UNLIMITED
-					</span>
-					<span class="text-white/40">•</span>
-					<span>{formatDate(post._createdAt)}</span>
+				<div class="flex items-center gap-2">
+					<span class="uppercase tracking-wider">{formatDate(post._createdAt)}</span>
 				</div>
 
 				<div class="flex items-center gap-4">

@@ -24,7 +24,6 @@
 
 	// Primary interactive state
 	let selectedEditionId = $state(data.editions?.[0]?.id || '');
-	let customThemeId = $state<string | null>(null);
 	let selectedCategory = $state('All');
 	let activeReaderPost = $state<Post | null>(null);
 	let isArchiveOpen = $state(false);
@@ -50,11 +49,8 @@
 		return data.editions[activeEditionIndex - 1];
 	});
 
-	// Currently active theme (dynamic or user-customized)
+	// Dynamic theme calculated for current edition
 	const activeTheme: EditionTheme = $derived.by(() => {
-		if (customThemeId && EDITION_THEMES[customThemeId]) {
-			return EDITION_THEMES[customThemeId];
-		}
 		return activeEdition?.theme || EDITION_THEMES['house-of-heat'];
 	});
 
@@ -83,12 +79,7 @@
 	function handleSelectEdition(editionId: string) {
 		selectedEditionId = editionId;
 		selectedCategory = 'All';
-		customThemeId = null; // reset to edition's native dynamic theme
 		window.scrollTo({ top: 0, behavior: 'smooth' });
-	}
-
-	function handleSelectTheme(themeId: string) {
-		customThemeId = themeId;
 	}
 
 	function handleSelectCategory(cat: string) {
@@ -129,7 +120,6 @@
 			{selectedCategory}
 			categories={popularCategories}
 			onSelectEdition={handleSelectEdition}
-			onSelectTheme={handleSelectTheme}
 			onSelectCategory={handleSelectCategory}
 			onOpenArchives={() => (isArchiveOpen = true)}
 		/>

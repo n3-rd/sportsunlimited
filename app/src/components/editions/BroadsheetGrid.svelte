@@ -18,14 +18,6 @@
 		if (!post.mainImage) return '';
 		return urlFor(post.mainImage).width(600).quality(85).url();
 	}
-
-	// Pseudo engagement stats to mirror The Free Press aesthetic
-	function getEngagement(title: string = '') {
-		const hash = title.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-		const comments = (hash % 180) + 12;
-		const hearts = (hash % 90) + 18;
-		return { comments, hearts };
-	}
 </script>
 
 {#if col1.length > 0 || col2.length > 0 || col3.length > 0}
@@ -83,15 +75,11 @@
 						{/if}
 					</div>
 
-					<!-- Byline, Date & Heart/Comment Count (Free Press aesthetic) -->
+					<!-- Date -->
 					<div class="mt-2 flex items-center justify-between text-[11px] font-mono text-zinc-500">
 						<span class="font-semibold uppercase tracking-wider">
-							BY SPORTS DESK — {formatDate(post._createdAt)}
+							{formatDate(post._createdAt)}
 						</span>
-						<div class="flex items-center gap-2 text-zinc-400">
-							<span>💬 {stats.comments}</span>
-							<span>❤️ {stats.hearts}</span>
-						</div>
 					</div>
 
 					<button
@@ -161,12 +149,8 @@
 
 					<div class="mt-2 flex items-center justify-between text-[11px] font-mono text-zinc-500">
 						<span class="font-semibold uppercase tracking-wider">
-							EDITION REPORT — {formatDate(post._createdAt)}
+							{formatDate(post._createdAt)}
 						</span>
-						<div class="flex items-center gap-2 text-zinc-400">
-							<span>💬 {stats.comments}</span>
-							<span>❤️ {stats.hearts}</span>
-						</div>
 					</div>
 
 					<button
@@ -216,12 +200,8 @@
 
 					<div class="mt-2 flex items-center justify-between text-[11px] font-mono text-zinc-500">
 						<span class="font-semibold uppercase tracking-wider">
-							BY SPECIAL CORRESPONDENT — {formatDate(post._createdAt)}
+							{formatDate(post._createdAt)}
 						</span>
-						<div class="flex items-center gap-2 text-zinc-400">
-							<span>💬 {stats.comments}</span>
-							<span>❤️ {stats.hearts}</span>
-						</div>
 					</div>
 
 					<button
