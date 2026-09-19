@@ -7,7 +7,7 @@ const POCKETBASE_URL = DB_URL;
 const COLLECTION_NAME = 'posts';
 
 /**
- * Construct PocketBase image URL
+ * Construct PocketBase image URLd
  */
 function getImageUrl(post: PocketBasePost): string | null {
 	if (!post.mainImage || !post.id) return null;
@@ -35,9 +35,8 @@ function transformPost(pbPost: PocketBasePost): Post {
 	}
 
 	// Transform slug from string to object
-	const slug = typeof pbPost.slug === 'string'
-		? { current: pbPost.slug }
-		: pbPost.slug || { current: '' };
+	const slug =
+		typeof pbPost.slug === 'string' ? { current: pbPost.slug } : pbPost.slug || { current: '' };
 
 	// Parse keywords (PocketBase may return array or JSON string)
 	const toKeywords = (v: unknown): string[] | undefined => {
@@ -45,7 +44,9 @@ function transformPost(pbPost: PocketBasePost): Post {
 		if (typeof v === 'string') {
 			try {
 				const parsed = JSON.parse(v);
-				return Array.isArray(parsed) ? parsed.filter((k: unknown): k is string => typeof k === 'string') : undefined;
+				return Array.isArray(parsed)
+					? parsed.filter((k: unknown): k is string => typeof k === 'string')
+					: undefined;
 			} catch {
 				return undefined;
 			}
@@ -79,7 +80,6 @@ function transformPost(pbPost: PocketBasePost): Post {
 		body
 	};
 }
-
 
 async function fetchPocketBase<T>(endpoint: string, options?: RequestInit): Promise<T> {
 	if (!POCKETBASE_URL) {
@@ -123,12 +123,17 @@ async function fetchPocketBase<T>(endpoint: string, options?: RequestInit): Prom
 		const data = await response.json();
 
 		const itemCount = data.items?.length ?? 'N/A';
-		console.log(`[PocketBase] FETCH SUCCESS: ${endpoint} (${Date.now() - start}ms) - Items: ${itemCount}`);
+		console.log(
+			`[PocketBase] FETCH SUCCESS: ${endpoint} (${Date.now() - start}ms) - Items: ${itemCount}`
+		);
 		return data;
 	} catch (error) {
 		clearTimeout(timeoutId);
 		const duration = Date.now() - start;
-		console.error(`[PocketBase] FETCH ERROR: ${endpoint} (${duration}ms):`, error instanceof Error ? error.message : error);
+		console.error(
+			`[PocketBase] FETCH ERROR: ${endpoint} (${duration}ms):`,
+			error instanceof Error ? error.message : error
+		);
 
 		if (error instanceof Error && error.name === 'AbortError') {
 			throw new Error(`Connection to PocketBase timed out after 10s at ${POCKETBASE_URL}`);
@@ -164,16 +169,17 @@ export async function getRelatedPosts(
 	// For related posts, we only need a few latest ones to filter, or we search
 	// Using a smaller set for better performance
 	const allPosts = await getPosts(50);
-	const filtered = allPosts.filter(post => post.slug.current !== currentSlug);
+	const filtered = allPosts.filter((post) => post.slug.current !== currentSlug);
 
 	// Simple keyword matching
 	if (title || excerpt) {
-		const keywords = `${title} ${excerpt}`.toLowerCase()
+		const keywords = `${title} ${excerpt}`
+			.toLowerCase()
 			.split(/\s+/)
-			.filter(word => word.length > 3)
+			.filter((word) => word.length > 3)
 			.slice(0, 5);
 
-		const scored = filtered.map(post => {
+		const scored = filtered.map((post) => {
 			const postText = `${post.title || ''} ${post.excerpt || ''}`.toLowerCase();
 			const score = keywords.reduce((acc, keyword) => {
 				return acc + (postText.includes(keyword) ? 1 : 0);
@@ -182,7 +188,7 @@ export async function getRelatedPosts(
 		});
 
 		const sorted = scored.sort((a, b) => b.score - a.score);
-		return sorted.slice(0, limit).map(item => item.post);
+		return sorted.slice(0, limit).map((item) => item.post);
 	}
 
 	// Fallback to recent posts
@@ -211,7 +217,7 @@ export async function getTags(): Promise<string[]> {
 	if (!data?.items || !Array.isArray(data.items)) return [];
 
 	const allTags: string[] = [];
-	data.items.forEach(post => {
+	data.items.forEach((post) => {
 		if (post.tags) {
 			allTags.push(...post.tags);
 		}
@@ -253,7 +259,7 @@ export async function searchPosts(query: string): Promise<Post[]> {
 	const allPosts = await getPosts();
 	const queryLower = query.toLowerCase();
 
-	return allPosts.filter(post => {
+	return allPosts.filter((post) => {
 		const titleMatch = post.title?.toLowerCase().includes(queryLower);
 		const excerptMatch = post.excerpt?.toLowerCase().includes(queryLower);
 
@@ -261,12 +267,10 @@ export async function searchPosts(query: string): Promise<Post[]> {
 		let bodyMatch = false;
 		if (post.body) {
 			const bodyText = post.body
-				.map(block => {
+				.map((block) => {
 					if (block._type === 'block' && 'children' in block && block.children) {
 						const children = block.children as Array<{ text?: string }>;
-						return children
-							.map(child => child.text || '')
-							.join(' ');
+						return children.map((child) => child.text || '').join(' ');
 					}
 					return '';
 				})
@@ -282,6 +286,8 @@ export async function searchPosts(query: string): Promise<Post[]> {
 // Export a dummy client for compatibility (used by image.ts)
 export const client = {
 	fetch: async () => {
-		throw new Error('Sanity client.fetch is not available. Use the new PocketBase functions instead.');
+		throw new Error(
+			'Sanity client.fetch is not available. Use the new PocketBase functions instead.'
+		);
 	}
 };
