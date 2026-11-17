@@ -4,6 +4,8 @@ import { KNOWN_CLUB_SLUGS } from "$lib/npfl";
 export const prerender = false;
 
 const site = 'https://www.sportsunlimited.ng';
+let sitemapCache: { at: number; xml: string } | null = null;
+const SITEMAP_CACHE_TTL = 15 * 60 * 1000;
 
 function staticSitemapXml(lastmodDate: string): string {
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -28,6 +30,10 @@ export async function GET({ setHeaders })  {
         'Content-Type': 'application/xml',
         'Cache-Control': 'public, max-age=3600'
     });
+
+    if (sitemapCache && Date.now() - sitemapCache.at < SITEMAP_CACHE_TTL) {
+        return new Response(sitemapCache.xml);
+    }
 
     const lastmodDate = new Date().toISOString().split('T')[0];
     const toLastmod = (value: string | undefined): string => {
@@ -196,6 +202,7 @@ ${postsWithSlug.map(post => {
 }).join('\n')}
 </urlset>`;
 
+        sitemapCache = { at: Date.now(), xml: sitemap };
         return new Response(sitemap);
     } catch (error) {
         console.error('Sitemap generation error:', error);
