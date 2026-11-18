@@ -3,8 +3,8 @@ import { env } from '$env/dynamic/private';
 import type { Post, PocketBasePost, PocketBaseListResponse } from '$lib/types';
 
 // Base URL for PocketBase
-const POCKETBASE_URL = env.DB_URL;
-const PUBLIC_POCKETBASE_URL = env.PUBLIC_DB_URL || env.DB_URL;
+const POCKETBASE_URL = env.INTERNAL_DB_URL || env.DB_URL;
+const PUBLIC_POCKETBASE_URL = env.DB_URL;
 const COLLECTION_NAME = 'posts';
 const LIST_FIELDS = 'id,title,slug,excerpt,mainImage,tags,keywords,created,updated';
 
