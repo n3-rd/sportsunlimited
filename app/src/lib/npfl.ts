@@ -208,12 +208,19 @@ export function parseNpflTable(html: string): StandingRow[] {
 }
 
 // In-memory caches with 5-minute TTL + 2-minute failure cooldown + in-flight dedupe
-let fixturesCache: { at: number; data: NPFLFixture[] } | null = null;
-let tableCache: { at: number; data: StandingRow[] } | null = null;
+interface CacheEntry<T> {
+	at: number;
+	data: T;
+}
+
+let fixturesCache: CacheEntry<NPFLFixture[]> | null = null;
+let tableCache: CacheEntry<StandingRow[]> | null = null;
 let fixturesInFlight: Promise<NPFLFixture[]> | null = null;
 let tableInFlight: Promise<StandingRow[]> | null = null;
 const CACHE_TTL = 5 * 60 * 1000;
 const FAILURE_COOLDOWN = 2 * 60 * 1000;
+const UPSTREAM_TIMEOUT_MS = 3000;
+const INFLIGHT_HARD_TIMEOUT_MS = 8000;
 
 function getFastApiUrl(): string | null {
 	if (typeof process !== 'undefined' && process.env.NPFL_API_URL) {
@@ -222,148 +229,205 @@ function getFastApiUrl(): string | null {
 	return null;
 }
 
-export async function fetchNpflFixtures(fetchFn: typeof fetch = fetch): Promise<NPFLFixture[]> {
-	if (fixturesCache && Date.now() - fixturesCache.at < CACHE_TTL) {
-		return fixturesCache.data;
+/** Fetch text or JSON with a single AbortController covering both headers and body read. */
+async function fetchWithDeadline<T>(
+	fetchFn: typeof fetch,
+	url: string,
+	init: RequestInit,
+	parse: (res: Response) => Promise<T>,
+	timeoutMs = UPSTREAM_TIMEOUT_MS
+): Promise<T | null> {
+	const controller = new AbortController();
+	const timer = setTimeout(() => controller.abort(), timeoutMs);
+	try {
+		const res = await fetchFn(url, { ...init, signal: controller.signal });
+		if (!res.ok) return null;
+		return await parse(res);
+	} finally {
+		clearTimeout(timer);
 	}
-	if (fixturesInFlight) {
-		return fixturesInFlight;
+}
+
+/** Deduplicate and hard-timeout an NPFL cache refresh so a stalled upstream can never wedge SSR. */
+async function runCachedNpflFetch<T>(
+	getCache: () => CacheEntry<T[]> | null,
+	setCache: (entry: CacheEntry<T[]>) => void,
+	getInFlight: () => Promise<T[]> | null,
+	setInFlight: (p: Promise<T[]> | null) => void,
+	loader: () => Promise<T[] | null>,
+	label: string
+): Promise<T[]> {
+	const cached = getCache();
+	if (cached && Date.now() - cached.at < CACHE_TTL) {
+		return cached.data;
+	}
+	const existing = getInFlight();
+	if (existing) {
+		return existing;
 	}
 
-	fixturesInFlight = (async () => {
-		// Try external Python FastAPI if configured
-		const fastApiUrl = getFastApiUrl();
-		if (fastApiUrl) {
-			try {
-				const res = await fetchFn(`${fastApiUrl}/api/fixtures`, { signal: AbortSignal.timeout(3000) });
-				if (res.ok) {
-					const json = await res.json();
-					if (json.ok && Array.isArray(json.fixtures) && json.fixtures.length > 0) {
-						const mapped: NPFLFixture[] = json.fixtures.map((f: any) => ({
-							matchday: f.matchday,
-							kickoff: f.kickoff,
-							kickoff_ts: f.kickoff_ts,
-							home: f.home,
-							homeSlug: f.home_slug || f.homeSlug,
-							homeLogo: f.home_logo || f.homeLogo,
-							away: f.away,
-							awaySlug: f.away_slug || f.awaySlug,
-							awayLogo: f.away_logo || f.awayLogo,
-							status: f.status,
-							homeScore: f.home_score ?? f.homeScore,
-							awayScore: f.away_score ?? f.awayScore,
-							venue: f.venue,
-							rawTail: f.score_display || `${f.home_score} - ${f.away_score}`
-						}));
-						fixturesCache = { at: Date.now(), data: mapped };
-						return mapped;
-					}
-				}
-			} catch {
-				console.log('[fetchNpflFixtures] FastAPI unavailable, falling back to direct scraper');
-			}
-		}
-
+	let hardTimer: ReturnType<typeof setTimeout> | undefined;
+	const work = (async () => {
 		try {
-			const res = await fetchFn(NPFL_FIXTURES_URL, {
-				headers: {
-					'user-agent': 'sportsunlimited/1.0 (+https://sportsunlimited.ng)',
-					accept: 'text/html'
-				},
-				signal: AbortSignal.timeout(3000)
-			});
-
-			if (res.ok) {
-				const html = await res.text();
-				const data = parseNpflFixtures(html);
-				if (data.length > 0) {
-					fixturesCache = { at: Date.now(), data };
-					return data;
-				}
+			const data = await loader();
+			if (data && data.length > 0) {
+				setCache({ at: Date.now(), data });
+				return data;
 			}
 		} catch (err) {
-			console.error('[fetchNpflFixtures] Live fetch failed, using fallback/cached if present:', err instanceof Error ? err.message : err);
+			console.error(
+				`[${label}] Live fetch failed, using fallback/cached if present:`,
+				err instanceof Error ? err.message : err
+			);
 		}
-
-		const fallback = fixturesCache?.data || [];
-		fixturesCache = { at: Date.now() - CACHE_TTL + FAILURE_COOLDOWN, data: fallback };
+		const fallback = getCache()?.data || [];
+		setCache({ at: Date.now() - CACHE_TTL + FAILURE_COOLDOWN, data: fallback });
 		return fallback;
-	})().finally(() => {
-		fixturesInFlight = null;
+	})();
+
+	const guarded = Promise.race<T[]>([
+		work,
+		new Promise<T[]>((resolve) => {
+			hardTimer = setTimeout(() => {
+				console.error(`[${label}] Hard in-flight timeout (${INFLIGHT_HARD_TIMEOUT_MS}ms) hit; returning fallback`);
+				const fallback = getCache()?.data || [];
+				setCache({ at: Date.now() - CACHE_TTL + FAILURE_COOLDOWN, data: fallback });
+				resolve(fallback);
+			}, INFLIGHT_HARD_TIMEOUT_MS);
+		})
+	]).finally(() => {
+		if (hardTimer) clearTimeout(hardTimer);
+		setInFlight(null);
 	});
 
-	return fixturesInFlight;
+	setInFlight(guarded);
+	return guarded;
+}
+
+function mapApiFixture(f: any): NPFLFixture {
+	return {
+		matchday: f.matchday,
+		kickoff: f.kickoff,
+		kickoff_ts: f.kickoff_ts,
+		home: f.home,
+		homeSlug: f.home_slug || f.homeSlug,
+		homeLogo: f.home_logo || f.homeLogo,
+		away: f.away,
+		awaySlug: f.away_slug || f.awaySlug,
+		awayLogo: f.away_logo || f.awayLogo,
+		status: f.status,
+		homeScore: f.home_score ?? f.homeScore,
+		awayScore: f.away_score ?? f.awayScore,
+		venue: f.venue,
+		rawTail: f.score_display || `${f.home_score} - ${f.away_score}`
+	};
+}
+
+function mapApiStandingRow(r: any): StandingRow {
+	return {
+		pos: r.pos,
+		club: r.club,
+		slug: r.slug,
+		logo: r.logo,
+		played: r.played,
+		win: r.win,
+		draw: r.draw,
+		loss: r.loss,
+		goalsFor: r.goals_for ?? r.goalsFor,
+		goalsAgainst: r.goals_against ?? r.goalsAgainst,
+		goalDiff: r.goal_diff ?? r.goalDiff,
+		points: r.points
+	};
+}
+
+export async function fetchNpflFixtures(fetchFn: typeof fetch = fetch): Promise<NPFLFixture[]> {
+	return runCachedNpflFetch(
+		() => fixturesCache,
+		(entry) => {
+			fixturesCache = entry;
+		},
+		() => fixturesInFlight,
+		(p) => {
+			fixturesInFlight = p;
+		},
+		async () => {
+			const fastApiUrl = getFastApiUrl();
+			if (fastApiUrl) {
+				try {
+					const json = await fetchWithDeadline<any>(
+						fetchFn,
+						`${fastApiUrl}/api/fixtures`,
+						{},
+						(res) => res.json()
+					);
+					if (json?.ok && Array.isArray(json.fixtures) && json.fixtures.length > 0) {
+						return json.fixtures.map(mapApiFixture);
+					}
+				} catch {
+					console.log('[fetchNpflFixtures] FastAPI unavailable, falling back to direct scraper');
+				}
+			}
+
+			const html = await fetchWithDeadline(
+				fetchFn,
+				NPFL_FIXTURES_URL,
+				{
+					headers: {
+						'user-agent': 'sportsunlimited/1.0 (+https://sportsunlimited.ng)',
+						accept: 'text/html'
+					}
+				},
+				(res) => res.text()
+			);
+			return html ? parseNpflFixtures(html) : null;
+		},
+		'fetchNpflFixtures'
+	);
 }
 
 export async function fetchNpflTable(fetchFn: typeof fetch = fetch): Promise<StandingRow[]> {
-	if (tableCache && Date.now() - tableCache.at < CACHE_TTL) {
-		return tableCache.data;
-	}
-	if (tableInFlight) {
-		return tableInFlight;
-	}
-
-	tableInFlight = (async () => {
-		// Try external Python FastAPI if configured
-		const fastApiUrl = getFastApiUrl();
-		if (fastApiUrl) {
-			try {
-				const res = await fetchFn(`${fastApiUrl}/api/table`, { signal: AbortSignal.timeout(3000) });
-				if (res.ok) {
-					const json = await res.json();
-					if (json.ok && Array.isArray(json.table) && json.table.length > 0) {
-						const mapped: StandingRow[] = json.table.map((r: any) => ({
-							pos: r.pos,
-							club: r.club,
-							slug: r.slug,
-							logo: r.logo,
-							played: r.played,
-							win: r.win,
-							draw: r.draw,
-							loss: r.loss,
-							goalsFor: r.goals_for ?? r.goalsFor,
-							goalsAgainst: r.goals_against ?? r.goalsAgainst,
-							goalDiff: r.goal_diff ?? r.goalDiff,
-							points: r.points
-						}));
-						tableCache = { at: Date.now(), data: mapped };
-						return mapped;
+	return runCachedNpflFetch(
+		() => tableCache,
+		(entry) => {
+			tableCache = entry;
+		},
+		() => tableInFlight,
+		(p) => {
+			tableInFlight = p;
+		},
+		async () => {
+			const fastApiUrl = getFastApiUrl();
+			if (fastApiUrl) {
+				try {
+					const json = await fetchWithDeadline<any>(
+						fetchFn,
+						`${fastApiUrl}/api/table`,
+						{},
+						(res) => res.json()
+					);
+					if (json?.ok && Array.isArray(json.table) && json.table.length > 0) {
+						return json.table.map(mapApiStandingRow);
 					}
+				} catch {
+					console.log('[fetchNpflTable] FastAPI unavailable, falling back to direct scraper');
 				}
-			} catch {
-				console.log('[fetchNpflTable] FastAPI unavailable, falling back to direct scraper');
 			}
-		}
 
-		try {
-			const res = await fetchFn(NPFL_TABLE_URL, {
-				headers: {
-					'user-agent': 'sportsunlimited/1.0 (+https://sportsunlimited.ng)',
-					accept: 'text/html'
+			const html = await fetchWithDeadline(
+				fetchFn,
+				NPFL_TABLE_URL,
+				{
+					headers: {
+						'user-agent': 'sportsunlimited/1.0 (+https://sportsunlimited.ng)',
+						accept: 'text/html'
+					}
 				},
-				signal: AbortSignal.timeout(3000)
-			});
-
-			if (res.ok) {
-				const html = await res.text();
-				const data = parseNpflTable(html);
-				if (data.length > 0) {
-					tableCache = { at: Date.now(), data };
-					return data;
-				}
-			}
-		} catch (err) {
-			console.error('[fetchNpflTable] Live fetch failed, using fallback/cached if present:', err instanceof Error ? err.message : err);
-		}
-
-		const fallback = tableCache?.data || [];
-		tableCache = { at: Date.now() - CACHE_TTL + FAILURE_COOLDOWN, data: fallback };
-		return fallback;
-	})().finally(() => {
-		tableInFlight = null;
-	});
-
-	return tableInFlight;
+				(res) => res.text()
+			);
+			return html ? parseNpflTable(html) : null;
+		},
+		'fetchNpflTable'
+	);
 }
 
 export async function fetchClubData(slug: string, fetchFn: typeof fetch = fetch) {

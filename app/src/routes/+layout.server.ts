@@ -1,5 +1,19 @@
 import { getTags, getTrendingPosts } from '$lib/utils/sanity.server';
 
+const LAYOUT_FETCH_TIMEOUT_MS = 5000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	return Promise.race([
+		promise,
+		new Promise<never>((_, reject) => {
+			timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+		})
+	]).finally(() => {
+		if (timer) clearTimeout(timer);
+	});
+}
+
 export const load = async ({ url, fetch }) => {
 	const { pathname } = url;
 
@@ -11,10 +25,10 @@ export const load = async ({ url, fetch }) => {
 
 	try {
 		const [trendingPostsResult, tagsResult, tableRes, fixturesRes] = await Promise.allSettled([
-			getTrendingPosts(5),
-			getTags(),
-			fetch('/api/npfl/table'),
-			fetch('/api/npfl/matchday/current')
+			withTimeout(getTrendingPosts(5), LAYOUT_FETCH_TIMEOUT_MS, 'getTrendingPosts'),
+			withTimeout(getTags(), LAYOUT_FETCH_TIMEOUT_MS, 'getTags'),
+			withTimeout(fetch('/api/npfl/table'), LAYOUT_FETCH_TIMEOUT_MS, '/api/npfl/table'),
+			withTimeout(fetch('/api/npfl/matchday/current'), LAYOUT_FETCH_TIMEOUT_MS, '/api/npfl/matchday/current')
 		]);
 
 		if (trendingPostsResult.status === 'fulfilled') {
